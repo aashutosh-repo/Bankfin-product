@@ -1,0 +1,95 @@
+.header-title{
+	color:black;
+	text-align-last: center;
+    background-color: turquoise;
+    padding: 1px;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-bottom: 20px;
+}
+body, html {
+    margin: 10px;
+    padding: 0;
+    margin-top:0px;
+    
+}
+
+
+strong {
+	font-weight: 600;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Open Sans', "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serify;
+	line-height: 0.5em;
+	font-weight: 300;	
+}
+
+strong {
+  font-weight: 400;
+}
+
+.tile {  
+	width: 250px;
+    display: flex;
+    box-sizing: border-box;
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 10px;
+    flex-direction: column;
+    height: 150px;
+    border-radius: 5%;
+} 
+
+ .title {
+    	margin-top: 0px;
+  }
+
+.purple, .blue, .red, .orange, .green {
+    color: #fff;
+  }
+  
+.purple {
+    background: #5133AB;
+}
+
+ .purple:hover {
+    background: darken(#5133AB, 10%);
+ }	
+ 
+.red { background: #AC193D;}
+
+.red:hover {
+    background: darken(#AC193D, 10%);
+}		
+
+
+.green {background: #00A600;}
+
+ .green:hover {
+	background: darken(#00A600, 10%);
+}		
+
+
+.blue {   background: #2672EC;}
+
+.blue:hover {
+	background: darken(#2672EC, 10%);
+}	
+
+
+.orange {  background: #DC572E;}
+
+.orange:hover {
+	background: darken(#DC572E, 10%);
+}
+.container{
+
+}
+.row{
+	display: flex;
+    justify-content: space-between;
+    margin:5px;
+	flex-direction: row;
+	flex: 0 0 20%;
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Information</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<div class="container">
+    <h2 class="headline">Customer Information</h2>
+    <form  class="flex-container" th:action="@{/customer-service/insert}"
+		th:object="${customer}" method="POST">
+		<!-- Add Hidden form field to handle the update -->
+		<input type="hidden" th:field="*{CUS_ID}">
+<!--        <div class="form-group">
+            <label for="status">Status:</label>
+            <select id="status" name="status" th:field="*{STATUS}">
+           		<option Value="Select">Select</option>
+            	<option Value="Active">Active</option>
+            	<option Value="Pending">On Hold</option>
+            	<option Value="Blocked">Blocked</option>
+            </select> 
+        </div> -->
+        <div class="form-group">
+            <label for="first_NAME">First Name:</label>
+            <input type="text" id="first_NAME" name="first_NAME" th:field="*{FIRST_NAME}">
+        </div>
+        <div class="form-group">
+            <label for="last_NAME">Last Name:</label>
+            <input type="text" id="last_NAME" name="last_NAME" th:field="*{LAST_NAME}">
+        </div>
+        <div class="form-group">
+            <label for="father_NAME">Father's Name:</label>
+            <input type="text" id="father_NAME" name="father_NAME" th:field="*{FATHER_NAME}">
+        </div>
+        <div class="form-group">
+            <label for="mother_NAME">Mother's Name:</label>
+            <input type="text" id="mother_NAME" name="mother_NAME" th:field="*{MOTHER_NAME}">
+        </div>
+        <div class="form-group">
+            <label for="date_OF_BIRTH">Date of Birth:</label>
+            <input type="date" id="date_OF_BIRTH" name="date_OF_BIRTH" th:field="*{DATE_OF_BIRTH}">
+        </div>
+        <div class="form-group">
+            <label for="cus_ID">Customer ID:</label>
+            <input type="text" id="cus_ID" name="cus_ID" th:field="*{CUS_ID}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="risk_RATING">Risk Rating:</label>
+            <input type="text" id="risk_RATING" name="risk_RATING" th:field="*{RISK_RATING}" >
+        </div>
+        <div class="form-group">
+            <label for="cust_CREATION_DT">Creation Date:</label>
+            <input type="date" id="cust_CREATION_DT" name="cust_CREATION_DT" th:field="*{CUST_CREATION_DT}">
+        </div>
+        <div class="form-group">
+            <label for="nominee_ID">Nominee ID:</label>
+            <input type="text" id="nominee_ID" name="nominee_ID" th:field="*{NOMINEE_ID}">
+        </div>
+        <div class="form-group">
+            <label for="rating_AGENCY">Rating Agency:</label>
+            <input type="text" id="rating_AGENCY" name="rating_AGENCY" th:field="*{RATING_AGENCY}">
+        </div>
+        <div class="form-group">
+            <label for="mobile_NUMBER">Mobile Number:</label>
+            <input type="tel" id="mobile_NUMBER" name="mobile_NUMBER" th:field="*{MOBILE_NUMBER}">
+        </div>
+        <div class="form-group">
+            <label for="address_ID">Address ID:</label>
+            <input type="text" id="address_ID" name="address_ID" th:field="*{ADDRESS_ID}">
+        </div>
+        <div class="form-group">
+            <label for="cust_CLSNG_DT">Closing Date:</label>
+            <input type="date" id="cust_CLSNG_DT" name="cust_CLSNG_DT" th:field="*{CUST_CLSNG_DT}">
+        </div>
+        <div class="form-group">
+            <label for="cus_TYP">Customer Type:</label>
+            <input type="text" id="cus_TYP" name="cus_TYP" th:field="*{CUS_TYP}">
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+</body>
+</html>

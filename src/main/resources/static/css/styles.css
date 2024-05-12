@@ -1,0 +1,50 @@
+.form-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  margin-bottom: 3px;
+  float: left;
+  width: 33%;
+}
+
+.form-group label {
+  width: 30%;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.form-group input[type="text"],.form-group input[type="date"],.form-group input[type="tel"] {
+  width: 50%;
+  padding: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+}
+
+.form-group input[type="date"] {
+  padding: 5px 5px;
+}
+
+/* Add this to make three fields in one row */
+.form-group:nth-child(3n+1) {
+  margin-right: 0px;
+}
+
+.form-group:nth-child(3n+2) {
+  margin-right: 0px;
+}
+
+.form-group:nth-child(3n) {
+  margin-right: 0;
+}
+.headline{
+    text-align: center;
+    background:lightblue;
+    padding: 10px;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 10px;
+    margin-left: 0px;
+}
+.flex-container{
+    margin-left: 15px;
+}
