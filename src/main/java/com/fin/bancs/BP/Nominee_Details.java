@@ -10,8 +10,8 @@ public class Nominee_Details {
 
 	@Id
 	protected int NOMINEE_ID; //pk
-	protected int 	OWNER_ID;
-	protected int 	OWNER_TYPE;
+	protected int OWNER_ID;
+	protected int OWNER_TYPE;
 	protected int NOM_TYPE; //MAJOR/MINOR
 	protected int NOM_TYPE_CODE;
 	protected String NOMINEE_FIRST_NAME;

@@ -3,8 +3,8 @@ package com.fin.bancs.endpoints;
 import com.fin.bancs.BP.CustomerID;
 import com.fin.bancs.BP.Customer_Details;
 import com.fin.bancs.BP.Nominee_Details;
-import com.fin.bancs.controller.Customer_Details_Controller;
 import com.fin.bancs.repository.Customer_Details_Repository;
+import com.fin.bancs.services.Customer_Details_services;
 
 import jakarta.persistence.EntityManager;
 
@@ -25,7 +25,7 @@ public class Customer_Details_EndPoints {
     @Autowired
     private EntityManager entityManager;
     @Autowired
-    Customer_Details_Controller customerDetailsController;
+    Customer_Details_services customerDetailsController;
 
     @GetMapping("/getallcust")
     public String getAllCustomer(Model theModel){
