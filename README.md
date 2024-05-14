@@ -1,6 +1,6 @@
 # Bankfin-product
-This project Contain various banking high leven services 
-<h1 align="center">Hi 👋, I'm Aashutosh kumar</h1>
+This project contains various high level banking services 
+<h1 align="center">Aashutosh kumar</h1>
 <h3 align="center">A passionate Full stack developer from India</h3>
 <h3 align="left">Project: Banking-product</h3>
 <p>This project is based on spring boot, Jpa, spring security and spring MVC and it will allow users to use financial products like Cutsomer Onboarding, Account creation, Calculating SIP, Currency conversion, EMI calculator and many more features. In this project I have exposed required endpoints as well as linked with html to paas input from screen and endpoints can be used with postman to pass input.</p>
@@ -18,7 +18,7 @@ This project Contain various banking high leven services
 
 - 💬 Ask me about **rest, Spring-Security, spring-data**
 
-- 📫 How to reach me **aashutoshkumar@gmail.com**
+- 📫 How to reach me **aashutoshkumar6729@gmail.com**
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
