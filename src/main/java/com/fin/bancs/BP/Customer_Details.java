@@ -1,12 +1,14 @@
 package com.fin.bancs.BP;
 
-import jakarta.persistence.*;
+import java.time.LocalDate;
+
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.*;
 import org.hibernate.annotations.Parameter;
 
-import java.time.LocalDate;
-import java.util.Date;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 
 
 @Entity
@@ -49,6 +51,7 @@ public class Customer_Details {
 	protected LocalDate CUST_CREATION_DT;
 	protected LocalDate CUST_CLSNG_DT;
 	protected int RISK_RATING;
+	protected LocalDate LAST_UPDATE;
 	protected String RATING_AGENCY;
 
 	public Customer_Details() {
@@ -57,7 +60,7 @@ public class Customer_Details {
 	public Customer_Details(int CUS_ID, int CUS_TYP, String FIRST_NAME, String LAST_NAME, String FATHER_NAME,
 							String MOTHER_NAME, String EMAIL, String MOBILE_NUMBER, int STATUS, int ADDRESS_ID,
 							int NOMINEE_ID, LocalDate DATE_OF_BIRTH, LocalDate CUST_CREATION_DT, LocalDate CUST_CLSNG_DT,
-							int RISK_RATING, String RATING_AGENCY) {
+							int RISK_RATING, String RATING_AGENCY,LocalDate LAST_UPDATE) {
 		this.CUS_ID = CUS_ID;
 		this.CUS_TYP = CUS_TYP;
 		this.FIRST_NAME = FIRST_NAME;
@@ -74,6 +77,7 @@ public class Customer_Details {
 		this.CUST_CLSNG_DT = CUST_CLSNG_DT;
 		this.RISK_RATING = RISK_RATING;
 		this.RATING_AGENCY = RATING_AGENCY;
+		this.LAST_UPDATE = LAST_UPDATE;
 	}
 
 	public int getCUS_ID() {
@@ -171,6 +175,13 @@ public class Customer_Details {
 	}
 	public void setRATING_AGENCY(String rATING_AGENCY) {
 		RATING_AGENCY = rATING_AGENCY;
+	}
+	public LocalDate getLAST_UPDATE() {
+		return LAST_UPDATE;
+	}
+
+	public void setLAST_UPDATE(LocalDate lAST_UPDATE) {
+		LAST_UPDATE = LocalDate.now();
 	}
 
 	@Override

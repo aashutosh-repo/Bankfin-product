@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -32,7 +33,7 @@ public class Customer_Address_Details {
 	protected String DISTRICT;
 	protected String TALUKA;
 	protected String STATE;
-
+	protected LocalDate LAST_UPDATE;
 	protected Date DATE_OF_CAPTURE;
 
 	public Customer_Address_Details() {
@@ -119,6 +120,13 @@ public class Customer_Address_Details {
 	}
 	public void setDATE_OF_CAPTURE(Date dATE_OF_CAPTURE) {
 		DATE_OF_CAPTURE = dATE_OF_CAPTURE;
+	}
+	public LocalDate getLAST_UPDATE() {
+		return LAST_UPDATE;
+	}
+
+	public void setLAST_UPDATE(LocalDate lAST_UPDATE) {
+		LAST_UPDATE = LocalDate.now();
 	}
 
 

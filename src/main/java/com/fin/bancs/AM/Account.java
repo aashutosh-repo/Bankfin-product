@@ -1,5 +1,6 @@
 package com.fin.bancs.AM;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
@@ -11,7 +12,7 @@ public class Account {
 	protected int ACCOUNT_ID; //pk
 	protected int ACCOUNT_TYPE; //pk
 	protected int ACCOUNT_STATUS;
-	protected Date ACCOUNT_OPN_DT;
+	protected LocalDate ACCOUNT_OPN_DT;
 	protected int CURRENCY;
 	protected int CUS_ID;
 	protected int CUS_TYP;
@@ -23,10 +24,8 @@ public class Account {
 	protected int ATM_REQ;
 	protected int CHEQ_REQ;
 	protected int SMS_REQ;
-	
-	
-	
-	
+	protected LocalDate LAST_UPDATE;
+	protected LocalDate CLSNG_DATE;
 	public int getACCOUNT_ID() {
 		return ACCOUNT_ID;
 	}
@@ -45,10 +44,10 @@ public class Account {
 	public void setACCOUNT_STATUS(int aCCOUNT_STATUS) {
 		ACCOUNT_STATUS = aCCOUNT_STATUS;
 	}
-	public Date getACCOUNT_OPN_DT() {
+	public LocalDate getACCOUNT_OPN_DT() {
 		return ACCOUNT_OPN_DT;
 	}
-	public void setACCOUNT_OPN_DT(Date aCCOUNT_OPN_DT) {
+	public void setACCOUNT_OPN_DT(LocalDate aCCOUNT_OPN_DT) {
 		ACCOUNT_OPN_DT = aCCOUNT_OPN_DT;
 	}
 	public int getCURRENCY() {
@@ -117,6 +116,23 @@ public class Account {
 	public void setSMS_REQ(int sMS_REQ) {
 		SMS_REQ = sMS_REQ;
 	}
+	public LocalDate getLAST_UPDATE() {
+		return LAST_UPDATE;
+	}
+	public void setLAST_UPDATE(LocalDate lAST_UPDATE) {
+		LAST_UPDATE = lAST_UPDATE;
+	}
+	public LocalDate getCLSNG_DATE() {
+		return CLSNG_DATE;
+	}
+	public void setCLSNG_DATE(LocalDate cLSNG_DATE) {
+		if(cLSNG_DATE !=null) {
+		CLSNG_DATE = cLSNG_DATE;
+		}else {
+			CLSNG_DATE= LocalDate.now();
+		}
+	}
 	
 
+	
 }

@@ -6,26 +6,29 @@ import jakarta.persistence.Id;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
 public class Documents_Details {
 	@Id
-//	@GeneratedValue(generator = "DOC_ID-seq-generator")
-//	@GenericGenerator(
-//			name = "DOC_ID-generator",
-//			strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-//			parameters = {
-//					@Parameter(name = "DOC_ID_seq", value = "user_sequence"),
-//					@Parameter(name = "initial_value", value = "100000"),
-//					@Parameter(name = "increment_size", value = "1")
-//			})
+	@GeneratedValue(generator = "DOC_ID-seq-generator")
+	@GenericGenerator(
+			name = "DOC_ID-generator",
+			strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+			parameters = {
+					@Parameter(name = "DOC_ID_seq", value = "user_sequence"),
+					@Parameter(name = "initial_value", value = "100000"),
+					@Parameter(name = "increment_size", value = "1")
+			})
 	protected int DOC_ID; //pk
 	protected int CUST_ID;
+	protected String DOC_DESCRIPTION;
 	protected String DOC_IDENTIFICATION_NUM;
 	protected String DOC_TYPE;
 	protected String dOC_TYPE_CD;
 	protected Date ISSUE_DATE;
+	protected LocalDate LAST_UPDATE;
 	protected Date EXPIRY_DATE;
 
 	public Documents_Details() {
@@ -83,5 +86,19 @@ public class Documents_Details {
 	}
 	public void setEXPIRY_DATE(Date eXPIRY_DATE) {
 		EXPIRY_DATE = eXPIRY_DATE;
+	}
+	public LocalDate getLAST_UPDATE() {
+		return LAST_UPDATE;
+	}
+
+	public void setLAST_UPDATE(LocalDate lAST_UPDATE) {
+		LAST_UPDATE = LocalDate.now();
+	}
+	public String getDOC_DESCRIPTION() {
+		return DOC_DESCRIPTION;
+	}
+
+	public void setDOC_DESCRIPTION(String dOC_DESCRIPTION) {
+		DOC_DESCRIPTION = dOC_DESCRIPTION;
 	}
 }
