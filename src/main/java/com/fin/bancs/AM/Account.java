@@ -12,6 +12,7 @@ public class Account {
 	protected int ACCOUNT_ID; //pk
 	protected int ACCOUNT_TYPE; //pk
 	protected int ACCOUNT_STATUS;
+	protected String ACCOUNT_NUMBER;
 	protected LocalDate ACCOUNT_OPN_DT;
 	protected int CURRENCY;
 	protected int CUS_ID;
@@ -26,6 +27,35 @@ public class Account {
 	protected int SMS_REQ;
 	protected LocalDate LAST_UPDATE;
 	protected LocalDate CLSNG_DATE;
+	
+	public Account() {
+		
+	}
+	
+	public Account(int aCCOUNT_ID, int aCCOUNT_TYPE, int aCCOUNT_STATUS, String aCCOUNT_NUMBER,
+			LocalDate aCCOUNT_OPN_DT, int cURRENCY, int cUS_ID, int cUS_TYP, int nPA_STATUS, int mIN_BAL,
+			Date lAST_WITHDR_DT, int aVAILABLE_BALANCE, int oWNER_NAME, int aTM_REQ, int cHEQ_REQ, int sMS_REQ,
+			LocalDate lAST_UPDATE, LocalDate cLSNG_DATE) {
+		super();
+		ACCOUNT_ID = aCCOUNT_ID;
+		ACCOUNT_TYPE = aCCOUNT_TYPE;
+		ACCOUNT_STATUS = aCCOUNT_STATUS;
+		ACCOUNT_NUMBER = aCCOUNT_NUMBER;
+		ACCOUNT_OPN_DT = aCCOUNT_OPN_DT;
+		CURRENCY = cURRENCY;
+		CUS_ID = cUS_ID;
+		CUS_TYP = cUS_TYP;
+		NPA_STATUS = nPA_STATUS;
+		MIN_BAL = mIN_BAL;
+		LAST_WITHDR_DT = lAST_WITHDR_DT;
+		AVAILABLE_BALANCE = aVAILABLE_BALANCE;
+		OWNER_NAME = oWNER_NAME;
+		ATM_REQ = aTM_REQ;
+		CHEQ_REQ = cHEQ_REQ;
+		SMS_REQ = sMS_REQ;
+		LAST_UPDATE = lAST_UPDATE;
+		CLSNG_DATE = cLSNG_DATE;
+	}
 	public int getACCOUNT_ID() {
 		return ACCOUNT_ID;
 	}
@@ -43,6 +73,13 @@ public class Account {
 	}
 	public void setACCOUNT_STATUS(int aCCOUNT_STATUS) {
 		ACCOUNT_STATUS = aCCOUNT_STATUS;
+	}
+	public String getACCOUNT_NUMBER() {
+		return ACCOUNT_NUMBER;
+	}
+
+	public void setACCOUNT_NUMBER(String aCCOUNT_NUMBER) {
+		ACCOUNT_NUMBER = aCCOUNT_NUMBER;
 	}
 	public LocalDate getACCOUNT_OPN_DT() {
 		return ACCOUNT_OPN_DT;
@@ -132,6 +169,7 @@ public class Account {
 			CLSNG_DATE= LocalDate.now();
 		}
 	}
+
 	
 
 	
