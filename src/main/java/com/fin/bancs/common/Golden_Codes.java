@@ -3,6 +3,7 @@ package com.fin.bancs.common;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
+import java.time.LocalDate;
 import java.util.Date;
 @Entity
 public class Golden_Codes {
@@ -14,9 +15,11 @@ public class Golden_Codes {
 	private String short_desc;
 	private String Description;
 	private Date insert_date ;
+	private LocalDate Last_Update;
 	protected String Userid;
 	
-	public Golden_Codes(int code_id, int value, String shortDesc, String description, Date insert_date, String userid) {
+	public Golden_Codes(int code_id, int value, String shortDesc, String description, 
+			Date insert_date, String userid,LocalDate Last_Update) {
 		super();
 		this.code_id = code_id;
 		this.value = value;
@@ -24,6 +27,8 @@ public class Golden_Codes {
         this.Description = description;
 		this.insert_date = insert_date;
 		Userid = userid;
+		//This date should not Change and should always pick Current system date
+		this.Last_Update=LocalDate.now();
 	}
 	public int getCode_id() {
 		return code_id;
@@ -69,4 +74,11 @@ public class Golden_Codes {
 	public void setShort_desc(String short_desc) {
 		this.short_desc = short_desc;
 	}
+	public LocalDate getLast_Update() {
+		return Last_Update;
+	}
+	public void setLast_Update(LocalDate last_Update) {
+		Last_Update = LocalDate.now();
+	}
+	
 }

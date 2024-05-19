@@ -1,21 +1,23 @@
 package com.fin.bancs.endpoints;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.fin.bancs.BP.CustomerID;
 import com.fin.bancs.BP.Customer_Details;
-import com.fin.bancs.BP.Nominee_Details;
 import com.fin.bancs.repository.Customer_Details_Repository;
 import com.fin.bancs.services.Customer_Details_services;
 
 import jakarta.persistence.EntityManager;
-
-import org.hibernate.result.Output;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/customer-service")

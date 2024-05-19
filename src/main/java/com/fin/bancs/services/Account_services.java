@@ -1,7 +1,5 @@
 package com.fin.bancs.services;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,9 +14,22 @@ public class Account_services {
 	public Account_repository account_repository;
 	
 	
-	public void ceateModifyAccountDetails(Account account) {
+	public void ceateModifyAccountDetails(Account account,int modifyFlag) {
+		//If Modify flag is 1 then primary key should pass as a User-input 
+		Account acc=  new Account();
+		if(modifyFlag==1) {
+			AccountPk accpk = new AccountPk();
+					
+			accpk.setACCOUNT_ID(account.getACCOUNT_ID());
+			accpk.setACCOUNT_TYPE(account.getACCOUNT_TYPE());
+			//check the given data is existing in DB or not if yes then proceed 
+			acc = account_repository.getReferenceById(accpk);
+			if(acc != null) {
+				account_repository.save(account);
+			}
+		}
 		
-	account_repository.save(account);
+		account_repository.save(account);
 	}
 	
 	public void deleteAccount(Account account) {

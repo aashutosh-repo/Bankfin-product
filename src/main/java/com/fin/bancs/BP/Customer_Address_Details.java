@@ -1,13 +1,11 @@
 package com.fin.bancs.BP;
 
-import com.fin.bancs.repository.Customer_Address_Repository;
-import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.time.LocalDate;
 import java.util.Date;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 
 @Entity
 @IdClass(Cust_Address_detailsPk.class)

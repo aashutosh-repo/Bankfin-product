@@ -6,6 +6,12 @@ import java.util.Objects;
 public class GoldenCodePk implements Serializable{
 	private int code_id;
 	private int value;
+	
+	public GoldenCodePk (int code_id,int value) {
+		this.code_id=code_id;
+		this.value=value;
+		
+	}
 	public int getCode_id() {
 		return code_id;
 	}

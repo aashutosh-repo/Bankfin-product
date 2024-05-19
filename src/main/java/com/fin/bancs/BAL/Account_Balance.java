@@ -1,18 +1,19 @@
 package com.fin.bancs.BAL;
 
-import java.util.Date;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class Account_Balance {
 	protected int ACCOUNT_ID; //PK
 	protected int ACCOUNT_TYPE; //PK
 	protected int BALANCE_SEQ_ID; //PK
-	protected Date BALANCE_DATE;
-	protected long INTRST_RT;
-	protected int PRNCPL_BAL;
-	protected int INTRST_BAL;
-	protected int TOTAL_BAL;
+	protected LocalDate BALANCE_DATE;
 	protected int TXN_TYPE;
-	
-	
-	
+	protected long INTRST_RT;
+	protected BigDecimal PRNCPL_BAL;
+	protected BigDecimal INTRST_BAL;
+	protected BigDecimal TOTAL_BAL;
+	protected BigDecimal OPENING_BAL;
+	protected BigDecimal AVAILABLE_BAL;
+	protected LocalDate Last_Update;
 }

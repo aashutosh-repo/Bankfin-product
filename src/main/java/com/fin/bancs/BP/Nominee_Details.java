@@ -1,7 +1,6 @@
 package com.fin.bancs.BP;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

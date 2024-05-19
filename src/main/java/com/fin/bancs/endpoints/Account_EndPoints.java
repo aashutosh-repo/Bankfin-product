@@ -6,18 +6,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fin.bancs.AM.Account;
-import com.fin.bancs.BP.CustomerID;
-import com.fin.bancs.BP.Customer_Details;
 import com.fin.bancs.repository.Account_repository;
+import com.fin.bancs.services.Account_services;
 
 @Controller
 @RequestMapping("/account")
 public class Account_EndPoints {
 	@Autowired
 	public Account_repository acc_repo;
+	@Autowired
+	public Account_services acc_services;
+	
 	
     @GetMapping("/view")
     public String viewAccountDetails(Model theModel){    
@@ -29,5 +32,14 @@ public class Account_EndPoints {
     	
     	theModel.addAttribute("Account",allAccount);
         return "account/tiles";
+    }
+    
+    @GetMapping("/create")
+    public void createAccount(@RequestBody Account account) {
+    	acc_services.ceateModifyAccountDetails(account, 0);
+    }
+    @GetMapping("/modify")
+    public void modifyAccount(@RequestBody Account account) {
+    	acc_services.ceateModifyAccountDetails(account, 1);
     }
 }
