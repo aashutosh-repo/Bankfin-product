@@ -1,4 +1,4 @@
-package com.fin.bancs.BAL;
+package com.fin.bancs.AM;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

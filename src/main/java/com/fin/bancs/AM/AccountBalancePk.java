@@ -1,4 +1,4 @@
-package com.fin.bancs.BAL;
+package com.fin.bancs.AM;
 
 import java.io.Serializable;
 import java.util.Objects;

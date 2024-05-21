@@ -1,5 +1,6 @@
 package com.fin.bancs.AM;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -20,7 +21,7 @@ public class Account {
 	protected int NPA_STATUS;
 	protected int MIN_BAL;
 	protected Date LAST_WITHDR_DT;
-	protected int AVAILABLE_BALANCE;
+	protected BigDecimal AVAILABLE_BALANCE;
 	protected int OWNER_NAME;
 	protected int ATM_REQ;
 	protected int CHEQ_REQ;
@@ -34,7 +35,7 @@ public class Account {
 	
 	public Account(int aCCOUNT_ID, int aCCOUNT_TYPE, int aCCOUNT_STATUS, String aCCOUNT_NUMBER,
 			LocalDate aCCOUNT_OPN_DT, int cURRENCY, int cUS_ID, int cUS_TYP, int nPA_STATUS, int mIN_BAL,
-			Date lAST_WITHDR_DT, int aVAILABLE_BALANCE, int oWNER_NAME, int aTM_REQ, int cHEQ_REQ, int sMS_REQ,
+			Date lAST_WITHDR_DT, BigDecimal aVAILABLE_BALANCE, int oWNER_NAME, int aTM_REQ, int cHEQ_REQ, int sMS_REQ,
 			LocalDate lAST_UPDATE, LocalDate cLSNG_DATE) {
 		super();
 		ACCOUNT_ID = aCCOUNT_ID;
@@ -123,10 +124,10 @@ public class Account {
 	public void setLAST_WITHDR_DT(Date lAST_WITHDR_DT) {
 		LAST_WITHDR_DT = lAST_WITHDR_DT;
 	}
-	public int getAVAILABLE_BALANCE() {
+	public BigDecimal getAVAILABLE_BALANCE() {
 		return AVAILABLE_BALANCE;
 	}
-	public void setAVAILABLE_BALANCE(int aVAILABLE_BALANCE) {
+	public void setAVAILABLE_BALANCE(BigDecimal aVAILABLE_BALANCE) {
 		AVAILABLE_BALANCE = aVAILABLE_BALANCE;
 	}
 	public int getOWNER_NAME() {

@@ -31,7 +31,7 @@ public class Account_EndPoints {
     	}
     	
     	theModel.addAttribute("Account",allAccount);
-        return "account/tiles";
+        return "mainpage/tiles";
     }
     
     @GetMapping("/create")

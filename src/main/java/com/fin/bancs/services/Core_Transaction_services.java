@@ -1,8 +1,10 @@
 package com.fin.bancs.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fin.bancs.AM.Account;
@@ -21,8 +23,6 @@ public class Core_Transaction_services {
 
 	
 	public void CreateTransaction(List<Core_Transaction_Layer> txnInput) {
-		Transaction_Out transactionOut_dr = new Transaction_Out();
-		Transaction_Out transactionOut_cr = new Transaction_Out();
 		Core_Transaction_Layer core_transaction_cash= new Core_Transaction_Layer();
 		Core_Transaction_Layer core_transaction_cr= new Core_Transaction_Layer();
 		Core_Transaction_Layer core_transaction_dr= new Core_Transaction_Layer();
@@ -54,16 +54,60 @@ public class Core_Transaction_services {
 			//1. Debit from source account and credit to internal Credit Account
 			//Find out Credit side account details and debit side account details.
 			//one row can handle this txn
+			Account acc = new Account();
 			Optional<Account> acc_internal= Optional.of(new  Account());
 			Optional<Account> acc_cash= Optional.of(new  Account());
 			AccountPk accpk= new AccountPk();
-			//credit to internal account
-			accpk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_CR());
+			BigDecimal total_amt_internal= new BigDecimal(0.00);
+			BigDecimal total_amt_cash= new BigDecimal(0.00);
+			//debit/credit to internal account srarts
+			accpk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_CR()); //internal Account need to maintain internally
 			accpk.setACCOUNT_TYPE(1); //For inernal account
 			acc_internal= accRepo.findById(accpk);
 			if(acc_internal == null) {
-				//Handle it account not found Error 
+				//Handle it account not found Error
+			}else {
+			acc= acc_internal.get();
+			BigDecimal Available_AMT= acc.getAVAILABLE_BALANCE();
+			BigDecimal trabsaction_amt= core_transaction_cash.getTXN_AMT();
+			int cred_deb_flag= core_transaction_cash.getCredit_debit_flag();
+			if(cred_deb_flag==1) {
+				total_amt_internal= Available_AMT.add(trabsaction_amt.multiply(new BigDecimal(1)));
+			}else {
+				total_amt_internal= Available_AMT.add(trabsaction_amt.multiply(new BigDecimal(-1)));
 			}
+			acc.setAVAILABLE_BALANCE(total_amt_internal);
+			accRepo.save(acc);
+			//DEBIT/credit to internal account ends
+	
+			}
+			
+			//For customer account
+			//Debit/credit to Customer account ends
+			accpk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_DR()); 
+			accpk.setACCOUNT_TYPE(core_transaction_cash.getACCOUNT_TYPE_DR()); 
+			acc_cash= accRepo.findById(accpk);
+			if(acc_cash == null) {
+				//Handle it account not found Error
+			}else {
+			acc= acc_cash.get(); 
+			BigDecimal Available_AMT= acc.getAVAILABLE_BALANCE();
+			BigDecimal trabsaction_amt= core_transaction_cash.getTXN_AMT();
+			int cred_deb_flag= core_transaction_cash.getCredit_debit_flag();
+			if(cred_deb_flag==1) {
+				total_amt_cash= Available_AMT.add(trabsaction_amt.multiply(new BigDecimal(1)));
+			}else {
+				total_amt_cash= Available_AMT.add(trabsaction_amt.multiply(new BigDecimal(-1)));
+			}
+			acc.setAVAILABLE_BALANCE(total_amt_internal);
+			accRepo.save(acc);
+			//Debit/credit to Customer account ends
+	
+			}
+			
+			
+			
+			
 			accpk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_DR());
 			accpk.setACCOUNT_TYPE(core_transaction_cash.getACCOUNT_TYPE_DR());
 			acc_cash = accRepo.findById(accpk);
@@ -75,6 +119,9 @@ public class Core_Transaction_services {
 			core_transaction_cash.setTXN_DESC(str+ " - " + "cash-Transaction");
 			cenTxnRepo.save(core_transaction_cash);
 		}
+		
+		
+		
 		if(core_transaction_cr.getTXN_TYPE()==2){  //Transfer-> Do transfer Operation
 
 			//1. Debit from source account and credit to internal Credit Account

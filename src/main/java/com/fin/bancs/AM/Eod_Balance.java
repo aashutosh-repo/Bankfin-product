@@ -1,4 +1,4 @@
-package com.fin.bancs.BAL;
+package com.fin.bancs.AM;
 
 public class Eod_Balance {
 
