@@ -28,12 +28,13 @@ public class Core_Transaction_Layer {
 	protected int LAST_TXN_DT;
 	protected LocalDate LAST_UPDATE = LocalDate.now();
 	protected String TXN_DESC;
+	protected String CURRENCY;
 	public Core_Transaction_Layer (){
 
 	}
 	public Core_Transaction_Layer(int cEN_TXN_ID, int tXN_TYPE, int tXN_SEQ, int aCCOUNT_ID_CR, int aCCOUNT_TYPE_CR,
 			int aCCOUNT_ID_DR, int aCCOUNT_TYPE_DR, LocalDate gEN_DT, BigDecimal tXN_AMT, BigDecimal iNTEREST_AMT,
-			BigDecimal gST_AMT, int lAST_TXN_DT, LocalDate lAST_UPDATE, String tXN_DESC) {
+			BigDecimal gST_AMT, int lAST_TXN_DT, LocalDate lAST_UPDATE, String tXN_DESC,String CURRENCY) {
 		super();
 		CEN_TXN_ID = cEN_TXN_ID;
 		TXN_TYPE = tXN_TYPE;
@@ -49,6 +50,7 @@ public class Core_Transaction_Layer {
 		LAST_TXN_DT = lAST_TXN_DT;
 		LAST_UPDATE = LocalDate.now();
 		TXN_DESC = tXN_DESC;
+		CURRENCY =this.CURRENCY;
 	}
 	public int getCEN_TXN_ID() {
 		return CEN_TXN_ID;
@@ -141,5 +143,13 @@ public class Core_Transaction_Layer {
 
 	public void setCredit_debit_flag(int credit_debit_flag) {
 		this.credit_debit_flag = credit_debit_flag;
+	}
+
+	public String getCURRENCY() {
+		return CURRENCY;
+	}
+
+	public void setCURRENCY(String CURRENCY) {
+		this.CURRENCY = CURRENCY;
 	}
 }
