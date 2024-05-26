@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.logging.Log;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fin.bancs.AM.Account;
@@ -16,7 +18,8 @@ import com.fin.bancs.transactions.Core_Transaction_Layer;
 import com.fin.bancs.transactions.Transaction_Out;
 
 public class Core_Transaction_services {
-	
+
+	private static final Logger log = LogManager.getLogger(Core_Transaction_services.class);
 	@Autowired
 	private Core_Transaction_Layer_Repository  coreRepo;
 	@Autowired
@@ -32,6 +35,7 @@ public class Core_Transaction_services {
 		Core_Transaction_Layer core_transaction_cr= new Core_Transaction_Layer();
 		Core_Transaction_Layer core_transaction_dr= new Core_Transaction_Layer();
 		List<Core_Transaction_Layer> core_transaction = new ArrayList<>();
+		List<Account> UpdateAccBal= new ArrayList<>();
 		//Check Transaction Type Cash/transfer
 		for(Core_Transaction_Layer txn:txnInput){
 			if(txn.getTXN_TYPE() == 0){
@@ -61,6 +65,7 @@ public class Core_Transaction_services {
 			//Find out Credit side account details and debit side account details.
 			//one row can handle this txn
 			Account acc = new Account();
+
 			Optional<Account> acc_internal= Optional.of(new  Account());
 			Optional<Account> acc_cash= Optional.of(new  Account());
 			AccountPk accpk= new AccountPk();
@@ -70,7 +75,7 @@ public class Core_Transaction_services {
 			accpk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_CR()); //internal Account need to maintain internally
 			accpk.setACCOUNT_TYPE(1); //For inernal account
 			acc_internal= accRepo.findById(accpk);
-			if(acc_internal == null) {
+			if(acc_internal.isEmpty()) {
 				//Handle it account not found Error
 			}else {
 			acc= acc_internal.get();
@@ -99,7 +104,7 @@ public class Core_Transaction_services {
 				//Core Txn Ends here
 			accRepo.save(acc);
 			//DEBIT/credit to internal account ends
-	
+
 			}
 			
 			//For customer account
@@ -107,8 +112,9 @@ public class Core_Transaction_services {
 			accpk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_DR()); 
 			accpk.setACCOUNT_TYPE(core_transaction_cash.getACCOUNT_TYPE_DR()); 
 			acc_cash= accRepo.findById(accpk);
-			if(acc_cash == null) {
+			if(acc_cash.isEmpty()) {
 				//Handle it account not found Error
+				log.debug("No Data Found");
 			}else {
 			acc= acc_cash.get(); 
 			BigDecimal Available_AMT= acc.getAVAILABLE_BALANCE();
@@ -142,8 +148,9 @@ public class Core_Transaction_services {
 			accpk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_DR());
 			accpk.setACCOUNT_TYPE(core_transaction_cash.getACCOUNT_TYPE_DR());
 			acc_cash = accRepo.findById(accpk);
-			if(acc_cash == null) {
-				//Handle it account not found Error 
+			if(acc_cash.isEmpty()) {
+				//Handle it account not found Error
+				log.debug("No Data Found");
 			}
 			acc=acc_cash.get();
 
@@ -163,7 +170,37 @@ public class Core_Transaction_services {
 			Core_Transaction_Layer coreTransactionLayer_acc_cr = new Core_Transaction_Layer();
 			Core_Transaction_Layer coreTransactionLayer_acc_dr = new Core_Transaction_Layer();
 			//case1 -- Debit from source account
-				coreTransactionLayer_acc_dr.setACCOUNT_ID_DR(core_transaction_dr.getACCOUNT_ID_DR());
+			AccountPk cash_acc_pk= new AccountPk();
+			AccountPk internal_acc_pk= new AccountPk();
+			Account cash_acc_dr= new Account();
+			Account cash_acc_cr= new Account();
+			Account internal_acc_cr= new Account();
+			Account internal_acc_dr= new Account();
+			//Account balance Update Starts here
+			cash_acc_pk.setACCOUNT_ID(core_transaction_dr.getACCOUNT_ID_DR());
+			cash_acc_pk.setACCOUNT_TYPE(core_transaction_dr.getACCOUNT_TYPE_DR());
+			Optional<Account> account_cash_dr = accRepo.findById(cash_acc_pk);
+			if(account_cash_dr.isEmpty()) {
+				//handle Account Not Found Error
+				log.debug("No Data Found");
+			}else{
+				cash_acc_dr= account_cash_dr.get();
+				cash_acc_dr.setAVAILABLE_BALANCE(cash_acc_dr.getAVAILABLE_BALANCE().subtract(core_transaction_dr.getTXN_AMT()));
+				UpdateAccBal.add(cash_acc_dr);
+			}
+			internal_acc_pk.setACCOUNT_ID(18626); //Cr type internal Account
+			internal_acc_pk.setACCOUNT_TYPE(1);
+			Optional<Account> int_acc_cr= accRepo.findById(internal_acc_pk);
+			if(int_acc_cr.isEmpty()){
+				//handle Not Found Exception
+				log.debug("No Data Found");
+			}else {
+				internal_acc_cr= int_acc_cr.get();
+				internal_acc_cr.setAVAILABLE_BALANCE(internal_acc_dr.getAVAILABLE_BALANCE().add(core_transaction_dr.getTXN_AMT()));
+				UpdateAccBal.add(internal_acc_cr);
+			}
+			//Account balance Update Ends here
+            coreTransactionLayer_acc_dr.setACCOUNT_ID_DR(core_transaction_dr.getACCOUNT_ID_DR());
 				coreTransactionLayer_acc_dr.setACCOUNT_TYPE_DR(core_transaction_dr.getACCOUNT_TYPE_DR());
 				coreTransactionLayer_acc_dr.setTXN_AMT(core_transaction_dr.getTXN_AMT());
 				coreTransactionLayer_acc_dr.setGEN_DT(core_transaction_dr.getGEN_DT());
@@ -180,6 +217,33 @@ public class Core_Transaction_services {
 				coreTransactionLayer_int_cr.setTXN_DESC(core_transaction_dr.getTXN_DESC());
 				coreTransactionLayer_int_cr.setCURRENCY("INR");
 			core_transaction.add(coreTransactionLayer_int_cr);
+
+
+
+			//Account balance Update Starts here
+			cash_acc_pk.setACCOUNT_ID(core_transaction_dr.getACCOUNT_ID_CR());
+			cash_acc_pk.setACCOUNT_TYPE(core_transaction_dr.getACCOUNT_TYPE_CR());
+			Optional<Account> account_cash_cr = accRepo.findById(cash_acc_pk);
+			if(account_cash_cr.isEmpty()) {
+				//handle Account Not Found Error
+				log.debug("No Data Found");
+			}else{
+				cash_acc_cr= account_cash_cr.get();
+				cash_acc_cr.setAVAILABLE_BALANCE(cash_acc_cr.getAVAILABLE_BALANCE().add(core_transaction_dr.getTXN_AMT()));
+				UpdateAccBal.add(cash_acc_cr);
+			}
+			internal_acc_pk.setACCOUNT_ID(18625); //requires rules to get Internal Account for cr/dr type
+			internal_acc_pk.setACCOUNT_TYPE(1);
+			Optional<Account> int_acc_dr= accRepo.findById(internal_acc_pk);
+			if(int_acc_dr.isEmpty()){
+				//handle Not Found Exception
+				log.debug("No Data Found");
+			}else {
+				internal_acc_dr= int_acc_cr.get();
+				internal_acc_dr.setAVAILABLE_BALANCE(internal_acc_dr.getAVAILABLE_BALANCE().subtract(core_transaction_dr.getTXN_AMT()));
+				UpdateAccBal.add(internal_acc_dr);
+			}
+			//Account balance Update Ends here
 
 			//case3 -- Debit from Internal account
 			coreTransactionLayer_int_dr.setACCOUNT_ID_DR(core_transaction_dr.getACCOUNT_ID_DR()); //Debit type of internal account
@@ -200,7 +264,7 @@ public class Core_Transaction_services {
 			coreTransactionLayer_acc_cr.setCURRENCY("INR");
 			core_transaction.add(coreTransactionLayer_acc_cr);
 		}
-
+		accRepo.saveAll(UpdateAccBal);
 		coreRepo.saveAll(core_transaction);
 	}
 
