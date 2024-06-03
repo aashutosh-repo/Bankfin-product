@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.fin.bancs.error.ErrorCode;
+import com.fin.bancs.error.GlobalException;
+import com.fin.bancs.error.ResourceNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,12 +33,14 @@ public class Core_Transaction_services {
         this.accRepo = accRepo;
     }
 
+
     public void CreateTransaction(List<Core_Transaction_Layer> txnInput) {
 		Core_Transaction_Layer core_transaction_cash= new Core_Transaction_Layer();
 		Core_Transaction_Layer core_transaction_cr= new Core_Transaction_Layer();
 		Core_Transaction_Layer core_transaction_dr= new Core_Transaction_Layer();
 		List<Core_Transaction_Layer> core_transaction = new ArrayList<>();
 		List<Account> UpdateAccBal= new ArrayList<>();
+		GlobalException Exception = new GlobalException();
 		//Check Transaction Type Cash/transfer
 		for(Core_Transaction_Layer txn:txnInput){
 			if(txn.getTXN_TYPE() == 0){
@@ -68,15 +73,16 @@ public class Core_Transaction_services {
 
 			Optional<Account> acc_internal= Optional.of(new  Account());
 			Optional<Account> acc_cash= Optional.of(new  Account());
-			AccountPk accpk= new AccountPk();
-			BigDecimal total_amt_internal= new BigDecimal(0.00);
-			BigDecimal total_amt_cash= new BigDecimal(0.00);
+			AccountPk accPk= new AccountPk();
+			BigDecimal total_amt_internal;
+			BigDecimal total_amt_cash;
 			//debit/credit to internal account srarts
-			accpk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_CR()); //internal Account need to maintain internally
-			accpk.setACCOUNT_TYPE(1); //For inernal account
-			acc_internal= accRepo.findById(accpk);
+			accPk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_CR()); //internal Account need to maintain internally
+			accPk.setACCOUNT_TYPE(1); //For inernal account
+			acc_internal= accRepo.findById(accPk);
 			if(acc_internal.isEmpty()) {
-				//Handle it account not found Error
+				Exception.handleResourceNotFoundException(
+						new ResourceNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND));
 			}else {
 			acc= acc_internal.get();
 			BigDecimal Available_AMT= acc.getAVAILABLE_BALANCE();
@@ -109,9 +115,9 @@ public class Core_Transaction_services {
 			
 			//For customer account
 			//Debit/credit to Customer account ends
-			accpk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_DR()); 
-			accpk.setACCOUNT_TYPE(core_transaction_cash.getACCOUNT_TYPE_DR()); 
-			acc_cash= accRepo.findById(accpk);
+			accPk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_DR());
+			accPk.setACCOUNT_TYPE(core_transaction_cash.getACCOUNT_TYPE_DR());
+			acc_cash= accRepo.findById(accPk);
 			if(acc_cash.isEmpty()) {
 				//Handle it account not found Error
 				log.debug("No Data Found");
@@ -145,9 +151,9 @@ public class Core_Transaction_services {
 			//Debit/credit to Customer account ends
 			}
 
-			accpk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_DR());
-			accpk.setACCOUNT_TYPE(core_transaction_cash.getACCOUNT_TYPE_DR());
-			acc_cash = accRepo.findById(accpk);
+			accPk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_DR());
+			accPk.setACCOUNT_TYPE(core_transaction_cash.getACCOUNT_TYPE_DR());
+			acc_cash = accRepo.findById(accPk);
 			if(acc_cash.isEmpty()) {
 				//Handle it account not found Error
 				log.debug("No Data Found");
