@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nominee Details</title>
+    <link rel="stylesheet" th:href="@{/css/css-nom.css}" />
+    <script src="/js/nomjs.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Nominee Details</h2>
+        <form id="nomineeForm">
+            <div>
+                <label for="nomineeId">NOMINEE_ID:</label>
+                <input type="text" id="nomineeId" name="nomineeId" readonly>
+            </div>
+            <div>
+                <label for="ownerId">OWNER_ID:</label>
+                <input type="text" id="ownerId" name="ownerId" readonly>
+            </div>
+            <div>
+                <label for="ownerType">OWNER_TYPE:</label>
+                <input type="text" id="ownerType" name="ownerType" readonly>
+            </div>
+            <div>
+                <label for="nomType">NOM_TYPE:</label>
+                <select id="nomType" name="nomType">
+                    <option value="1">Minor</option>
+                    <option value="2">Major</option>
+                </select>
+            </div>
+            <div>
+                <label for="nomineeFirstName">NOMINEE_FIRST_NAME:</label>
+                <input type="text" id="nomineeFirstName" name="nomineeFirstName">
+            </div>
+            <div>
+                <label for="nomineeMiddleName">NOMINEE_MIDDLE_NAME:</label>
+                <input type="text" id="nomineeMiddleName" name="nomineeMiddleName">
+            </div>
+            <div>
+                <label for="nomineeLastName">NOMINEE_LAST_NAME:</label>
+                <input type="text" id="nomineeLastName" name="nomineeLastName">
+            </div>
+            <div>
+                <label for="relationType">RTLN_TYPE:</label>
+                <select id="relationType" name="relationType">
+                    <option value="1">Brother</option>
+                    <option value="2">Sister</option>
+                    <option value="3">Mother</option>
+                    <option value="4">Father</option>
+                </select>
+            </div>
+            <div>
+                <label for="dateOfBirth">DATE_OF_BIRTH:</label>
+                <input type="date" id="dateOfBirth" name="dateOfBirth">
+            </div>
+            <div>
+                <label for="nomDocId">NOM_DOC_ID:</label>
+                <input type="text" id="nomDocId" name="nomDocId">
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
