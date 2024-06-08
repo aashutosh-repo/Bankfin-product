@@ -10,18 +10,18 @@
 <body>
     <div class="container">
         <h2>Nominee Details</h2>
-        <form id="nomineeForm">
+        <form id="nomineeForm" th:object="${nominee}" >
             <div>
                 <label for="nomineeId">NOMINEE_ID:</label>
                 <input type="text" id="nomineeId" name="nomineeId" readonly>
             </div>
             <div>
                 <label for="ownerId">OWNER_ID:</label>
-                <input type="text" id="ownerId" name="ownerId" readonly>
+                <input type="text" id="ownerId" name="ownerId" th:field="*{Owner_id}" readonly>
             </div>
             <div>
                 <label for="ownerType">OWNER_TYPE:</label>
-                <input type="text" id="ownerType" name="ownerType" readonly>
+                <input type="text" id="ownerType" name="ownerType" value="Customer" readonly>
             </div>
             <div>
                 <label for="nomType">NOM_TYPE:</label>

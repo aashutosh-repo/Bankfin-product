@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const nominee = {
             nominee_id: document.getElementById('nomineeId').value,
             owner_id: document.getElementById('ownerId').value,
-            owner_type: document.getElementById('ownerType').value,
+            //owner_type: document.getElementById('ownerType').value,
+            owner_type:1,
             nom_type: document.getElementById('nomType').value,
             nominee_first_name: document.getElementById('nomineeFirstName').value,
             nominee_middle_name: document.getElementById('nomineeMiddleName').value,

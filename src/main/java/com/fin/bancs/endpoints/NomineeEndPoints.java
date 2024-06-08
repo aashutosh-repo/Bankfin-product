@@ -1,5 +1,7 @@
 package com.fin.bancs.endpoints;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fin.bancs.BP.Nominee_Details;
@@ -27,9 +30,14 @@ public class NomineeEndPoints {
 
 	
     @GetMapping("/add-nom") 
-    public String modifyDetails(Model theModel){
+    public String modifyDetails(Model theModel,@RequestParam("owner_id") int owner_id){
     	Nominee_Details  nominee = new Nominee_Details();
+    	//Optional<Nominee_Details>  nominee= nomRepo.findById(nominee_id);
+    	nominee.setOwner_id(owner_id);
+    	nominee.setOwner_type(1);
+    	//if(!nominee.isEmpty() == true){
     	theModel.addAttribute("nominee",nominee);
+    	//}
     	return "customer/Nominee";
     }
     
@@ -40,6 +48,17 @@ public class NomineeEndPoints {
     	
     	nominee_Details=nomineeService.createModifyNomineeDetails(nominee,1);
     	return "redirect:/customer-service/getallcust";
+    }
+    
+    @GetMapping("/show-nominee") 
+    public String showNomineeDetails(Model theModel,@RequestParam("nominee_id") int nominee_id){
+    	//Optional<Nominee_Details>  nominee = Optional.ofNullable(new Nominee_Details());
+    	Optional<Nominee_Details>  nominee= nomRepo.findById(nominee_id);
+    	if(!nominee.isEmpty() == true){
+    	theModel.addAttribute("nominee",nominee);
+    	}
+    	
+    	return "customer/Nominee";
     }
 
 
