@@ -160,8 +160,8 @@ public class Nominee_Details {
 		return last_update;
 	}
 
-	public void setLast_update(LocalDate last_update) {
-		this.last_update = last_update;
+	public void setLast_update(LocalDate localdate) {
+		this.last_update = LocalDate.now();
 	}
 
 	public int getNom_add_id() {

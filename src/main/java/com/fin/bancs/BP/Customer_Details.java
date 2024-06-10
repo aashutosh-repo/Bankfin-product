@@ -77,7 +77,7 @@ public class Customer_Details {
 		this.CUST_CLSNG_DT = CUST_CLSNG_DT;
 		this.RISK_RATING = RISK_RATING;
 		this.RATING_AGENCY = RATING_AGENCY;
-		this.LAST_UPDATE = LAST_UPDATE;
+		this.LAST_UPDATE = LocalDate.now();
 	}
 
 	public int getCUS_ID() {
