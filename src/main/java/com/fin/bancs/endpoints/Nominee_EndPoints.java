@@ -21,12 +21,12 @@ import com.fin.bancs.services.Nominee_Details_services;
 
 @Controller
 @RequestMapping("/nominee")
-public class NomineeEndPoints {
+public class Nominee_EndPoints {
 	@Autowired
 	private Nominee_Repository nomRepo;
 	@Autowired
 	private Nominee_Details_Controller nomineeService;
-    private static final Logger logger = LoggerFactory.getLogger(NomineeEndPoints.class);
+    private static final Logger logger = LoggerFactory.getLogger(Nominee_EndPoints.class);
 
 	
     @GetMapping("/add-nom") 

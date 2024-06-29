@@ -7,14 +7,15 @@ document.addEventListener('DOMContentLoaded', function () {
             nominee_id: document.getElementById('nomineeId').value,
             owner_id: document.getElementById('ownerId').value,
             //owner_type: document.getElementById('ownerType').value,
-            owner_type:1,
+            owner_type:12,
             nom_type: document.getElementById('nomType').value,
             nominee_first_name: document.getElementById('nomineeFirstName').value,
             nominee_middle_name: document.getElementById('nomineeMiddleName').value,
             nominee_last_name: document.getElementById('nomineeLastName').value,
             rtln_type: document.getElementById('relationType').value,
             date_of_birth: document.getElementById('dateOfBirth').value,
-           	nom_doc_id: document.getElementById('nomDocId').value
+           	nom_doc_id: document.getElementById('nomDocId').value,
+           	nom_share: document.getElementById('nomShare').value
         };
 
         // Send the nominee object to the REST endpoint
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => {
             if (response.ok) {
                 console.log('Nominee data sent successfully.');
+                console.log(nominee);
                 // Do something after successful submission
             } else {
                 console.error('Failed to send nominee data.');
