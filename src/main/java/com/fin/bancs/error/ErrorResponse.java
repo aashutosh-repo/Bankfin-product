@@ -1,19 +1,30 @@
 package com.fin.bancs.error;
 
 public class ErrorResponse {
-    private final int errorCode;
-    private final String errorMessage;
+    private String message;
+    private int errcode;
+    private int status;
 
-    public ErrorResponse(int errorCode, String errorMessage) {
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
+    public ErrorResponse(String message, int errcode, int status) {
+    	if(errcode>0 ) {
+    		this.message =errcode +" : "+ message;
+    	}else {
+    		this.message ="NOCODE" +" : "+ message;
+    	}
+    	this.errcode=errcode;
+        this.status = status;
     }
 
-    public int getErrorCode() {
-        return errorCode;
+    public String getMessage() {
+        return message;
     }
+    
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public int getErrcode() {
+		return errcode;
+	}
+
+	public int getStatus() {
+        return status;
     }
 }
