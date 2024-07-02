@@ -10,13 +10,13 @@ This project contains various high level banking services
     - Cash transactions/ C2C transaction (wip) 
     - SIP calculation (planned)
     - Cross Currency calculation (backend Development done )
-    - User access control (wip)
+    - User access control (Completed)
   
 - 🔭 Currently working on project [Banking product](https://github.com/aashutosh-repo/Bankfin-product.git)
 
 - 🌱 Tech Used:  **Spring-Boot, java, rest-api, HTML,Spring-data**
 
-- 💬 Ask me about **rest, Spring-Security, spring-data**
+- 💬 Ask me about **Rest, Web-Services, Spring-Security, spring-data**
 
 - 📫 How to reach me **aashutoshkumar6729@gmail.com**
 
