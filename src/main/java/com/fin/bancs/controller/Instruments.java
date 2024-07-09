@@ -1,34 +1,42 @@
 package com.fin.bancs.controller;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fin.bancs.common.Currency;
-import com.fin.bancs.repository.Currency_Repository;
+import com.fin.bancs.error.CustomException;
+import com.fin.bancs.services.Currency_service;
 
-import java.math.BigDecimal;
-import java.util.Optional;
-
-@RestController
+@Controller
+@RequestMapping("instrument")
 public class Instruments {
-
+	
     @Autowired
-    private Currency_Repository currencyRepository;  // Assuming you have a repository for the Currency table
-
-    @GetMapping("/convert")
+    Currency_service currency;
+    
+    @GetMapping("currency/Get")
+    public String getCurrency() {
+    	
+    	return "instruments/currencyconversion";
+    }
+    @PostMapping("/currency/conversion")
     public String convertCurrency(@RequestParam String inputCurrency, @RequestParam BigDecimal amount) {
-        Optional<Currency> currencyOptional = currencyRepository.findById(inputCurrency);
-        
-        if (currencyOptional.isPresent()) {
-            Currency currency = currencyOptional.get();
-            BigDecimal exchangeRate = currency.getExch_value();
-            BigDecimal convertedAmount = amount.multiply(exchangeRate);
-            return String.format("%.2f %s", convertedAmount, currency.getCurrency_code());
-        } else {
-            return "Currency code not found.";
-        }
+    	System.out.println(inputCurrency+" "+amount);
+    	BigDecimal finalAmt= new BigDecimal(0.0);
+    	finalAmt= currency.currencyConverter(inputCurrency, amount);
+    	if(finalAmt ==null) {
+    		throw new CustomException("Currency Not Converted",101, HttpStatus
+    				.NOT_IMPLEMENTED);
+    	}else {
+    		return String.valueOf(finalAmt);
+    	}
     }
 }
 
