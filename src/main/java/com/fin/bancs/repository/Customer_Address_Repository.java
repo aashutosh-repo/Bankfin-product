@@ -1,11 +1,11 @@
 package com.fin.bancs.repository;
 
-import com.fin.bancs.BP.Cust_Address_detailsPk;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.fin.bancs.BP.Customer_Address_Details;
 import org.springframework.stereotype.Repository;
+
+import com.fin.bancs.customer.Cust_Address_detailsPk;
+import com.fin.bancs.customer.Customer_Address_Details;
 
 @Repository
 @Transactional

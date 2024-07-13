@@ -1,7 +1,7 @@
 package com.fin.bancs.services;
 
-import com.fin.bancs.BP.Cust_Address_detailsPk;
-import com.fin.bancs.BP.Customer_Address_Details;
+import com.fin.bancs.customer.Cust_Address_detailsPk;
+import com.fin.bancs.customer.Customer_Address_Details;
 import com.fin.bancs.repository.Customer_Address_Repository;
 
 import java.util.Optional;

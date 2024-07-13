@@ -1,4 +1,4 @@
-package com.fin.bancs.BP;
+package com.fin.bancs.customer;
 
 import java.time.LocalDate;
 

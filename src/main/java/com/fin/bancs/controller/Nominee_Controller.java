@@ -1,4 +1,4 @@
-package com.fin.bancs.endpoints;
+package com.fin.bancs.controller;
 
 import java.util.Optional;
 
@@ -14,19 +14,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fin.bancs.BP.Nominee_Details;
-import com.fin.bancs.controller.Nominee_Details_Controller;
+import com.fin.bancs.customer.Nominee_Details;
 import com.fin.bancs.repository.Nominee_Repository;
 import com.fin.bancs.services.Nominee_Details_services;
 
 @Controller
 @RequestMapping("/nominee")
-public class Nominee_EndPoints {
+public class Nominee_Controller {
 	@Autowired
 	private Nominee_Repository nomRepo;
 	@Autowired
 	private Nominee_Details_Controller nomineeService;
-    private static final Logger logger = LoggerFactory.getLogger(Nominee_EndPoints.class);
+    private static final Logger logger = LoggerFactory.getLogger(Nominee_Controller.class);
 
 	
     @GetMapping("/add-nom") 

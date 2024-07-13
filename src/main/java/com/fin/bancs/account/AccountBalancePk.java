@@ -1,11 +1,12 @@
-package com.fin.bancs.AM;
+package com.fin.bancs.account;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class AccountPk implements Serializable{
+public class AccountBalancePk implements Serializable{
 	private int ACCOUNT_ID;
-	private int ACCOUNT_TYPE;
+	protected int ACCOUNT_TYPE;
+	protected int BALANCE_SEQ_ID;
 	
 	
 	public int getACCOUNT_ID() {
@@ -20,9 +21,17 @@ public class AccountPk implements Serializable{
 	public void setACCOUNT_TYPE(int aCCOUNT_TYPE) {
 		ACCOUNT_TYPE = aCCOUNT_TYPE;
 	}
+	public int getBALANCE_SEQ_ID() {
+		return BALANCE_SEQ_ID;
+	}
+	public void setBALANCE_SEQ_ID(int bALANCE_SEQ_ID) {
+		BALANCE_SEQ_ID = bALANCE_SEQ_ID;
+	}
+	
+	
 	@Override
 	public int hashCode() {
-		return Objects.hash(ACCOUNT_ID, ACCOUNT_TYPE);
+		return Objects.hash(ACCOUNT_ID, ACCOUNT_TYPE, BALANCE_SEQ_ID);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -32,11 +41,10 @@ public class AccountPk implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AccountPk other = (AccountPk) obj;
-		return ACCOUNT_ID == other.ACCOUNT_ID && ACCOUNT_TYPE == other.ACCOUNT_TYPE;
+		AccountBalancePk other = (AccountBalancePk) obj;
+		return ACCOUNT_ID == other.ACCOUNT_ID && ACCOUNT_TYPE == other.ACCOUNT_TYPE
+				&& BALANCE_SEQ_ID == other.BALANCE_SEQ_ID;
 	}
 	
-	 
 	
-
 }

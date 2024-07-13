@@ -1,6 +1,7 @@
-package com.fin.bancs.endpoints;
+package com.fin.bancs.controller;
 
 import com.fin.bancs.repository.Core_Transaction_Layer_Repository;
+import com.fin.bancs.services.Core_Transaction_services;
 import com.fin.bancs.transactions.Core_Transaction_Layer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/transaction")
-public class Transaction {
+public class Transaction_Controller {
     @Autowired
     private Core_Transaction_Layer_Repository repo;
 
@@ -17,7 +18,9 @@ public class Transaction {
     @PostMapping("/cash")
     public String createTxn(@RequestBody Core_Transaction_Layer centralTransaction){
     	//capture the input for cash transaction(credit and debit type)
-    	repo.save(centralTransaction);
+    	Core_Transaction_services txn_service= new Core_Transaction_services();
+    	txn_service.CreateTransaction(centralTransaction);
+    	//repo.save(centralTransaction);
         return "SuccessFully Inserted";
     }
     //Transaction  with TXN-ID 

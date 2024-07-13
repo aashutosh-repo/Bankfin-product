@@ -1,6 +1,6 @@
 package com.fin.bancs.services;
 
-import com.fin.bancs.BP.Nominee_Details;
+import com.fin.bancs.customer.Nominee_Details;
 import com.fin.bancs.repository.Nominee_Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

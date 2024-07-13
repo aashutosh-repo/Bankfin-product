@@ -2,9 +2,9 @@ package com.fin.bancs.repository;
 
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.fin.bancs.BP.Nominee_Details;
 import org.springframework.stereotype.Repository;
+
+import com.fin.bancs.customer.Nominee_Details;
 
 @Repository
 @Transactional

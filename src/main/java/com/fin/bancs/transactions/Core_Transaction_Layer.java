@@ -13,143 +13,153 @@ public class Core_Transaction_Layer {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int CEN_TXN_ID;
-	protected int TXN_TYPE; //cash or transfer
+	protected int cen_txn_id;
+	protected int txn_type; //cash or transfer
 	protected int credit_debit_flag;
-	protected int TXN_SEQ;
-	protected int ACCOUNT_ID_CR;
-	protected int ACCOUNT_TYPE_CR;
-	protected int ACCOUNT_ID_DR;
-	protected int ACCOUNT_TYPE_DR;
-	protected LocalDate GEN_DT;
-	protected BigDecimal TXN_AMT;
-	protected BigDecimal INTEREST_AMT;
-	protected BigDecimal GST_AMT;
-	protected int LAST_TXN_DT;
-	protected LocalDate LAST_UPDATE = LocalDate.now();
-	protected String TXN_DESC;
-	protected String CURRENCY;
+	protected int txn_seq;
+	protected int account_id_cr;
+	protected int account_type_cr;
+	protected int account_id_dr;
+	protected int account_type_dr;
+	protected LocalDate gen_dt;
+	protected BigDecimal txn_amt;
+	protected BigDecimal interest_amt;
+	protected BigDecimal gst_amt;
+	protected int last_txn_dt;
+	protected LocalDate last_update = LocalDate.now();
+	protected String txn_desc;
+	protected String currency;
 	public Core_Transaction_Layer (){
 
 	}
-	public Core_Transaction_Layer(int cEN_TXN_ID, int tXN_TYPE, int tXN_SEQ, int aCCOUNT_ID_CR, int aCCOUNT_TYPE_CR,
-			int aCCOUNT_ID_DR, int aCCOUNT_TYPE_DR, LocalDate gEN_DT, BigDecimal tXN_AMT, BigDecimal iNTEREST_AMT,
-			BigDecimal gST_AMT, int lAST_TXN_DT, LocalDate lAST_UPDATE, String tXN_DESC,String CURRENCY) {
+	public Core_Transaction_Layer(int cen_txn_id, int txn_type, int credit_debit_flag, int txn_seq, int account_id_cr,
+			int account_type_cr, int account_id_dr, int account_type_dr, LocalDate gen_dt, BigDecimal txn_amt,
+			BigDecimal interest_amt, BigDecimal gst_amt, int last_txn_dt, LocalDate last_update, String txn_desc,
+			String currency) {
 		super();
-		CEN_TXN_ID = cEN_TXN_ID;
-		TXN_TYPE = tXN_TYPE;
-		TXN_SEQ = tXN_SEQ;
-		ACCOUNT_ID_CR = aCCOUNT_ID_CR;
-		ACCOUNT_TYPE_CR = aCCOUNT_TYPE_CR;
-		ACCOUNT_ID_DR = aCCOUNT_ID_DR;
-		ACCOUNT_TYPE_DR = aCCOUNT_TYPE_DR;
-		GEN_DT = gEN_DT;
-		TXN_AMT = tXN_AMT;
-		INTEREST_AMT = iNTEREST_AMT;
-		GST_AMT = gST_AMT;
-		LAST_TXN_DT = lAST_TXN_DT;
-		LAST_UPDATE = LocalDate.now();
-		TXN_DESC = tXN_DESC;
-		CURRENCY =this.CURRENCY;
+		this.cen_txn_id = cen_txn_id;
+		this.txn_type = txn_type;
+		this.credit_debit_flag = credit_debit_flag;
+		this.txn_seq = txn_seq;
+		this.account_id_cr = account_id_cr;
+		this.account_type_cr = account_type_cr;
+		this.account_id_dr = account_id_dr;
+		this.account_type_dr = account_type_dr;
+		this.gen_dt = gen_dt;
+		this.txn_amt = txn_amt;
+		this.interest_amt = interest_amt;
+		this.gst_amt = gst_amt;
+		this.last_txn_dt = last_txn_dt;
+		this.last_update = last_update;
+		this.txn_desc = txn_desc;
+		this.currency = currency;
 	}
-	public int getCEN_TXN_ID() {
-		return CEN_TXN_ID;
+	public int getCen_txn_id() {
+		return cen_txn_id;
 	}
-//	public void setCEN_TXN_ID(int cEN_TXN_ID) {
-//		CEN_TXN_ID = cEN_TXN_ID;
-//	}
-	public int getTXN_TYPE() {
-		return TXN_TYPE;
+	public void setCen_txn_id(int cen_txn_id) {
+		this.cen_txn_id = cen_txn_id;
 	}
-	public void setTXN_TYPE(int tXN_TYPE) {
-		TXN_TYPE = tXN_TYPE;
+	public int getTxn_type() {
+		return txn_type;
 	}
-	public int getTXN_SEQ() {
-		return TXN_SEQ;
+	public void setTxn_type(int txn_type) {
+		this.txn_type = txn_type;
 	}
-	public void setTXN_SEQ(int tXN_SEQ) {
-		TXN_SEQ = tXN_SEQ;
-	}
-	public int getACCOUNT_ID_CR() {
-		return ACCOUNT_ID_CR;
-	}
-	public void setACCOUNT_ID_CR(int aCCOUNT_ID_CR) {
-		ACCOUNT_ID_CR = aCCOUNT_ID_CR;
-	}
-	public int getACCOUNT_TYPE_CR() {
-		return ACCOUNT_TYPE_CR;
-	}
-	public void setACCOUNT_TYPE_CR(int aCCOUNT_TYPE_CR) {
-		ACCOUNT_TYPE_CR = aCCOUNT_TYPE_CR;
-	}
-	public int getACCOUNT_ID_DR() {
-		return ACCOUNT_ID_DR;
-	}
-	public void setACCOUNT_ID_DR(int aCCOUNT_ID_DR) {
-		ACCOUNT_ID_DR = aCCOUNT_ID_DR;
-	}
-	public int getACCOUNT_TYPE_DR() {
-		return ACCOUNT_TYPE_DR;
-	}
-	public void setACCOUNT_TYPE_DR(int aCCOUNT_TYPE_DR) {
-		ACCOUNT_TYPE_DR = aCCOUNT_TYPE_DR;
-	}
-	public LocalDate getGEN_DT() {
-		return GEN_DT;
-	}
-	public void setGEN_DT(LocalDate gEN_DT) {
-		GEN_DT = gEN_DT;
-	}
-	public BigDecimal getTXN_AMT() {
-		return TXN_AMT;
-	}
-	public void setTXN_AMT(BigDecimal tXN_AMT) {
-		TXN_AMT = tXN_AMT;
-	}
-	public BigDecimal getINTEREST_AMT() {
-		return INTEREST_AMT;
-	}
-	public void setINTEREST_AMT(BigDecimal iNTEREST_AMT) {
-		INTEREST_AMT = iNTEREST_AMT;
-	}
-	public BigDecimal getGST_AMT() {
-		return GST_AMT;
-	}
-	public void setGST_AMT(BigDecimal gST_AMT) {
-		GST_AMT = gST_AMT;
-	}
-	public int getLAST_TXN_DT() {
-		return LAST_TXN_DT;
-	}
-	public void setLAST_TXN_DT(int lAST_TXN_DT) {
-		LAST_TXN_DT = lAST_TXN_DT;
-	}
-	public LocalDate getLAST_UPDATE() {
-		return LAST_UPDATE;
-	}
-	public void setLAST_UPDATE(LocalDate lAST_UPDATE) {
-		LAST_UPDATE = LocalDate.now();
-	}
-	public String getTXN_DESC() {
-		return TXN_DESC;
-	}
-	public void setTXN_DESC(String tXN_DESC) {
-		TXN_DESC = tXN_DESC;
-	}
-
 	public int getCredit_debit_flag() {
 		return credit_debit_flag;
 	}
-
 	public void setCredit_debit_flag(int credit_debit_flag) {
 		this.credit_debit_flag = credit_debit_flag;
 	}
-
-	public String getCURRENCY() {
-		return CURRENCY;
+	public int getTxn_seq() {
+		return txn_seq;
 	}
-
-	public void setCURRENCY(String CURRENCY) {
-		this.CURRENCY = CURRENCY;
+	public void setTxn_seq(int txn_seq) {
+		this.txn_seq = txn_seq;
 	}
+	public int getAccount_id_cr() {
+		return account_id_cr;
+	}
+	public void setAccount_id_cr(int account_id_cr) {
+		this.account_id_cr = account_id_cr;
+	}
+	public int getAccount_type_cr() {
+		return account_type_cr;
+	}
+	public void setAccount_type_cr(int account_type_cr) {
+		this.account_type_cr = account_type_cr;
+	}
+	public int getAccount_id_dr() {
+		return account_id_dr;
+	}
+	public void setAccount_id_dr(int account_id_dr) {
+		this.account_id_dr = account_id_dr;
+	}
+	public int getAccount_type_dr() {
+		return account_type_dr;
+	}
+	public void setAccount_type_dr(int account_type_dr) {
+		this.account_type_dr = account_type_dr;
+	}
+	public LocalDate getGen_dt() {
+		return gen_dt;
+	}
+	public void setGen_dt(LocalDate gen_dt) {
+		this.gen_dt = gen_dt;
+	}
+	public BigDecimal getTxn_amt() {
+		return txn_amt;
+	}
+	public void setTxn_amt(BigDecimal txn_amt) {
+		this.txn_amt = txn_amt;
+	}
+	public BigDecimal getInterest_amt() {
+		return interest_amt;
+	}
+	public void setInterest_amt(BigDecimal interest_amt) {
+		this.interest_amt = interest_amt;
+	}
+	public BigDecimal getGst_amt() {
+		return gst_amt;
+	}
+	public void setGst_amt(BigDecimal gst_amt) {
+		this.gst_amt = gst_amt;
+	}
+	public int getLast_txn_dt() {
+		return last_txn_dt;
+	}
+	public void setLast_txn_dt(int last_txn_dt) {
+		this.last_txn_dt = last_txn_dt;
+	}
+	public LocalDate getLast_update() {
+		return last_update;
+	}
+	public void setLast_update(LocalDate last_update) {
+		this.last_update = LocalDate.now();
+	}
+	public String getTxn_desc() {
+		return txn_desc;
+	}
+	public void setTxn_desc(String txn_desc) {
+		this.txn_desc = txn_desc;
+	}
+	public String getCurrency() {
+		return currency;
+	}
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+	@Override
+	public String toString() {
+		return "Core_Transaction_Layer [cen_txn_id=" + cen_txn_id + ", txn_type=" + txn_type + ", credit_debit_flag="
+				+ credit_debit_flag + ", txn_seq=" + txn_seq + ", account_id_cr=" + account_id_cr + ", account_type_cr="
+				+ account_type_cr + ", account_id_dr=" + account_id_dr + ", account_type_dr=" + account_type_dr
+				+ ", gen_dt=" + gen_dt + ", txn_amt=" + txn_amt + ", interest_amt=" + interest_amt + ", gst_amt="
+				+ gst_amt + ", last_txn_dt=" + last_txn_dt + ", last_update=" + last_update + ", txn_desc=" + txn_desc
+				+ ", currency=" + currency + "]";
+	}
+	
+	
+
 }

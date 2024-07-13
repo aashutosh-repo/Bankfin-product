@@ -1,8 +1,6 @@
 package com.fin.bancs.services;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -10,8 +8,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
-import com.fin.bancs.BP.CustomerID;
-import com.fin.bancs.BP.Customer_Details;
+import com.fin.bancs.controller.Nominee_Details_Controller;
+import com.fin.bancs.customer.Customer_Address_Details;
+import com.fin.bancs.customer.Customer_Details;
+import com.fin.bancs.customer.Nominee_Details;
 import com.fin.bancs.repository.Customer_Details_Repository;
 
 import jakarta.transaction.Transactional;
@@ -29,12 +29,18 @@ public class Customer_Details_services {
 
     @Autowired
     private Customer_Details_Repository detailsRepository;
+    @Autowired
+    private Nominee_Details_Controller nomineeDetailsController;
+
     public void CreateCustDetails( Customer_Details inp_cust_details
 //                                   Nominee_Details inp_nominee_details
 //                                   Customer_Address_Details inp_Customer_Address_Details
     ){
 
         Customer_Details customer_Details = new Customer_Details();
+        Nominee_Details nominee_Details = new Nominee_Details();
+        Customer_Address_Details customer_Address_Details = new Customer_Address_Details();
+
         //These three value should not came as a Input from customer It should Generate Automatically
         int cust_id=0; //Add code to generate Unique Primary key
         int nominee_id= 0; ///Add code to generate Unique Primary key
@@ -68,23 +74,11 @@ public class Customer_Details_services {
 
     }
     public void DeleteCustomer(Customer_Details customerDetails){
-        CustomerID customerID= new CustomerID();
-        Customer_Details customer_detail = new Customer_Details();
-        customerID.setCUS_ID(customerDetails.getCUS_ID());
-        customerID.setCUS_TYP(customerDetails.getCUS_TYP());
-		Optional<Customer_Details> cust_dtls = detailsRepository.findById(customerID);
-		if(cust_dtls.get() != null) {
-			customer_detail= cust_dtls.get();
-		}else {
-			//Handle Customer NOT FOUND
-		}
-		customer_detail.setCUST_CLSNG_DT(LocalDate.now());
-		customer_detail.setSTATUS(2); //put Account Closing Status
-		
-		detailsRepository.save(customer_detail);
-		
+//        CustomerID customerID= new CustomerID(customerDetails.getCUS_ID(),customerDetails.CUS_TYP);
+//		Customer_Details cust_dtls = entityManager.find(Customer_Details.class,customerID);
+//		cust_dtls.setCUST_CLSNG_DT(customerDetails.getCUST_CLSNG_DT());
+//		cust_dtls.setSTATUS(0000); //put Account Closing Status
     }
-    
     public List<Customer_Details> getAllCust(){
         List<Customer_Details> allcust = detailsRepository.findAll();
         return allcust;

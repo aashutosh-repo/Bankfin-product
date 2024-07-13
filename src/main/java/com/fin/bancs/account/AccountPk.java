@@ -1,4 +1,4 @@
-package com.fin.bancs.AM;
+package com.fin.bancs.account;
 
 import java.io.Serializable;
 import java.util.Objects;

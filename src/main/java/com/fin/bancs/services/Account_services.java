@@ -3,8 +3,8 @@ package com.fin.bancs.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.fin.bancs.AM.Account;
-import com.fin.bancs.AM.AccountPk;
+import com.fin.bancs.account.Account;
+import com.fin.bancs.account.AccountPk;
 import com.fin.bancs.repository.Account_repository;
 
 @Repository

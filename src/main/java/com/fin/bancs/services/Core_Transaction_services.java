@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.fin.bancs.account.Account;
+import com.fin.bancs.account.AccountPk;
+import com.fin.bancs.error.CustomException;
 import com.fin.bancs.error.ErrorCode;
 import com.fin.bancs.error.GlobalException;
 import com.fin.bancs.error.ResourceNotFoundException;
@@ -12,9 +15,8 @@ import org.apache.commons.logging.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
-import com.fin.bancs.AM.Account;
-import com.fin.bancs.AM.AccountPk;
 import com.fin.bancs.repository.Account_repository;
 import com.fin.bancs.repository.Core_Transaction_Layer_Repository;
 import com.fin.bancs.transactions.Core_Transaction_Layer;
@@ -32,9 +34,17 @@ public class Core_Transaction_services {
         this.coreRepo = coreRepo;
         this.accRepo = accRepo;
     }
+    
 
 
-    public void CreateTransaction(List<Core_Transaction_Layer> txnInput) {
+    public Core_Transaction_services() {
+		super();
+	}
+
+
+
+	//public void CreateTransaction(List<Core_Transaction_Layer> txnInput) {
+    public void CreateTransaction(Core_Transaction_Layer txnInput) {
 		Core_Transaction_Layer core_transaction_cash= new Core_Transaction_Layer();
 		Core_Transaction_Layer core_transaction_cr= new Core_Transaction_Layer();
 		Core_Transaction_Layer core_transaction_dr= new Core_Transaction_Layer();
@@ -42,14 +52,17 @@ public class Core_Transaction_services {
 		List<Account> UpdateAccBal= new ArrayList<>();
 		GlobalException Exception = new GlobalException();
 		//Check Transaction Type Cash/transfer
-		for(Core_Transaction_Layer txn:txnInput){
-			if(txn.getTXN_TYPE() == 0){
+		//for(Core_Transaction_Layer txn:txnInput)
+		Core_Transaction_Layer txn = new Core_Transaction_Layer();
+		txn =txnInput;
+		{
+			if(txn.getTxn_type() == 0){
 				//handle Error for Transaction type not Specified
 			}
-			if (txn.getTXN_TYPE()==1){
+			if (txnInput.getTxn_type()==1){
 				core_transaction_cash= txn;
 			}
-			if (txn.getTXN_TYPE()==2) {
+			if (txn.getTxn_type()==2) {
 				if(txn.getCredit_debit_flag()==1) //Credit
 				{
 					core_transaction_cr= txn;
@@ -62,7 +75,7 @@ public class Core_Transaction_services {
 			}
 		}
 
-		if(core_transaction_cash.getTXN_TYPE()==1) //Cash-> do cash Operation
+		if(core_transaction_cash.getTxn_type()==1) //Cash-> do cash Operation
 		{
 			Core_Transaction_Layer coreTxn_cash_dr= new Core_Transaction_Layer();
 			Core_Transaction_Layer coreTxn_cash_cr = new Core_Transaction_Layer();
@@ -77,16 +90,15 @@ public class Core_Transaction_services {
 			BigDecimal total_amt_internal;
 			BigDecimal total_amt_cash;
 			//debit/credit to internal account srarts
-			accPk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_CR()); //internal Account need to maintain internally
+			accPk.setACCOUNT_ID(core_transaction_cash.getAccount_id_cr()); //internal Account need to maintain internally
 			accPk.setACCOUNT_TYPE(1); //For inernal account
 			acc_internal= accRepo.findById(accPk);
 			if(acc_internal.isEmpty()) {
-				Exception.handleResourceNotFoundException(
-						new ResourceNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND));
+				throw new CustomException(ErrorCode.ACCOUNT_NOT_FOUND,1001,HttpStatus.NOT_FOUND);
 			}else {
 			acc= acc_internal.get();
 			BigDecimal Available_AMT= acc.getAVAILABLE_BALANCE();
-			BigDecimal transaction_amt= core_transaction_cash.getTXN_AMT();
+			BigDecimal transaction_amt= core_transaction_cash.getTxn_amt();
 			int cred_deb_flag= core_transaction_cash.getCredit_debit_flag();
 			if(cred_deb_flag==1) {
 				total_amt_internal= Available_AMT.add(transaction_amt.multiply(new BigDecimal(1)));
@@ -95,16 +107,16 @@ public class Core_Transaction_services {
 			}
 			acc.setAVAILABLE_BALANCE(total_amt_internal);
 			//Core Txn for internal Account Started here
-				coreTxn_cash_cr.setACCOUNT_ID_CR(core_transaction_cash.getACCOUNT_ID_CR());
-				coreTxn_cash_cr.setACCOUNT_TYPE_CR(1);
-				coreTxn_cash_cr.setTXN_AMT(core_transaction_cash.getTXN_AMT());
+				coreTxn_cash_cr.setAccount_id_cr(core_transaction_cash.getAccount_id_cr());
+				coreTxn_cash_cr.setAccount_type_cr(1);
+				coreTxn_cash_cr.setTxn_amt(core_transaction_cash.getTxn_amt());
 				coreTxn_cash_cr.setCredit_debit_flag(1);
-				coreTxn_cash_cr.setTXN_TYPE(1);
-				coreTxn_cash_cr.setTXN_SEQ(1); //use sequence generator in case need to write txn with different cases
-				coreTxn_cash_dr.setTXN_DESC("cash-transaction: Credit");
-				coreTxn_cash_cr.setGEN_DT(core_transaction_cash.getGEN_DT());
-				coreTxn_cash_cr.setACCOUNT_ID_DR(core_transaction_cash.getACCOUNT_ID_DR());
-				coreTxn_cash_cr.setACCOUNT_TYPE_DR(core_transaction_cr.getACCOUNT_TYPE_DR());
+				coreTxn_cash_cr.setTxn_type(1);
+				coreTxn_cash_cr.setTxn_seq(1); //use sequence generator in case need to write txn with different cases
+				coreTxn_cash_dr.setTxn_desc("cash-transaction: Credit");
+				coreTxn_cash_cr.setGen_dt(core_transaction_cash.getGen_dt());
+				coreTxn_cash_cr.setAccount_id_dr(core_transaction_cash.getAccount_id_dr());
+				coreTxn_cash_cr.setAccount_type_dr(core_transaction_cr.getAccount_type_dr());
 
 			coreRepo.save(coreTxn_cash_cr);
 				//Core Txn Ends here
@@ -115,8 +127,8 @@ public class Core_Transaction_services {
 			
 			//For customer account
 			//Debit/credit to Customer account ends
-			accPk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_DR());
-			accPk.setACCOUNT_TYPE(core_transaction_cash.getACCOUNT_TYPE_DR());
+			accPk.setACCOUNT_ID(core_transaction_cash.getAccount_id_dr());
+			accPk.setACCOUNT_TYPE(core_transaction_cash.getAccount_type_dr());
 			acc_cash= accRepo.findById(accPk);
 			if(acc_cash.isEmpty()) {
 				//Handle it account not found Error
@@ -124,7 +136,7 @@ public class Core_Transaction_services {
 			}else {
 			acc= acc_cash.get(); 
 			BigDecimal Available_AMT= acc.getAVAILABLE_BALANCE();
-			BigDecimal transaction_amt= core_transaction_cash.getTXN_AMT();
+			BigDecimal transaction_amt= core_transaction_cash.getTxn_amt();
 			int cred_deb_flag= core_transaction_cash.getCredit_debit_flag();
 			if(cred_deb_flag==1) {
 				total_amt_cash= Available_AMT.add(transaction_amt.multiply(new BigDecimal(1)));
@@ -134,16 +146,16 @@ public class Core_Transaction_services {
 			acc.setAVAILABLE_BALANCE(total_amt_cash);
 
 				//Core Txn for cash Account Started here
-				coreTxn_cash_dr.setACCOUNT_ID_CR(core_transaction_cash.getACCOUNT_ID_CR());
-				coreTxn_cash_dr.setACCOUNT_TYPE_CR(core_transaction_cr.getACCOUNT_TYPE_CR());
-				coreTxn_cash_dr.setTXN_AMT(core_transaction_cash.getTXN_AMT());
+				coreTxn_cash_dr.setAccount_id_cr(core_transaction_cash.getAccount_id_cr());
+				coreTxn_cash_dr.setAccount_type_cr(core_transaction_cr.getAccount_type_cr());
+				coreTxn_cash_dr.setTxn_amt(core_transaction_cash.getTxn_amt());
 				coreTxn_cash_dr.setCredit_debit_flag(2);
-				coreTxn_cash_dr.setACCOUNT_ID_DR(core_transaction_cash.getACCOUNT_ID_DR());
-				coreTxn_cash_dr.setTXN_TYPE(core_transaction_cr.getACCOUNT_TYPE_DR());
+				coreTxn_cash_dr.setAccount_id_dr(core_transaction_cash.getAccount_id_dr());
+				coreTxn_cash_dr.setTxn_type(core_transaction_cr.getAccount_type_dr());
 				//coreTxn_cash_cr.setTXN_SEQ(2); //use auto sequence generator in case need to write txn with different cases
-				coreTxn_cash_dr.setGEN_DT(core_transaction_cash.getGEN_DT());
-				coreTxn_cash_dr.setTXN_DESC("cash-transaction: Debit");
-				coreTxn_cash_dr.setACCOUNT_ID_DR(core_transaction_cr.getACCOUNT_ID_DR());
+				coreTxn_cash_dr.setGen_dt(core_transaction_cash.getGen_dt());
+				coreTxn_cash_dr.setTxn_desc("cash-transaction: Debit");
+				coreTxn_cash_dr.setAccount_id_dr(core_transaction_cr.getAccount_id_dr());
 
 				coreRepo.save(coreTxn_cash_dr);
 				//Core Txn Ends here
@@ -151,8 +163,8 @@ public class Core_Transaction_services {
 			//Debit/credit to Customer account ends
 			}
 
-			accPk.setACCOUNT_ID(core_transaction_cash.getACCOUNT_ID_DR());
-			accPk.setACCOUNT_TYPE(core_transaction_cash.getACCOUNT_TYPE_DR());
+			accPk.setACCOUNT_ID(core_transaction_cash.getAccount_id_dr());
+			accPk.setACCOUNT_TYPE(core_transaction_cash.getAccount_type_dr());
 			acc_cash = accRepo.findById(accPk);
 			if(acc_cash.isEmpty()) {
 				//Handle it account not found Error
@@ -161,14 +173,14 @@ public class Core_Transaction_services {
 			acc=acc_cash.get();
 
 
-			String str= String.valueOf(core_transaction_cash.getACCOUNT_ID_DR());
-			core_transaction_cash.setTXN_DESC(str+ " - " + "cash-Transaction");
+			String str= String.valueOf(core_transaction_cash.getAccount_id_dr());
+			core_transaction_cash.setTxn_desc(str+ " - " + "cash-Transaction");
 			coreRepo.save(core_transaction_cash);
 		}
 		
 		
 		
-		if(core_transaction_cr.getTXN_TYPE()==2){  //Transfer-> Do transfer Operation
+		if(core_transaction_cr.getTxn_type()==2){  //Transfer-> Do transfer Operation
 			// total 4 transaction row will be written
 			//1. Debit from source account 2. credit to internal Credit Account
 			Core_Transaction_Layer coreTransactionLayer_int_dr = new Core_Transaction_Layer();
@@ -183,15 +195,15 @@ public class Core_Transaction_services {
 			Account internal_acc_cr= new Account();
 			Account internal_acc_dr= new Account();
 			//Account balance Update Starts here
-			cash_acc_pk.setACCOUNT_ID(core_transaction_dr.getACCOUNT_ID_DR());
-			cash_acc_pk.setACCOUNT_TYPE(core_transaction_dr.getACCOUNT_TYPE_DR());
+			cash_acc_pk.setACCOUNT_ID(core_transaction_dr.getAccount_id_dr());
+			cash_acc_pk.setACCOUNT_TYPE(core_transaction_dr.getAccount_type_dr());
 			Optional<Account> account_cash_dr = accRepo.findById(cash_acc_pk);
 			if(account_cash_dr.isEmpty()) {
 				//handle Account Not Found Error
 				log.debug("No Data Found");
 			}else{
 				cash_acc_dr= account_cash_dr.get();
-				cash_acc_dr.setAVAILABLE_BALANCE(cash_acc_dr.getAVAILABLE_BALANCE().subtract(core_transaction_dr.getTXN_AMT()));
+				cash_acc_dr.setAVAILABLE_BALANCE(cash_acc_dr.getAVAILABLE_BALANCE().subtract(core_transaction_dr.getTxn_amt()));
 				UpdateAccBal.add(cash_acc_dr);
 			}
 			internal_acc_pk.setACCOUNT_ID(18626); //Cr type internal Account
@@ -202,40 +214,40 @@ public class Core_Transaction_services {
 				log.debug("No Data Found");
 			}else {
 				internal_acc_cr= int_acc_cr.get();
-				internal_acc_cr.setAVAILABLE_BALANCE(internal_acc_dr.getAVAILABLE_BALANCE().add(core_transaction_dr.getTXN_AMT()));
+				internal_acc_cr.setAVAILABLE_BALANCE(internal_acc_dr.getAVAILABLE_BALANCE().add(core_transaction_dr.getTxn_amt()));
 				UpdateAccBal.add(internal_acc_cr);
 			}
 			//Account balance Update Ends here
-            coreTransactionLayer_acc_dr.setACCOUNT_ID_DR(core_transaction_dr.getACCOUNT_ID_DR());
-				coreTransactionLayer_acc_dr.setACCOUNT_TYPE_DR(core_transaction_dr.getACCOUNT_TYPE_DR());
-				coreTransactionLayer_acc_dr.setTXN_AMT(core_transaction_dr.getTXN_AMT());
-				coreTransactionLayer_acc_dr.setGEN_DT(core_transaction_dr.getGEN_DT());
+            coreTransactionLayer_acc_dr.setAccount_id_dr(core_transaction_dr.getAccount_id_dr());
+				coreTransactionLayer_acc_dr.setAccount_type_dr(core_transaction_dr.getAccount_type_dr());
+				coreTransactionLayer_acc_dr.setTxn_amt(core_transaction_dr.getTxn_amt());
+				coreTransactionLayer_acc_dr.setGen_dt(core_transaction_dr.getGen_dt());
 				coreTransactionLayer_acc_dr.setCredit_debit_flag(2);
-				coreTransactionLayer_acc_dr.setCURRENCY("INR");
-				coreTransactionLayer_acc_dr.setTXN_DESC(core_transaction_dr.getTXN_DESC());
+				coreTransactionLayer_acc_dr.setCurrency("INR");
+				coreTransactionLayer_acc_dr.setTxn_desc(core_transaction_dr.getTxn_desc());
 			core_transaction.add(coreTransactionLayer_acc_dr);
 			//case2 -- Credit to internal Account
-				coreTransactionLayer_int_cr.setTXN_AMT(core_transaction_dr.getTXN_AMT());
-				coreTransactionLayer_int_cr.setGEN_DT(core_transaction_dr.getGEN_DT());
-				coreTransactionLayer_int_cr.setTXN_DESC(core_transaction_dr.getTXN_DESC());
+				coreTransactionLayer_int_cr.setTxn_amt(core_transaction_dr.getTxn_amt());
+				coreTransactionLayer_int_cr.setGen_dt(core_transaction_dr.getGen_dt());
+				coreTransactionLayer_int_cr.setTxn_desc(core_transaction_dr.getTxn_desc());
 				coreTransactionLayer_int_cr.setCredit_debit_flag(1);
-				coreTransactionLayer_int_cr.setTXN_DESC(core_transaction_dr.getTXN_DESC());
-				coreTransactionLayer_int_cr.setTXN_DESC(core_transaction_dr.getTXN_DESC());
-				coreTransactionLayer_int_cr.setCURRENCY("INR");
+				coreTransactionLayer_int_cr.setTxn_desc(core_transaction_dr.getTxn_desc());
+				coreTransactionLayer_int_cr.setTxn_desc(core_transaction_dr.getTxn_desc());
+				coreTransactionLayer_int_cr.setCurrency("INR");
 			core_transaction.add(coreTransactionLayer_int_cr);
 
 
 
 			//Account balance Update Starts here
-			cash_acc_pk.setACCOUNT_ID(core_transaction_dr.getACCOUNT_ID_CR());
-			cash_acc_pk.setACCOUNT_TYPE(core_transaction_dr.getACCOUNT_TYPE_CR());
+			cash_acc_pk.setACCOUNT_ID(core_transaction_dr.getAccount_id_cr());
+			cash_acc_pk.setACCOUNT_TYPE(core_transaction_dr.getAccount_type_cr());
 			Optional<Account> account_cash_cr = accRepo.findById(cash_acc_pk);
 			if(account_cash_cr.isEmpty()) {
 				//handle Account Not Found Error
 				log.debug("No Data Found");
 			}else{
 				cash_acc_cr= account_cash_cr.get();
-				cash_acc_cr.setAVAILABLE_BALANCE(cash_acc_cr.getAVAILABLE_BALANCE().add(core_transaction_dr.getTXN_AMT()));
+				cash_acc_cr.setAVAILABLE_BALANCE(cash_acc_cr.getAVAILABLE_BALANCE().add(core_transaction_dr.getTxn_amt()));
 				UpdateAccBal.add(cash_acc_cr);
 			}
 			internal_acc_pk.setACCOUNT_ID(18625); //requires rules to get Internal Account for cr/dr type
@@ -246,28 +258,28 @@ public class Core_Transaction_services {
 				log.debug("No Data Found");
 			}else {
 				internal_acc_dr= int_acc_cr.get();
-				internal_acc_dr.setAVAILABLE_BALANCE(internal_acc_dr.getAVAILABLE_BALANCE().subtract(core_transaction_dr.getTXN_AMT()));
+				internal_acc_dr.setAVAILABLE_BALANCE(internal_acc_dr.getAVAILABLE_BALANCE().subtract(core_transaction_dr.getTxn_amt()));
 				UpdateAccBal.add(internal_acc_dr);
 			}
 			//Account balance Update Ends here
 
 			//case3 -- Debit from Internal account
-			coreTransactionLayer_int_dr.setACCOUNT_ID_DR(core_transaction_dr.getACCOUNT_ID_DR()); //Debit type of internal account
-			coreTransactionLayer_int_dr.setACCOUNT_TYPE_DR(core_transaction_dr.getACCOUNT_TYPE_DR());
-			coreTransactionLayer_int_dr.setTXN_AMT(core_transaction_dr.getTXN_AMT());
-			coreTransactionLayer_int_dr.setGEN_DT(core_transaction_dr.getGEN_DT());
+			coreTransactionLayer_int_dr.setAccount_id_dr(core_transaction_dr.getAccount_id_dr()); //Debit type of internal account
+			coreTransactionLayer_int_dr.setAccount_type_dr(core_transaction_dr.getAccount_type_dr());
+			coreTransactionLayer_int_dr.setTxn_amt(core_transaction_dr.getTxn_amt());
+			coreTransactionLayer_int_dr.setGen_dt(core_transaction_dr.getGen_dt());
 			coreTransactionLayer_int_dr.setCredit_debit_flag(2);
-			coreTransactionLayer_int_dr.setCURRENCY("INR");
-			coreTransactionLayer_int_dr.setTXN_DESC(core_transaction_dr.getTXN_DESC());
+			coreTransactionLayer_int_dr.setCurrency("INR");
+			coreTransactionLayer_int_dr.setTxn_desc(core_transaction_dr.getTxn_desc());
 			core_transaction.add(coreTransactionLayer_int_dr);
 			//case4 -- Credit to Target Account
-			coreTransactionLayer_acc_cr.setTXN_AMT(core_transaction_dr.getTXN_AMT());
-			coreTransactionLayer_acc_cr.setGEN_DT(core_transaction_dr.getGEN_DT());
-			coreTransactionLayer_acc_cr.setTXN_DESC(core_transaction_dr.getTXN_DESC());
+			coreTransactionLayer_acc_cr.setTxn_amt(core_transaction_dr.getTxn_amt());
+			coreTransactionLayer_acc_cr.setGen_dt(core_transaction_dr.getGen_dt());
+			coreTransactionLayer_acc_cr.setTxn_desc(core_transaction_dr.getTxn_desc());
 			coreTransactionLayer_acc_cr.setCredit_debit_flag(1);
-			coreTransactionLayer_acc_cr.setTXN_DESC(core_transaction_dr.getTXN_DESC());
-			coreTransactionLayer_acc_cr.setTXN_DESC(core_transaction_dr.getTXN_DESC());
-			coreTransactionLayer_acc_cr.setCURRENCY("INR");
+			coreTransactionLayer_acc_cr.setTxn_desc(core_transaction_dr.getTxn_desc());
+			coreTransactionLayer_acc_cr.setTxn_desc(core_transaction_dr.getTxn_desc());
+			coreTransactionLayer_acc_cr.setCurrency("INR");
 			core_transaction.add(coreTransactionLayer_acc_cr);
 		}
 		accRepo.saveAll(UpdateAccBal);

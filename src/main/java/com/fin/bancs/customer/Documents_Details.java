@@ -1,4 +1,4 @@
-package com.fin.bancs.BP;
+package com.fin.bancs.customer;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,8 +1,8 @@
 package com.fin.bancs.controller;
 
-import com.fin.bancs.BP.CustomerID;
-import com.fin.bancs.BP.Customer_Details;
-import com.fin.bancs.BP.Nominee_Details;
+import com.fin.bancs.customer.CustomerID;
+import com.fin.bancs.customer.Customer_Details;
+import com.fin.bancs.customer.Nominee_Details;
 import com.fin.bancs.error.ErrorCode;
 import com.fin.bancs.error.ErrorHandler;
 import com.fin.bancs.error.GlobalException;

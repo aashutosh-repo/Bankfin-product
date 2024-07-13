@@ -36,7 +36,8 @@ public class BankSecurityConfig {
                         configurer
                                 .requestMatchers("/").hasRole("EMPLOYEE")
                                 .requestMatchers(HttpMethod.POST,"/customer-service").hasRole("MANAGER")
-                                .requestMatchers(HttpMethod.POST,"/nominee").hasRole("EMPLOYEE")
+                                .requestMatchers(HttpMethod.GET,"/nominee").hasRole("EMPLOYEE")
+                                .requestMatchers("/instrument").hasRole("MANAGER")
                                 .requestMatchers("/leaders/**").hasRole("MANAGER")
                                 .requestMatchers("/systems/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()

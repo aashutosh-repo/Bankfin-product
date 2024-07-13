@@ -1,33 +1,44 @@
 package com.fin.bancs.controller;
 
-import com.fin.bancs.BP.Customer_Address_Details;
-import com.fin.bancs.repository.Customer_Address_Repository;
-import com.fin.bancs.repository.Customer_Details_Repository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@Repository
+import com.fin.bancs.customer.Cust_Address_detailsPk;
+import com.fin.bancs.customer.Customer_Address_Details;
+import com.fin.bancs.services.Customer_Address_services;
+
+@Controller
+@RequestMapping("/cust-address")
 public class Customer_Address_Controller {
-
-    @Autowired
-    private Customer_Address_Repository customerAddressRepository;
-    	public Customer_Address_Details modifyCustAddressDetails(Customer_Address_Details customerAddressDetails){
-            Customer_Address_Details customer_address_details= new Customer_Address_Details();
-
-            customer_address_details.setADDRESS_ID(999);
-            customer_address_details.setADDRESS_TYPE(customerAddressDetails.getADDRESS_TYPE());
-            customer_address_details.setADDRESS_LN1(customerAddressDetails.getADDRESS_LN1());
-            customer_address_details.setADDRESS_LN2(customerAddressDetails.getADDRESS_LN2());
-            customer_address_details.setCITY(customerAddressDetails.getCITY());
-            customer_address_details.setVILLAGE(customerAddressDetails.getVILLAGE());
-            customer_address_details.setTALUKA(customerAddressDetails.getTALUKA());
-            customer_address_details.setDISTRICT(customerAddressDetails.getDISTRICT());
-            customer_address_details.setSTATE(customerAddressDetails.getSTATE());
-            customer_address_details.setPIN_CODE(customerAddressDetails.getPIN_CODE());
-            customer_address_details.setDATE_OF_CAPTURE(customerAddressDetails.getDATE_OF_CAPTURE());
-
-            Customer_Address_Details cust_add_dtls = customerAddressRepository.save(customer_address_details);
-            return cust_add_dtls;
+	
+	@Autowired
+	private Customer_Address_services cusServices;
+	
+	@GetMapping("/create")
+	public void createAddressDetails(@RequestBody Customer_Address_Details cust_address ) {
+		cusServices.createModifyCustAddressDetails(cust_address);
+	}
+	
+	@GetMapping("/modify")
+	public void modifyAddressDetails(@RequestBody Customer_Address_Details cust_address ) {
+		cusServices.createModifyCustAddressDetails(cust_address);
+	}
+	
+	@GetMapping("/delete")
+	public void deleteAddressDetails(@RequestBody Customer_Address_Details cust_address ) {
+		int add_id= cust_address.getADDRESS_ID();
+		Cust_Address_detailsPk addresspk = new Cust_Address_detailsPk();
+		addresspk.setPIN_CODE(cust_address.getADDRESS_ID());
+		addresspk.setPIN_CODE(cust_address.getPIN_CODE());
+		if(cusServices.findCustAddressByID(addresspk) != null) {
+			cusServices.deleteAddress(cust_address);
+		}else {
+			//Handle Address Not Found Error
+		}
+		
 	}
 
 }
