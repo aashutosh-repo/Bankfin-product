@@ -50,7 +50,6 @@ public class Core_Transaction_services {
 		Core_Transaction_Layer core_transaction_dr= new Core_Transaction_Layer();
 		List<Core_Transaction_Layer> core_transaction = new ArrayList<>();
 		List<Account> UpdateAccBal= new ArrayList<>();
-		GlobalException Exception = new GlobalException();
 		//Check Transaction Type Cash/transfer
 		//for(Core_Transaction_Layer txn:txnInput)
 		Core_Transaction_Layer txn = new Core_Transaction_Layer();
@@ -90,14 +89,14 @@ public class Core_Transaction_services {
 			BigDecimal total_amt_internal;
 			BigDecimal total_amt_cash;
 			//debit/credit to internal account srarts
-			accPk.setACCOUNT_ID(core_transaction_cash.getAccount_id_cr()); //internal Account need to maintain internally
-			accPk.setACCOUNT_TYPE(1); //For inernal account
+			accPk.setAccount_id(core_transaction_cash.getAccount_id_cr()); //internal Account need to maintain internally
+			accPk.setAccount_type(1); //For inernal account
 			acc_internal= accRepo.findById(accPk);
 			if(acc_internal.isEmpty()) {
 				throw new CustomException(ErrorCode.ACCOUNT_NOT_FOUND,1001,HttpStatus.NOT_FOUND);
 			}else {
 			acc= acc_internal.get();
-			BigDecimal Available_AMT= acc.getAVAILABLE_BALANCE();
+			BigDecimal Available_AMT= acc.getAvailable_balance();
 			BigDecimal transaction_amt= core_transaction_cash.getTxn_amt();
 			int cred_deb_flag= core_transaction_cash.getCredit_debit_flag();
 			if(cred_deb_flag==1) {
@@ -105,7 +104,7 @@ public class Core_Transaction_services {
 			}else {
 				total_amt_internal= Available_AMT.add(transaction_amt.multiply(new BigDecimal(-1)));
 			}
-			acc.setAVAILABLE_BALANCE(total_amt_internal);
+			acc.setAvailable_balance(total_amt_internal);
 			//Core Txn for internal Account Started here
 				coreTxn_cash_cr.setAccount_id_cr(core_transaction_cash.getAccount_id_cr());
 				coreTxn_cash_cr.setAccount_type_cr(1);
@@ -127,15 +126,15 @@ public class Core_Transaction_services {
 			
 			//For customer account
 			//Debit/credit to Customer account ends
-			accPk.setACCOUNT_ID(core_transaction_cash.getAccount_id_dr());
-			accPk.setACCOUNT_TYPE(core_transaction_cash.getAccount_type_dr());
+			accPk.setAccount_id(core_transaction_cash.getAccount_id_dr());
+			accPk.setAccount_type(core_transaction_cash.getAccount_type_dr());
 			acc_cash= accRepo.findById(accPk);
 			if(acc_cash.isEmpty()) {
 				//Handle it account not found Error
 				log.debug("No Data Found");
 			}else {
 			acc= acc_cash.get(); 
-			BigDecimal Available_AMT= acc.getAVAILABLE_BALANCE();
+			BigDecimal Available_AMT= acc.getAvailable_balance();
 			BigDecimal transaction_amt= core_transaction_cash.getTxn_amt();
 			int cred_deb_flag= core_transaction_cash.getCredit_debit_flag();
 			if(cred_deb_flag==1) {
@@ -143,7 +142,7 @@ public class Core_Transaction_services {
 			}else {
 				total_amt_cash= Available_AMT.add(transaction_amt.multiply(new BigDecimal(-1)));
 			}
-			acc.setAVAILABLE_BALANCE(total_amt_cash);
+			acc.setAvailable_balance(total_amt_cash);
 
 				//Core Txn for cash Account Started here
 				coreTxn_cash_dr.setAccount_id_cr(core_transaction_cash.getAccount_id_cr());
@@ -163,8 +162,8 @@ public class Core_Transaction_services {
 			//Debit/credit to Customer account ends
 			}
 
-			accPk.setACCOUNT_ID(core_transaction_cash.getAccount_id_dr());
-			accPk.setACCOUNT_TYPE(core_transaction_cash.getAccount_type_dr());
+			accPk.setAccount_id(core_transaction_cash.getAccount_id_dr());
+			accPk.setAccount_type(core_transaction_cash.getAccount_type_dr());
 			acc_cash = accRepo.findById(accPk);
 			if(acc_cash.isEmpty()) {
 				//Handle it account not found Error
@@ -195,26 +194,26 @@ public class Core_Transaction_services {
 			Account internal_acc_cr= new Account();
 			Account internal_acc_dr= new Account();
 			//Account balance Update Starts here
-			cash_acc_pk.setACCOUNT_ID(core_transaction_dr.getAccount_id_dr());
-			cash_acc_pk.setACCOUNT_TYPE(core_transaction_dr.getAccount_type_dr());
+			cash_acc_pk.setAccount_id(core_transaction_dr.getAccount_id_dr());
+			cash_acc_pk.setAccount_type(core_transaction_dr.getAccount_type_dr());
 			Optional<Account> account_cash_dr = accRepo.findById(cash_acc_pk);
 			if(account_cash_dr.isEmpty()) {
 				//handle Account Not Found Error
 				log.debug("No Data Found");
 			}else{
 				cash_acc_dr= account_cash_dr.get();
-				cash_acc_dr.setAVAILABLE_BALANCE(cash_acc_dr.getAVAILABLE_BALANCE().subtract(core_transaction_dr.getTxn_amt()));
+				cash_acc_dr.setAvailable_balance(cash_acc_dr.getAvailable_balance().subtract(core_transaction_dr.getTxn_amt()));
 				UpdateAccBal.add(cash_acc_dr);
 			}
-			internal_acc_pk.setACCOUNT_ID(18626); //Cr type internal Account
-			internal_acc_pk.setACCOUNT_TYPE(1);
+			internal_acc_pk.setAccount_id(18626); //Cr type internal Account
+			internal_acc_pk.setAccount_type(1);
 			Optional<Account> int_acc_cr= accRepo.findById(internal_acc_pk);
 			if(int_acc_cr.isEmpty()){
 				//handle Not Found Exception
 				log.debug("No Data Found");
 			}else {
 				internal_acc_cr= int_acc_cr.get();
-				internal_acc_cr.setAVAILABLE_BALANCE(internal_acc_dr.getAVAILABLE_BALANCE().add(core_transaction_dr.getTxn_amt()));
+				internal_acc_cr.setAvailable_balance(internal_acc_dr.getAvailable_balance().add(core_transaction_dr.getTxn_amt()));
 				UpdateAccBal.add(internal_acc_cr);
 			}
 			//Account balance Update Ends here
@@ -239,26 +238,26 @@ public class Core_Transaction_services {
 
 
 			//Account balance Update Starts here
-			cash_acc_pk.setACCOUNT_ID(core_transaction_dr.getAccount_id_cr());
-			cash_acc_pk.setACCOUNT_TYPE(core_transaction_dr.getAccount_type_cr());
+			cash_acc_pk.setAccount_id(core_transaction_dr.getAccount_id_cr());
+			cash_acc_pk.setAccount_type(core_transaction_dr.getAccount_type_cr());
 			Optional<Account> account_cash_cr = accRepo.findById(cash_acc_pk);
 			if(account_cash_cr.isEmpty()) {
 				//handle Account Not Found Error
 				log.debug("No Data Found");
 			}else{
 				cash_acc_cr= account_cash_cr.get();
-				cash_acc_cr.setAVAILABLE_BALANCE(cash_acc_cr.getAVAILABLE_BALANCE().add(core_transaction_dr.getTxn_amt()));
+				cash_acc_cr.setAvailable_balance(cash_acc_cr.getAvailable_balance().add(core_transaction_dr.getTxn_amt()));
 				UpdateAccBal.add(cash_acc_cr);
 			}
-			internal_acc_pk.setACCOUNT_ID(18625); //requires rules to get Internal Account for cr/dr type
-			internal_acc_pk.setACCOUNT_TYPE(1);
+			internal_acc_pk.setAccount_id(18625); //requires rules to get Internal Account for cr/dr type
+			internal_acc_pk.setAccount_type(1);
 			Optional<Account> int_acc_dr= accRepo.findById(internal_acc_pk);
 			if(int_acc_dr.isEmpty()){
 				//handle Not Found Exception
 				log.debug("No Data Found");
 			}else {
 				internal_acc_dr= int_acc_cr.get();
-				internal_acc_dr.setAVAILABLE_BALANCE(internal_acc_dr.getAVAILABLE_BALANCE().subtract(core_transaction_dr.getTxn_amt()));
+				internal_acc_dr.setAvailable_balance(internal_acc_dr.getAvailable_balance().subtract(core_transaction_dr.getTxn_amt()));
 				UpdateAccBal.add(internal_acc_dr);
 			}
 			//Account balance Update Ends here

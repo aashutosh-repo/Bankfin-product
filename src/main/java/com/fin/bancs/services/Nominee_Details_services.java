@@ -40,7 +40,6 @@ public class Nominee_Details_services {
 		nominee_details.setDate_of_birth(nomineeDetails.getDate_of_birth());
 		nominee_details.setNom_add_id(999); //address details should also come as a input 
 		nominee_details.setNom_doc_id("999"); //Documents details should also come as a input
-		nominee_details.setLast_update(LocalDate.now());
 		//Need to call 2 task Address creation and Document Creation task here 
 		int nomineee_id=1;
 		//nomineeRepository.findBy(null, null);
