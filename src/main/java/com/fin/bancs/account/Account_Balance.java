@@ -3,6 +3,9 @@ package com.fin.bancs.account;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import jakarta.persistence.Embedded;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,15 +15,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
 public class Account_Balance {
-	@Id 
-	protected int account_id; //PK
-	@Id
-	protected int account_type; //PK
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int balance_seq_id; //PK
+	@EmbeddedId
+	protected AccountBalancePk acc_bal_id; //PK
 	protected LocalDate balance_date;
 	protected int txn_type;
 	protected long interest_rate;

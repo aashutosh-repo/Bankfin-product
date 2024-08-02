@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.TableGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +18,8 @@ import lombok.ToString;
 @AllArgsConstructor @NoArgsConstructor @Getter @Setter
 @ToString 
 public class Account {
-	@Id
-	protected int account_id; //pk
-	protected int account_type; //pk
+	@EmbeddedId
+	protected AccountPk account_id; //pk
 	protected int account_status;
 	protected String account_number;
 	protected LocalDate account_open_dt;
