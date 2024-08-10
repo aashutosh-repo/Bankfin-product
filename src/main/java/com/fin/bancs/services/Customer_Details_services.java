@@ -1,24 +1,26 @@
 package com.fin.bancs.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-
-import com.fin.bancs.controller.Nominee_Details_Controller;
 import com.fin.bancs.customer.Customer_Address_Details;
 import com.fin.bancs.customer.Customer_Details;
 import com.fin.bancs.customer.Nominee_Details;
+import com.fin.bancs.error.ErrorCode;
+import com.fin.bancs.error.ResourceNotFoundException;
 import com.fin.bancs.repository.Customer_Details_Repository;
+import com.fin.bancs.services.si.Customer_Service_Interface;
 
 import jakarta.transaction.Transactional;
 
-@Repository
+@Service
 @Transactional
-public class Customer_Details_services {
+public class Customer_Details_services implements Customer_Service_Interface{
 	
 	@InitBinder
 	public void initBinder(WebDataBinder webdataBinder) {
@@ -29,8 +31,6 @@ public class Customer_Details_services {
 
     @Autowired
     private Customer_Details_Repository detailsRepository;
-    @Autowired
-    private Nominee_Details_Controller nomineeDetailsController;
 
     public void CreateCustDetails( Customer_Details inp_cust_details
 //                                   Nominee_Details inp_nominee_details
@@ -48,14 +48,13 @@ public class Customer_Details_services {
         int nom_doc_id=0;
 
         //Create customer Details
-        customer_Details.setCUS_ID(inp_cust_details.getCUS_ID());
-        customer_Details.setCUS_TYP(12);
+
         customer_Details.setFIRST_NAME(inp_cust_details.getFIRST_NAME());
         customer_Details.setLAST_NAME(inp_cust_details.getLAST_NAME());
         customer_Details.setFATHER_NAME(inp_cust_details.getFATHER_NAME());
         customer_Details.setMOTHER_NAME(inp_cust_details.getMOTHER_NAME());
         customer_Details.setEMAIL(inp_cust_details.getEMAIL());
-        customer_Details.setMOBILE_NUMBER(inp_cust_details.getMOBILE_NUMBER());
+        //customer_Details.setMOBILE_NUMBER(inp_cust_details.getMOBILE_NUMBER());
         customer_Details.setSTATUS(inp_cust_details.getSTATUS());
         customer_Details.setADDRESS_ID(address_id); //Review
         customer_Details.setNOMINEE_ID(nominee_id);
@@ -83,4 +82,12 @@ public class Customer_Details_services {
         List<Customer_Details> allcust = detailsRepository.findAll();
         return allcust;
     }
+	@Override
+	public Customer_Details findCustomer(String mobile) {
+		Optional<Customer_Details> customerDtls = detailsRepository.findByMobileNumber(mobile);
+		if(customerDtls.isEmpty()) {
+			throw new ResourceNotFoundException(ErrorCode.CUSTOMER_NOT_FOUND);
+		}
+		return customerDtls.get();
+	}
 }

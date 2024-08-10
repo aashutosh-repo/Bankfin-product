@@ -4,24 +4,19 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import com.fin.bancs.account.Account;
-import com.fin.bancs.account.AccountPk;
-import com.fin.bancs.error.CustomException;
-import com.fin.bancs.error.ErrorCode;
-import com.fin.bancs.error.GlobalException;
-import com.fin.bancs.error.ResourceNotFoundException;
-import org.apache.commons.logging.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-
+import org.springframework.stereotype.Service;
+import com.fin.bancs.account.Account;
+import com.fin.bancs.account.AccountPk;
+import com.fin.bancs.error.ErrorCode;
+import com.fin.bancs.error.ResourceNotFoundException;
 import com.fin.bancs.repository.Account_repository;
 import com.fin.bancs.repository.Core_Transaction_Layer_Repository;
 import com.fin.bancs.transactions.Core_Transaction_Layer;
-import com.fin.bancs.transactions.Transaction_Out;
 
+@Service
 public class Core_Transaction_services {
 
 	private static final Logger log = LogManager.getLogger(Core_Transaction_services.class);
@@ -35,8 +30,6 @@ public class Core_Transaction_services {
         this.accRepo = accRepo;
     }
     
-
-
     public Core_Transaction_services() {
 		super();
 	}
@@ -93,7 +86,7 @@ public class Core_Transaction_services {
 			accPk.setAccount_type(1); //For inernal account
 			acc_internal= accRepo.findById(accPk);
 			if(acc_internal.isEmpty()) {
-				throw new CustomException(ErrorCode.ACCOUNT_NOT_FOUND,1001,HttpStatus.NOT_FOUND);
+				throw new ResourceNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND);
 			}else {
 			acc= acc_internal.get();
 			BigDecimal Available_AMT= acc.getAvailable_balance();

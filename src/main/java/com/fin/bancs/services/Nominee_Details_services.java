@@ -1,20 +1,20 @@
 package com.fin.bancs.services;
 
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import com.fin.bancs.customer.Nominee_Details;
 import com.fin.bancs.repository.Nominee_Repository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import com.fin.bancs.services.si.Nominee_Service_Interface;
 
-import java.time.LocalDate;
-import java.util.Optional;
-
-@Repository
-public class Nominee_Details_services {
+@Service
+public class Nominee_Details_services implements Nominee_Service_Interface{
 
     @Autowired
     private Nominee_Repository nomineeRepository;
 
 
+    @Override
 	public Nominee_Details createModifyNomineeDetails(Nominee_Details nomineeDetails,int flag){
 		//Flag=1-> Create and flag=2 -> Modify
 		Nominee_Details nominee_details = new Nominee_Details();
@@ -54,6 +54,7 @@ public class Nominee_Details_services {
 		return nominee_details;
     }
 	
+    @Override
 	public void deleteNominee(Nominee_Details nominee_Details) {
 		int NomineeId= nominee_Details.getNom_add_id();
 		if(nomineeRepository.findById(NomineeId) != null) {

@@ -1,16 +1,15 @@
 package com.fin.bancs.services;
 
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import com.fin.bancs.customer.Cust_Address_detailsPk;
 import com.fin.bancs.customer.Customer_Address_Details;
 import com.fin.bancs.repository.Customer_Address_Repository;
+import com.fin.bancs.services.si.Address_Service_Interface;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public class Customer_Address_services {
+@Service
+public class Customer_Address_services implements Address_Service_Interface{
 
     @Autowired
     private Customer_Address_Repository customerAddressRepository;
