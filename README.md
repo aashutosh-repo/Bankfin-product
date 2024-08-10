@@ -1,12 +1,14 @@
 # Bankfin-product
 This project contains various high level banking services 
-<h1 align="center">Aashutosh kumar</h1>
+<h1 align="center">Aashutosh Kumar</h1>
 <h3 align="center">A passionate Full stack developer from India</h3>
 <h3 align="left">Project: Banking-product</h3>
-<p>This project is based on spring boot, Jpa, spring security and spring MVC and it will allow users to use financial products like Cutsomer Onboarding, Account creation, Calculating SIP, Currency conversion, EMI calculator and many more features. In this project I have exposed required endpoints as well as linked with html to paas input from screen and endpoints can be used with postman to pass input.</p>
+<p>This project is based on spring boot, Jpa, hibernate, spring security and spring MVC and it will allow users to use financial products like Cutsomer Onboarding, Account creation, Calculating SIP, Currency conversion, EMI calculator and many more features. In this project I have exposed required endpoints as well as linked with html to paas input from screen and endpoints can be used with postman to pass input.
+update** - openApi Swagger added to make life easy</p>
 <p>Functions - </p>
 
     - Customer onboarding with nominee and address details
+    - Account Creation 
     - Cash transactions/ C2C transaction (wip) 
     - SIP calculation (planned)
     - Cross Currency calculation (backend Development done )
@@ -16,7 +18,7 @@ This project contains various high level banking services
 
 - 🌱 Tech Used:  **Spring-Boot, java, rest-api, HTML,Spring-data**
 
-- 💬 Ask me about **Rest, Web-Services, Spring-Security, spring-data**
+- 💬 Ask me about **Rest API, Web-Services, Spring-Security, hibernate, spring-data Jpa**
 
 - 📫 How to reach me **aashutoshkumar6729@gmail.com**
 
