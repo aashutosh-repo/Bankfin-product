@@ -1,11 +1,11 @@
 package com.fin.bancs.mapper;
 
-import com.fin.bancs.customer.Customer_Details;
+import com.fin.bancs.customer.CustomerDetails;
 import com.fin.bancs.dto.CustomerDto;
 
 public class CustomerDetailsMapper {
 	
-	public static CustomerDto mapToCustomerDetailsDto( Customer_Details customerDetails,CustomerDto customerDetailsDto) {
+	public static CustomerDto mapToCustomerDetailsDto( CustomerDetails customerDetails,CustomerDto customerDetailsDto) {
 		customerDetailsDto.setFirstName(customerDetails.getFirstName());
         customerDetailsDto.setLastName(customerDetails.getLastName());
         customerDetailsDto.setFatherName(customerDetails.getFatherName());
@@ -19,7 +19,7 @@ public class CustomerDetailsMapper {
         customerDetailsDto.setRatingAgency(customerDetails.getRatingAgency());
         return customerDetailsDto;
 	}
-	public static Customer_Details mapToCustomerDetails(CustomerDto customerDetailsDto, Customer_Details customerDetails)
+	public static CustomerDetails mapToCustomerDetails(CustomerDto customerDetailsDto, CustomerDetails customerDetails)
 	{
 		customerDetails.setFirstName(customerDetailsDto.getFirstName());
         customerDetails.setLastName(customerDetailsDto.getLastName());

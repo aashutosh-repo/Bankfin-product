@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.fin.bancs.account.Account;
 import com.fin.bancs.account.AccountPk;
 import com.fin.bancs.customer.CustomerID;
-import com.fin.bancs.customer.Customer_Details;
+import com.fin.bancs.customer.CustomerDetails;
 import com.fin.bancs.dto.AccountDto;
 import com.fin.bancs.error.ErrorCode;
 import com.fin.bancs.error.ResourceNotFoundException;
@@ -52,7 +52,7 @@ public class Account_services implements Account_Service_Interface{
 			cId.setCustomerID(account.getCust_id());
 			cId.setCustomerType(account.getCus_type());
 		
-			Optional<Customer_Details> cust = custRepository.findById(cId);
+			Optional<CustomerDetails> cust = custRepository.findById(cId);
 			if(cust.isEmpty()) {
 				throw new ResourceNotFoundException(ErrorCode.CUSTOMER_NOT_FOUND);
 			}

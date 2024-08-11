@@ -1,4 +1,4 @@
-package com.fin.bancs.services;
+package com.fin.bancs.bankconfig;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,6 +40,10 @@ public class BankSecurityConfig {
                                 .requestMatchers("/instrument").hasRole("MANAGER")
                                 .requestMatchers("/leaders/**").hasRole("MANAGER")
                                 .requestMatchers("/systems/**").hasRole("ADMIN")
+                                .requestMatchers("/v2/api-docs",    // Swagger API documentation
+                                        "/swagger-resources/**",    // Swagger resource endpoints
+                                        "/swagger-ui.html",         // Swagger UI
+                                        "/webjars/**"   ).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form ->

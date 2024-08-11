@@ -1,41 +1,42 @@
 package com.fin.bancs.services;
 
+import java.math.BigInteger;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.fin.bancs.customer.Cust_Address_detailsPk;
-import com.fin.bancs.customer.Customer_Address_Details;
+
+import com.fin.bancs.customer.AddressID;
+import com.fin.bancs.customer.CustomerAddressDetails;
+import com.fin.bancs.dto.CustomerAddressDto;
+import com.fin.bancs.mapper.AddressMapper;
 import com.fin.bancs.repository.Customer_Address_Repository;
 import com.fin.bancs.services.si.Address_Service_Interface;
+import com.fin.bancs.utils.SequenceGenerator;
 
 @Service
-public class Customer_Address_services implements Address_Service_Interface{
+public class CustomerAddressServices implements Address_Service_Interface{
 
     @Autowired
     private Customer_Address_Repository customerAddressRepository;
+	@Autowired
+	private SequenceGenerator sequenceGenerator;
     
-    	public void createModifyCustAddressDetails(Customer_Address_Details customerAddressDetails){
-            Customer_Address_Details customer_address_details= new Customer_Address_Details();
-
-            customer_address_details.setADDRESS_ID(999);
-            customer_address_details.setADDRESS_TYPE(customerAddressDetails.getADDRESS_TYPE());
-            customer_address_details.setADDRESS_LN1(customerAddressDetails.getADDRESS_LN1());
-            customer_address_details.setADDRESS_LN2(customerAddressDetails.getADDRESS_LN2());
-            customer_address_details.setCITY(customerAddressDetails.getCITY());
-            customer_address_details.setVILLAGE(customerAddressDetails.getVILLAGE());
-            customer_address_details.setTALUKA(customerAddressDetails.getTALUKA());
-            customer_address_details.setDISTRICT(customerAddressDetails.getDISTRICT());
-            customer_address_details.setSTATE(customerAddressDetails.getSTATE());
-            customer_address_details.setPIN_CODE(customerAddressDetails.getPIN_CODE());
-            customer_address_details.setDATE_OF_CAPTURE(customerAddressDetails.getDATE_OF_CAPTURE());
-
+    	public void createModifyCustAddressDetails(CustomerAddressDto customerAddressDto){
+            CustomerAddressDetails customer_address_details= new CustomerAddressDetails();
+            AddressID addressKey = new AddressID();
+            customer_address_details = AddressMapper.mapToCustomerAddress(customerAddressDto, new CustomerAddressDetails());
+            BigInteger addressId = sequenceGenerator.generateSequence("AddressId_seq");
+            addressKey.setCustomerId(customerAddressDto.getCustomerID());
+            addressKey.setAddressId(addressId.intValue());
+            customer_address_details.setAddressId(addressKey);
             customerAddressRepository.save(customer_address_details);
 	}
     	
-    	public Optional<Customer_Address_Details> findCustAddressByID(Cust_Address_detailsPk Addresspk) {
+    	public Optional<CustomerAddressDetails> findCustAddressByID(AddressID Addresspk) {
     		return customerAddressRepository.findById(Addresspk);
     	}
-    	public boolean deleteAddress(Customer_Address_Details customer_Address_Details) {
+    	public boolean deleteAddress(CustomerAddressDetails customer_Address_Details) {
     		customerAddressRepository.delete(customer_Address_Details);
     		return true;
     	}

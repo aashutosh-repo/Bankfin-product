@@ -1,6 +1,7 @@
 package com.fin.bancs.services;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,10 +12,10 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
 import com.fin.bancs.customer.CustomerID;
-import com.fin.bancs.customer.Customer_Address_Details;
-import com.fin.bancs.customer.Customer_Details;
+import com.fin.bancs.customer.CustomerAddressDetails;
+import com.fin.bancs.customer.CustomerDetails;
 import com.fin.bancs.customer.DocumentsDetails;
-import com.fin.bancs.customer.Nominee_Details;
+import com.fin.bancs.customer.NomineeDetails;
 import com.fin.bancs.dto.CustomerDto;
 import com.fin.bancs.dto.DocumentsDtlsDto;
 import com.fin.bancs.error.ErrorCode;
@@ -30,7 +31,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-public class Customer_Details_services implements Customer_Service_Interface{
+public class CustomerDetailsServices implements Customer_Service_Interface{
 	
 	@InitBinder
 	public void initBinder(WebDataBinder webdataBinder) {
@@ -52,12 +53,12 @@ public class Customer_Details_services implements Customer_Service_Interface{
 //                                   Customer_Address_Details inp_Customer_Address_Details
     ){
 
-        Customer_Details customer_Details = new Customer_Details();
-        Nominee_Details nominee_Details = new Nominee_Details();
+        CustomerDetails customer_Details = new CustomerDetails();
+        NomineeDetails nominee_Details = new NomineeDetails();
         DocumentsDetails doc = new DocumentsDetails();
-        Customer_Address_Details customer_Address_Details = new Customer_Address_Details();
+        CustomerAddressDetails customer_Address_Details = new CustomerAddressDetails();
         //Create customer Details
-        customer_Details = CustomerDetailsMapper.mapToCustomerDetails(inp_cust_details, new Customer_Details());
+        customer_Details = CustomerDetailsMapper.mapToCustomerDetails(inp_cust_details, new CustomerDetails());
         customer_Details.setCustClsngDt(null);
         doc = DocumentDetailsMapper.mapToDocumentDetails(docDtls, new DocumentsDetails());
         
@@ -82,22 +83,34 @@ public class Customer_Details_services implements Customer_Service_Interface{
 //				customer_Address_Details.Cr(inp_Customer_Address_Details);
 
     }
-    public void DeleteCustomer(Customer_Details customerDetails){
+    public void DeleteCustomer(CustomerDetails customerDetails){
 //        CustomerID customerID= new CustomerID(customerDetails.getCUS_ID(),customerDetails.CUS_TYP);
 //		Customer_Details cust_dtls = entityManager.find(Customer_Details.class,customerID);
 //		cust_dtls.setCUST_CLSNG_DT(customerDetails.getCUST_CLSNG_DT());
 //		cust_dtls.setSTATUS(0000); //put Account Closing Status
     }
-    public List<Customer_Details> getAllCust(){
-        List<Customer_Details> allcust = detailsRepository.findAll();
-        return allcust;
+    public List<CustomerDto> getAllCust(){
+        List<CustomerDetails> allcust = detailsRepository.findAll();
+        List<CustomerDto> allCustDtoOut = new ArrayList<CustomerDto>();
+        for(CustomerDetails cust : allcust) {
+        	CustomerDto customerDetailsSingle = CustomerDetailsMapper.mapToCustomerDetailsDto(cust, new CustomerDto());
+        	allCustDtoOut.add(customerDetailsSingle);
+        }
+        
+        return allCustDtoOut;
     }
 	@Override
-	public Customer_Details findCustomer(String mobile) {
-		Optional<Customer_Details> customerDtls = detailsRepository.findByMobileNumber(mobile);
+	public CustomerDetails findCustomer(String mobile) {
+		Optional<CustomerDetails> customerDtls = detailsRepository.findByMobileNumber(mobile);
 		if(customerDtls.isEmpty()) {
 			throw new ResourceNotFoundException(ErrorCode.CUSTOMER_NOT_FOUND);
 		}
 		return customerDtls.get();
+	}
+	@Override
+	public CustomerDto findCustomerByMobileNumber(String mobNumber) {
+		Optional<CustomerDetails> customerDetails = detailsRepository.findByMobileNumber(mobNumber);
+		CustomerDto custDto = CustomerDetailsMapper.mapToCustomerDetailsDto(customerDetails.get(), new CustomerDto());
+		return custDto;
 	}
 }

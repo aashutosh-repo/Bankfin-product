@@ -21,7 +21,7 @@ public class CustomerDto {
 
     @NotEmpty(message = "Father's name cannot be null or empty")
     @Schema(description = "User's father's name", example = "Robert Doe")
-    protected String fatheName;
+    protected String fatherName;
 
     @NotEmpty(message = "Mother's name cannot be null or empty")
     @Schema(description = "User's mother's name", example = "Jane Doe")
@@ -48,7 +48,7 @@ public class CustomerDto {
     protected LocalDate onboardingDate;
 
     @Schema(description = "Date when the account was closed", example = "2024-12-31")
-    protected LocalDate clsngDate;
+    protected LocalDate custClsngDt;
 
     @NotNull(message = "Risk profile cannot be null")
     @Schema(description = "User's risk profile level", example = "2")
@@ -56,5 +56,6 @@ public class CustomerDto {
 
     @NotEmpty(message = "Rating agency cannot be null or empty")
     @Schema(description = "Name of the rating agency", example = "Moody's")
-    protected String ratingAgency;	
+    protected String ratingAgency;
+	
 }
