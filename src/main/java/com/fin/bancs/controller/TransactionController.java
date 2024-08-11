@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/transaction")
-public class Transaction_Controller {
+public class TransactionController {
     @Autowired
     private Core_Transaction_Layer_Repository repo;
 

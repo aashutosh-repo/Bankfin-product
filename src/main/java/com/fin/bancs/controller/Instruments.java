@@ -3,15 +3,14 @@ package com.fin.bancs.controller;
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.fin.bancs.error.CustomException;
+import com.fin.bancs.error.CustomError;
+import com.fin.bancs.error.ErrorCode;
 import com.fin.bancs.services.Currency_service;
 
 @Controller
@@ -32,8 +31,7 @@ public class Instruments {
     	BigDecimal finalAmt= new BigDecimal(0.0);
     	finalAmt= currency.currencyConverter(inputCurrency, amount);
     	if(finalAmt ==null) {
-    		throw new CustomException("Currency Not Converted",101, HttpStatus
-    				.NOT_IMPLEMENTED);
+    		throw new CustomError(ErrorCode.CURRNCY_CANNOT_CONVERTED);
     	}else {
     		return String.valueOf(finalAmt);
     	}

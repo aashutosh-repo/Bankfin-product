@@ -1,4 +1,4 @@
-package com.fin.bancs.controller;
+package com.fin.bancs.controller.mvc;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

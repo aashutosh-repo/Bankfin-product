@@ -1,4 +1,4 @@
-package com.fin.bancs.controller;
+package com.fin.bancs.controller.mvc;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,32 +13,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fin.bancs.customer.CustomerID;
-import com.fin.bancs.customer.Customer_Details;
+import com.fin.bancs.customer.CustomerDetails;
+import com.fin.bancs.dto.CustomerDto;
 import com.fin.bancs.repository.Customer_Details_Repository;
-import com.fin.bancs.services.Customer_Details_services;
+import com.fin.bancs.services.CustomerDetailsServices;
 
 import jakarta.persistence.EntityManager;
 
 @Controller
 @RequestMapping("/customer-service")
-public class Customer_Details_Controller {
+public class Customer_Details_ControllerMvc {
     @Autowired
     private Customer_Details_Repository detailsRepository;
     @Autowired
     private EntityManager entityManager;
     @Autowired
-    Customer_Details_services customerDetailsController;
+    CustomerDetailsServices customerDetailsController;
 
     @GetMapping("/getallcust")
     public String getAllCustomer(Model theModel){
     	//List<Customer_Details> allCust= customerDetailsController.getAllCust();
     	CustomerID prim= new CustomerID();
-    	prim.setCUS_ID(52);
-    	prim.setCUS_TYP(12);
-    	Customer_Details customer_Details= entityManager.find(Customer_Details.class, prim);
+    	CustomerDetails customer_Details= entityManager.find(CustomerDetails.class, prim);
 
-    	List<Customer_Details> allCust =detailsRepository.findAll();
-    	for (Customer_Details details: allCust) {
+    	List<CustomerDetails> allCust =detailsRepository.findAll();
+    	for (CustomerDetails details: allCust) {
     		System.out.println(details.toString());
     	}
     	System.out.println(customer_Details);
@@ -46,13 +45,13 @@ public class Customer_Details_Controller {
         return "customer/all-Customer-details";
     }
     @PostMapping("/create-customer")
-    public Customer_Details creteCust(@RequestParam Customer_Details inp_customerDetails){
-        customerDetailsController.CreateCustDetails(inp_customerDetails);
+    public CustomerDto creteCust(@RequestParam CustomerDto inp_customerDetails){
+        //customerDetailsController.CreateCustDetails(inp_customerDetails);
         return inp_customerDetails;
     }
     @GetMapping("/add-cust") 
     public String insertDetails(Model theModel){
-    	Customer_Details customer_Details= new Customer_Details();
+    	CustomerDetails customer_Details= new CustomerDetails();
     	theModel.addAttribute("customer",customer_Details);
         //return "customer/add-customer";
     	return "customer/index-form";
@@ -60,18 +59,18 @@ public class Customer_Details_Controller {
     @GetMapping("/modify-cust") 
     public String modifyDetails(Model theModel,@RequestParam("cust-id") int cust_id){
     	CustomerID customer_id= new CustomerID();
-    	customer_id.setCUS_ID(cust_id);
-    	customer_id.setCUS_TYP(12);
-    	Optional<Customer_Details> customer_Details= detailsRepository.findById(customer_id);
+//    	customer_id.setCUS_ID(cust_id);
+//    	customer_id.setCUS_TYP(12);
+    	Optional<CustomerDetails> customer_Details= detailsRepository.findById(customer_id);
     	theModel.addAttribute("customer",customer_Details);
         //return "customer/add-customer";
     	return "customer/index-form";
     }
     
     @PostMapping("/insert")
-    public String insertInto(@ModelAttribute("customer") Customer_Details customer_Details){
+    public String insertInto(@ModelAttribute("customer") CustomerDto customer_Details){
 //        detailsRepository.save(customer_Details);
-        customerDetailsController.CreateCustDetails(customer_Details);
+        //customerDetailsController.CreateCustDetails(customer_Details);
         return "redirect:/customer-service/getallcust";
     }
 }
