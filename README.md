@@ -20,7 +20,9 @@ update** - openApi Swagger added to make life easy</p>
 
 - 💬 Ask me about **Rest API, Web-Services, Spring-Security, hibernate, spring-data Jpa**
 
-- 📫 How to reach me **aashutoshkumar6729@gmail.com**
+- ⚡ Tools Used : **Eclipse , Intellij , MySql, Swagger, Postman, prometheus**
+
+- 📫 Feel Free to reach me **aashutoshkumar6729@gmail.com**
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
