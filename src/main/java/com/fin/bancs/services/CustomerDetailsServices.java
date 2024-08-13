@@ -48,10 +48,7 @@ public class CustomerDetailsServices implements Customer_Service_Interface{
     private SequenceGenerator sequenceGenerator;
 
     public void CreateCustDetails( CustomerDto inp_cust_details,
-    		DocumentsDtlsDto docDtls
-//                                   Nominee_Details inp_nominee_details
-//                                   Customer_Address_Details inp_Customer_Address_Details
-    ){
+    		DocumentsDtlsDto docDtls){
 
         CustomerDetails customer_Details = new CustomerDetails();
         NomineeDetails nominee_Details = new NomineeDetails();
@@ -112,5 +109,21 @@ public class CustomerDetailsServices implements Customer_Service_Interface{
 		Optional<CustomerDetails> customerDetails = detailsRepository.findByMobileNumber(mobNumber);
 		CustomerDto custDto = CustomerDetailsMapper.mapToCustomerDetailsDto(customerDetails.get(), new CustomerDto());
 		return custDto;
+	}
+	
+	public CustomerDto modifyCustomer(CustomerDto cuatomerInp, int CustomerId,int CustomerType) {
+		CustomerID cusPkey = new CustomerID();
+		CustomerDto cDto = new CustomerDto();
+		CustomerDetails customer = new CustomerDetails();
+		cusPkey.setCustomerID(CustomerId);
+		cusPkey.setCustomerType(CustomerType);
+		Optional<CustomerDetails> customerDetails = detailsRepository.findById(cusPkey);
+		if(customerDetails.isPresent()) {
+			customer= customerDetails.get();
+			customer = CustomerDetailsMapper.mapToCustomerDetails(cuatomerInp, customer);
+			customer = detailsRepository.save(customer);
+			cDto = CustomerDetailsMapper.mapToCustomerDetailsDto(customer, new CustomerDto());
+		}
+		return cDto;
 	}
 }

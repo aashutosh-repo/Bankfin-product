@@ -1,9 +1,12 @@
 package com.fin.bancs.services.si;
 
-import com.fin.bancs.customer.Nominee_Details;
+import java.util.List;
+
+import com.fin.bancs.customer.NomineeDetails;
+import com.fin.bancs.dto.NomineeDto;
 
 public interface Nominee_Service_Interface {
 
-	Nominee_Details createModifyNomineeDetails(Nominee_Details nominee,int flag);
-	void deleteNominee(Nominee_Details nominee_Details);
+	List<NomineeDetails> createModifyNomineeDetails(NomineeDto nominee,int flag);
+	void deleteNominee(NomineeDto nominee_Details);
 }

@@ -17,8 +17,10 @@ import com.fin.bancs.customer.CustomerID;
 import com.fin.bancs.dto.CustomerDto;
 import com.fin.bancs.dto.ResponseDto;
 import com.fin.bancs.mapper.RequestWrapper;
+import com.fin.bancs.repository.Nominee_Repository;
 import com.fin.bancs.services.CustomerAddressServices;
 import com.fin.bancs.services.CustomerDetailsServices;
+import com.fin.bancs.services.NomineeDetailsServices;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,6 +35,8 @@ public class CustomerDtlsController {
     CustomerDetailsServices customerDetailsServices;
     @Autowired
     CustomerAddressServices custAddServices;
+    @Autowired
+    NomineeDetailsServices nomineeService;
 
 
     @Operation(summary = "Find All Customer API",
@@ -60,12 +64,13 @@ public class CustomerDtlsController {
             responseCode = "202",
             description = "Http Status CREATED"
     )
-    @PostMapping("/create-customer")
+    @PostMapping("/customer-Onboarding")
     public ResponseEntity<ResponseDto> creteCust(@RequestBody RequestWrapper requestWrapper) 
 	{
     	customerDetailsServices.CreateCustDetails(requestWrapper.getCustomerDto(), 
     			requestWrapper.getDocDto());
     	custAddServices.createModifyCustAddressDetails(requestWrapper.getCustomerAddress());
+    	nomineeService.createNomineesDetails(requestWrapper.getNomineeDetails(), 1);
         return  ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ResponseDto(AccountsConstants.STATUS_202,AccountsConstants.MESSAGE_202));
@@ -79,11 +84,10 @@ public class CustomerDtlsController {
             description = "Http Status Succesfully Precessed"
     )
     @PutMapping("/modify-cust") 
-    public ResponseEntity<ResponseDto> modifyDetails(@RequestParam int cust_id){
-    	CustomerID customer_id= new CustomerID();
-//    	customer_id.setCUS_ID(cust_id);
-//    	customer_id.setCUS_TYP(12);
-    	//Optional<CustomerDetails> customer_Details= detailsRepository.findById(customer_id);
+    public ResponseEntity<ResponseDto> modifyDetails(@RequestBody CustomerDto customerDetails, 
+    		@RequestParam int cust_id, @RequestParam int CustomerType){
+    	customerDetailsServices.modifyCustomer(customerDetails, cust_id, CustomerType);
+    	
     	return  ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ResponseDto(AccountsConstants.STATUS_200,AccountsConstants.MESSAGE_200));
