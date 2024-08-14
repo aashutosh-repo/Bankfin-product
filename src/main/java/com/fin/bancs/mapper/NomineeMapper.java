@@ -20,6 +20,7 @@ public class NomineeMapper {
         nomineeDto.setDateOfBirth(nominee.getDateOfBirth());
         nomineeDto.setNomAddId(nominee.getNomAddId());
         nomineeDto.setNomDocId(nominee.getNomDocId());
+        nomineeDto.setNomineeRefNum(nominee.getNomineeRefNum());
         nomineeDto.setVer(nominee.getVer());
         return nomineeDto;
 	}
@@ -39,6 +40,7 @@ public class NomineeMapper {
         nominee.setDateOfBirth(nomineeDto.getDateOfBirth());
         nominee.setNomAddId(nomineeDto.getNomAddId());
         nominee.setNomDocId(nomineeDto.getNomDocId());
+        nominee.setNomineeRefNum(nomineeDto.getNomineeRefNum());
         nominee.setVer(nomineeDto.getVer());
         return nominee;
 	}

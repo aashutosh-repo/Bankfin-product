@@ -6,7 +6,8 @@ import com.fin.bancs.customer.NomineeDetails;
 import com.fin.bancs.dto.NomineeDto;
 
 public interface Nominee_Service_Interface {
-
-	List<NomineeDetails> createModifyNomineeDetails(NomineeDto nominee,int flag);
+	List<NomineeDetails> createNomineesDetails(List<NomineeDto> nomineeDetails,int flag);
+	List<NomineeDetails> modifyNomineeDetails(List<NomineeDto> nominee,int flag);
 	void deleteNominee(NomineeDto nominee_Details);
+	List<NomineeDetails> findNomineeByOwnerId(int ownerId);
 }

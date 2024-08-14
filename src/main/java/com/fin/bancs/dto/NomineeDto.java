@@ -2,29 +2,25 @@ package com.fin.bancs.dto;
 
 import java.time.LocalDate;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
+import javax.xml.bind.annotation.XmlRootElement;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
+@XmlRootElement(name = "NomineeDetails")
+@ApiModel(description = "Nominee details")
 @Data
 public class NomineeDto {
 	
 	@NotNull(message = "Owner ID cannot be null")
     @Schema(description = "Unique identifier for the owner", example = "1001")
     protected int ownerId;
+	
+    @Schema(description = "Unique identifier for the Nominee Ref Num", example = "1001")
+	protected int nomineeRefNum;
 
     @NotNull(message = "Owner type cannot be null")
     @Schema(description = "Type of the owner", example = "1")
