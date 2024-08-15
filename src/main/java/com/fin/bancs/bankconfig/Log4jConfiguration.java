@@ -1,5 +1,5 @@
 @Configuration
-public class Log4j2Config {
+public class Log4j2Configuration {
     @Bean
     public LoggerContext loggerContext() {
         return (LoggerContext) LogManager.getContext(false);
