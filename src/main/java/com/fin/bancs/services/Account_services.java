@@ -65,18 +65,6 @@ public class Account_services implements Account_Service_Interface{
 			AccountPk accpk = new AccountPk();
 			accpk.setAccount_id(entityId.intValue());
 			accpk.setAccount_type(1);
-			
-//	        accCreate.setAvailable_balance(account.getAvailable_balance());
-//	        accCreate.setAccount_open_dt(account.getAccount_open_dt());
-//	        accCreate.setAccount_status(account.getAccount_status());
-//	        accCreate.setOwner_name(account.getOwner_name());
-//	        accCreate.setCheq_req_flag(account.getCheq_req_flag());
-//	        accCreate.setAtm_req_flag(account.getAtm_req_flag());
-//	        accCreate.setClsr_reason(account.getClsr_reason());
-//	        accCreate.setClsr_dt(account.getClsr_dt());
-//	        accCreate.setCust_id(account.getCust_id());
-//	        accCreate.setCus_type(account.getCus_type());
-//	       accCreate.setCurrency(account.getCurrency());
 			accCreate= AccountMapper.mapToAccount(account, new Account());
 			accCreate.setAccountId(accpk);
 			accCreate.setIntrnl_acnt_nmbr(intAccNumStr);
@@ -108,5 +96,10 @@ public class Account_services implements Account_Service_Interface{
 			accountDto.setAccount_number(acc.getAccount_number());
 		}
 		return accDto;
+	}
+	public List<Account> getAccountByCustomerId(int customerId){
+		List<Account> accounts = new ArrayList<>();
+		accounts= account_repository.findByCustId(customerId);
+		return accounts;
 	}
 }

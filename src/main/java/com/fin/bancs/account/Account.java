@@ -24,7 +24,7 @@ public class Account {
 	protected String account_number;
 	protected LocalDate account_open_dt;
 	protected int currency;
-	protected int cust_id;
+	protected int custId;
 	protected int cus_type;
 	protected int npa_status;
 	protected int min_bal;
