@@ -36,14 +36,14 @@ public class Core_Transaction_services {
 
 
 
-	//public void CreateTransaction(List<Core_Transaction_Layer> txnInput) {
-    public void CreateTransaction(Core_Transaction_Layer txnInput) {
+
+    public void CreateTransaction(List<Core_Transaction_Layer> txnInput) {
 		Core_Transaction_Layer core_transaction_cash= new Core_Transaction_Layer();
 		Core_Transaction_Layer core_transaction_cr= new Core_Transaction_Layer();
 		Core_Transaction_Layer core_transaction_dr= new Core_Transaction_Layer();
 		List<Core_Transaction_Layer> core_transaction = new ArrayList<>();
 		List<Account> UpdateAccBal= new ArrayList<>();
-		//Check Transaction Type Cash/transfer
+
 		//for(Core_Transaction_Layer txn:txnInput)
 		Core_Transaction_Layer txn = new Core_Transaction_Layer();
 		txn =txnInput;

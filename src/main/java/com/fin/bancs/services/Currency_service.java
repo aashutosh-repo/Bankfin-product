@@ -13,7 +13,7 @@ public class Currency_service implements Currency_Service_Interface{
     private Currency_Repository currencyRepository;  // Assuming you have a repository for the Currency table
 
 	
-	public BigDecimal currencyConverter(String inputCurrency, BigDecimal amount) {
+	public BigDecimal currencyConverter(String refCurrency,String targetCurrencyirrncy, BigDecimal amount) {
         Optional<Currency> currencyOptional = currencyRepository.findById(inputCurrency);
         
         if (currencyOptional.isPresent()) {
