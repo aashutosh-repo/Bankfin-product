@@ -13,6 +13,8 @@ import com.fin.bancs.error.CustomError;
 import com.fin.bancs.error.ErrorCode;
 import com.fin.bancs.services.Currency_service;
 
+
+
 @Controller
 @RequestMapping("instrument")
 public class Instruments {
@@ -36,5 +38,15 @@ public class Instruments {
     		return String.valueOf(finalAmt);
     	}
     }
+	@GetMapping
+	public String emiCalculator(@RequestParam String loanAmt,@RequestParam String interestRate,
+	@RequestParam int tenure
+
+){
+     
+return "String";
+}
+
+
 }
 

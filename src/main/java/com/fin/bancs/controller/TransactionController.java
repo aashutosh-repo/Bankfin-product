@@ -5,7 +5,9 @@ import com.fin.bancs.services.Core_Transaction_services;
 import com.fin.bancs.transactions.Core_Transaction_Layer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.*;
 
+import java.nio.charset.CoderResult;
 import java.util.Optional;
 
 @tags(summary= "Omega Bank transaction Controller",
@@ -33,6 +35,13 @@ public class TransactionController {
         return "SuccessFully Inserted";
     }
 
+    @Operation(summary= "This end point is to create transfer type transaction",
+    description= "to create transfer type txn")
+    @PostMapping("/transfer")
+    public String transferTxn (@RequeatBody List<Core_Transaction_Layer> txnInput){
+        txnServices.createTxn(txnInput);
+        return "Transaction is successful";
+    }
     @Operation(
         summary = "This Endpoint enquiry the transactions ",
         description= "This endpoint handle enquiry for existing transaction stored in DB"
