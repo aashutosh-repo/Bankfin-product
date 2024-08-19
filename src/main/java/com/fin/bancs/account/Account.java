@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 
+import com.fin.bancs.audit.AuditInfo;
+
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -17,20 +19,21 @@ import lombok.ToString;
 @Entity
 @AllArgsConstructor @NoArgsConstructor @Getter @Setter
 @ToString 
-public class Account {
+public class Account extends AuditInfo{
 	@EmbeddedId
-	protected AccountPk account_id; //pk
+	protected AccountPk accountId; //pk
+	private String internalAcntNumber;
 	protected int account_status;
 	protected String account_number;
 	protected LocalDate account_open_dt;
-	protected int currency;
+	protected String currency;
 	protected int custId;
 	protected int cus_type;
 	protected int npa_status;
 	protected int min_bal;
 	protected Date last_withdrawal_dt;
 	protected BigDecimal available_balance;
-	protected int owner_name;
+	protected String owner_name;
 	protected int atm_req_flag;
 	protected int cheq_req_flag;
 	protected int sms_req_flag;

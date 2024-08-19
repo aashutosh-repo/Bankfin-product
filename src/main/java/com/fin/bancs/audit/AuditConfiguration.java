@@ -1,25 +1,16 @@
+package com.fin.bancs.audit;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 @Configuration
-@EnableJpaAuditing
-public class AuditingConfig {
+public class AuditConfiguration {
 
     @Bean
-    public AuditorAware<String> auditorAware() {
-        return new AuditorAware<String>() {
-                         
-    @Override
-    public String getCurrentAuditor() {
-       // Return the username of the current user
-      // You can use Spring Security's SecurityContextHolder to get the current user
-     return "admin"; // Replace with your own logic
+    public AuditorAware<String> auditorProvider() {
+        return new AuditorAwareImpl();
     }
-  };
- }
-
-    @Bean
-    public JpaAuditingConfigurer jpaAuditingConfigurer() {
-        return new JpaAuditingConfigurer().setAuditorAware(auditorAware());
-   }
 }
-                                                      
