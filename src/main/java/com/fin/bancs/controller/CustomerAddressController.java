@@ -1,5 +1,6 @@
 package com.fin.bancs.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +12,8 @@ import com.fin.bancs.customer.CustomerAddressDetails;
 import com.fin.bancs.dto.CustomerAddressDto;
 import com.fin.bancs.services.CustomerAddressServices;
 
+@Tag(name = "Omega Bank Address Controller",
+		description = "This Swagger containing CRUD operation for Address Management")
 @RestController
 @RequestMapping("/cust-address")
 public class CustomerAddressController {

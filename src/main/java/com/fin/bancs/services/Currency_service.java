@@ -14,7 +14,7 @@ public class Currency_service implements Currency_Service_Interface{
 
 	
 	public BigDecimal currencyConverter(String refCurrency,String targetCurrencyirrncy, BigDecimal amount) {
-        Optional<Currency> currencyOptional = currencyRepository.findById(inputCurrency);
+        Optional<Currency> currencyOptional = currencyRepository.findById(refCurrency);
         
         if (currencyOptional.isPresent()) {
             Currency currency = currencyOptional.get();

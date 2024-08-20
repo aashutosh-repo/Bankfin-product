@@ -37,7 +37,7 @@ public class Core_Transaction_services {
 
 
 
-    public void CreateTransaction(List<Core_Transaction_Layer> txnInput) {
+    public void CreateTransaction(Core_Transaction_Layer txnInput) {
 		Core_Transaction_Layer core_transaction_cash= new Core_Transaction_Layer();
 		Core_Transaction_Layer core_transaction_cr= new Core_Transaction_Layer();
 		Core_Transaction_Layer core_transaction_dr= new Core_Transaction_Layer();

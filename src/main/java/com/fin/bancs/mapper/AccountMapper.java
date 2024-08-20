@@ -11,7 +11,7 @@ public class AccountMapper {
         accountDto.setAccount_number(account.getAccount_number());
         accountDto.setAccount_open_dt(account.getAccount_open_dt());
         accountDto.setCurrency(account.getCurrency());
-        accountDto.setCust_id(account.getCust_id());
+        accountDto.setCust_id(account.getCustId());
         accountDto.setCus_type(account.getCus_type());
         accountDto.setNpa_status(account.getNpa_status());
         accountDto.setMin_bal(account.getMin_bal());
@@ -31,7 +31,7 @@ public class AccountMapper {
         account.setAccount_number(accountDto.getAccount_number());
         account.setAccount_open_dt(accountDto.getAccount_open_dt());
         account.setCurrency(accountDto.getCurrency());
-        account.setCust_id(accountDto.getCust_id());
+        account.setCustId(accountDto.getCust_id());
         account.setCus_type(accountDto.getCus_type());
         account.setNpa_status(accountDto.getNpa_status());
         account.setMin_bal(accountDto.getMin_bal());

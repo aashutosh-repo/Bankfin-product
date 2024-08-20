@@ -1,9 +1,10 @@
 package com.fin.bancs.services.si;
 
-import com.fin.bancs.customer.Customer_Details;
+import com.fin.bancs.customer.CustomerDetails;
+import com.fin.bancs.dto.CustomerDto;
 
 public interface Customer_Service_Interface {
-	
-	Customer_Details findCustomer(String mobile);
+
+	CustomerDto findCustomerByMobileNumber(String mobile);
 
 }

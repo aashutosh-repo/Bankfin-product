@@ -1,5 +1,6 @@
 package com.fin.bancs.dto;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,8 +10,8 @@ import lombok.Data;
 
 @Data
 public class DocumentsDtlsDto {
-	
-	@NotNull(message = "Customer ID cannot be null")
+
+    @NotNull(message = "Customer ID cannot be null")
     @Schema(description = "Unique identifier for the customer", example = "1001")
     protected int custId;
 
@@ -32,9 +33,9 @@ public class DocumentsDtlsDto {
 
     @NotNull(message = "Issue date cannot be null")
     @Schema(description = "Date when the document was issued", example = "2023-01-01")
-    protected Date issueDate;
+    protected LocalDate issueDate;
 
     @NotNull(message = "Expiry date cannot be null")
     @Schema(description = "Date when the document expires", example = "2033-01-01")
-    protected Date expiryDate;
+    protected LocalDate expiryDate;
 }

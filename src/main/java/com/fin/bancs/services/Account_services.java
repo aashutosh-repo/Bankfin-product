@@ -1,11 +1,14 @@
 package com.fin.bancs.services;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.catalina.mapper.Mapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fin.bancs.account.Account;
@@ -24,39 +27,43 @@ import com.fin.bancs.utils.SequenceGenerator;
 @Service
 public class Account_services implements Account_Service_Interface{
 
+	private static final Logger logger = LogManager.getLogger(Account_services.class);
+
+
 	@Autowired
 	public Account_repository account_repository;
 	@Autowired
 	private Customer_Details_Repository custRepository;
 	@Autowired
 	private SequenceGenerator sequenceGenerator;
-	
-	
+
+	@Override
 	public Account ceateModifyAccountDetails(AccountDto account,int modifyFlag){
-		//If Modify flag is 1 then primary key should pass as a User-input 
+		logger.debug("Entered int Creation Task of class : "+ this.getClass().getSimpleName()+ "On : "+ LocalDate.now());
+		//If Modify flag is 1 then primary key should pass as a User-input
 		Account acc=  new Account();
 		Account accCreate=  new Account();
 		Account accMdfy=  new Account();
 		if(modifyFlag==1) {
-			//check the given data is existing in DB or not if yes then proceed 
+			//check the given data is existing in DB or not if yes then proceed
 			//acc = account_repository.getReferenceById(account.getAccountId());
 			if(acc != null) {
 				accMdfy.setAccountId(acc.getAccountId());
 				acc = account_repository.save(accMdfy);
 			}
-			
-		} 
-		else 
+
+		}
+		else
 		{
 			CustomerID cId = new CustomerID();
 			cId.setCustomerID(account.getCust_id());
 			cId.setCustomerType(account.getCus_type());
-		
+
 			Optional<CustomerDetails> cust = custRepository.findById(cId);
 			if(cust.isEmpty()) {
 				throw new ResourceNotFoundException(ErrorCode.CUSTOMER_NOT_FOUND);
 			}
-		
+
 			BigInteger entityId = sequenceGenerator.generateSequence("AccountId_seq");
 			BigInteger intAccNumber = sequenceGenerator.generateSequence("InternalAccNO_seq");
 			BigInteger custAccNumber = sequenceGenerator.generateSequence("CustomerAccNO_seq");
@@ -67,15 +74,17 @@ public class Account_services implements Account_Service_Interface{
 			accpk.setAccount_type(1);
 			accCreate= AccountMapper.mapToAccount(account, new Account());
 			accCreate.setAccountId(accpk);
-			accCreate.setIntrnl_acnt_nmbr(intAccNumStr);
+			accCreate.setInternalAcntNumber(intAccNumStr);
 			accCreate.setAccount_number(custAccNum);
-			
+
 			acc= account_repository.save(accCreate);
+			logger.debug("Account Creation Completed :  "+ this.getClass().getSimpleName()+ "On : "+ LocalDate.now());
+
 		}
 		return acc;
 	}
-	
-	
+
+
 	public void deleteAccount(Account account) {
 		Account account_del =new Account();
 		if(account_repository.findById(account.getAccountId()) != null) {
@@ -84,10 +93,12 @@ public class Account_services implements Account_Service_Interface{
 			account_del.setClsr_dt (account.getClsr_dt());
 			account_repository.save(account_del);
 		}
-		
+
 	}
-	
+
 	public List<AccountDto> findAllAccounts() {
+		logger.debug("Account Finding in :  "+ this.getClass().getSimpleName()+ "On : "+ LocalDate.now());
+
 		List<Account> account = new ArrayList<>();
 		List<AccountDto> accDto = new ArrayList<AccountDto>();
 		AccountDto accountDto = new AccountDto();
@@ -95,6 +106,8 @@ public class Account_services implements Account_Service_Interface{
 		for(Account acc: account) {
 			accountDto.setAccount_number(acc.getAccount_number());
 		}
+		logger.debug("Account Finding completed in :  "+ this.getClass().getSimpleName()+ "On : "+ LocalDate.now());
+
 		return accDto;
 	}
 	public List<Account> getAccountByCustomerId(int customerId){

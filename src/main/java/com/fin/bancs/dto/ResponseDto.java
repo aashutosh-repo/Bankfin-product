@@ -3,12 +3,13 @@ package com.fin.bancs.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Schema(
         name = "Response",
         description = "Contains Details of Response Status"
 )
-@Data @AllArgsConstructor
+@Data @AllArgsConstructor @NoArgsConstructor
 public class ResponseDto {
     @Schema(
             description = "Status Code",

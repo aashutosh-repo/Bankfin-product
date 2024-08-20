@@ -1,16 +1,17 @@
 package com.fin.bancs.customer;
 
 import java.io.Serializable;
-import java.util.Objects;
 
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Embeddable
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor @ToString
-public class Cust_Address_detailsPk implements Serializable {
-    protected int PIN_CODE;
-    protected int ADDRESS_ID;
+public  class AddressID implements Serializable {
+    protected int customerId;
+    protected int addressId;
 }

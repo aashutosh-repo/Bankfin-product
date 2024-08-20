@@ -17,9 +17,7 @@ import com.fin.bancs.account.Account;
 import com.fin.bancs.common.AccountsConstants;
 import com.fin.bancs.dto.AccountDto;
 import com.fin.bancs.dto.ResponseDto;
-import com.fin.bancs.repository.Account_repository;
 import com.fin.bancs.services.Account_services;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

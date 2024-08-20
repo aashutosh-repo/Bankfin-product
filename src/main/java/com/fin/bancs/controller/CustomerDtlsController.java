@@ -26,7 +26,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "omega bank Customer Details Controller",
+@Tag(name = "Omega Bank Customer Details Controller",
 description = "This Swagger containing CRUD operation for Customer Management")
 @RestController
 @RequestMapping("/customer")
