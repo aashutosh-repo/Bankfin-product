@@ -48,10 +48,6 @@ public class CustomerDtlsController {
     }
     @Operation(summary = "Find Customer By Mobile Number API",
     description = "REST API to Find Customer By Mobile Number in Omega Bank")
-    @ApiResponse(
-            responseCode = "201",
-            description = "Http Status CREATED"
-    )
     @GetMapping("/getCustByMobileNumber")
     public CustomerDto geCustomerByCustomerId(@RequestParam String mobileNumber){
     	CustomerDto allCust =customerDetailsServices.findCustomerByMobileNumber(mobileNumber);
