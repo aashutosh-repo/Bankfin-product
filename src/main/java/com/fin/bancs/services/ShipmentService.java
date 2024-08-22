@@ -54,10 +54,6 @@ public boolean isDelivered(String shipmentId) {
 }
 
 public boolean isPaymentCleared(String shipmentId) {
-	boolean yesNo = tfservices.isPaymentCompleted(shipmentId);
-	if(yesNo == true) {
-		return true;
-	}
-	return false;
+    return tfservices.isPaymentCompleted(shipmentId);
 }
 }	
