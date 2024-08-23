@@ -42,7 +42,7 @@ public class OpenApiConfiguration {
 	public GroupedOpenApi publicApi() {
 		return GroupedOpenApi.builder()
 				.group("api")
-				.pathsToExclude("/transaction/**")
+				.pathsToExclude("/transactions/**")
 				.build();
 	}
 }

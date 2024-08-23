@@ -32,10 +32,10 @@ public class TransactionController {
 
     )
     @PostMapping("/cash")
-    public String createTxn(@RequestBody List<Core_Transaction_Layer> centralTransaction){
+    public String createTxn(@RequestBody Core_Transaction_Layer centralTransaction){
     	//capture the input for cash transaction(credit and debit type)
     	Core_Transaction_services txn_service= new Core_Transaction_services();
-    	//txn_service.CreateTransaction();
+    	txnServices.CreateTransaction(centralTransaction);
     	//repo.save(centralTransaction);
         return "SuccessFully Inserted";
     }

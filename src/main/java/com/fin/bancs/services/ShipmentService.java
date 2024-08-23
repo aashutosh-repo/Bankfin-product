@@ -18,8 +18,8 @@ public class ShipmentService {
   private ShipmentRepository shipmentRepository;
   @Autowired
   private TradeServices tfservices;
-	@Autowired
-	private SequenceGenerator sequenceGenerator;
+  @Autowired
+  private SequenceGenerator sequenceGenerator;
   
   public Shipment createShipment(Shipment shipment) {
 	  BigInteger shipmentId = sequenceGenerator.generateSequence("Shipment_seq");
