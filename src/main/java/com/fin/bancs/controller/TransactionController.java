@@ -1,15 +1,15 @@
 package com.fin.bancs.controller;
 
+import com.fin.bancs.dto.TransactionDTO;
 import com.fin.bancs.repository.Core_Transaction_Layer_Repository;
 import com.fin.bancs.services.Core_Transaction_services;
-import com.fin.bancs.transactions.Core_Transaction_Layer;
+import com.fin.bancs.transactions.Core_Transaction;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.*;
 
-import java.nio.charset.CoderResult;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,10 +32,10 @@ public class TransactionController {
 
     )
     @PostMapping("/cash")
-    public String createTxn(@RequestBody Core_Transaction_Layer centralTransaction){
+    public String createTxn(@RequestBody TransactionDTO centralTransaction){
     	//capture the input for cash transaction(credit and debit type)
     	Core_Transaction_services txn_service= new Core_Transaction_services();
-    	txnServices.CreateTransaction(centralTransaction);
+    	txnServices.cashTransaction(centralTransaction);
     	//repo.save(centralTransaction);
         return "SuccessFully Inserted";
     }
@@ -43,7 +43,7 @@ public class TransactionController {
     @Operation(summary= "This end point is to create transfer type transaction",
     description= "to create transfer type txn")
     @PostMapping("/transfer")
-    public String transferTxn (@RequestBody List<Core_Transaction_Layer> txnInput){
+    public String transferTxn (@RequestBody List<Core_Transaction> txnInput){
         //txnServices.CreateTransaction(txnInput);
         return "Transaction is successful";
     }
@@ -53,9 +53,9 @@ public class TransactionController {
     )
     //Transaction  with TXN-ID 
     @GetMapping("/getByTxnId")
-    public Optional<Core_Transaction_Layer> getTxn(@RequestParam Integer txnId){
+    public Optional<Core_Transaction> getTxn(@RequestParam Integer txnId){
         //Central_Transaction central_transaction= repo.findById(Central_Transaction.class,txnId);
-        Optional<Core_Transaction_Layer> central_transaction= repo.findById(txnId);
+        Optional<Core_Transaction> central_transaction= repo.findById(txnId);
 
         return central_transaction;
     }

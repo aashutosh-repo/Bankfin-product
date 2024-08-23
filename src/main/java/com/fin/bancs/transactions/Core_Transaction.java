@@ -7,7 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NegativeOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,22 +15,25 @@ import lombok.ToString;
 
 @Entity
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor @ToString
-public class Central_Transaction {
+public class Core_Transaction {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int CEN_TXN_ID;
-	protected int TXN_TYPE; //cash or transfer
+	protected int cen_txn_id;
+	protected int txn_type; //cash or transfer
 	protected int credit_debit_flag;
-	protected int TXN_SEQ;
-	protected int ACCOUNT_ID_CR;
-	protected int ACCOUNT_TYPE_CR;
-	protected int ACCOUNT_ID_DR;
-	protected int ACCOUNT_TYPE_DR;
-	protected LocalDate GEN_DT;
-	protected BigDecimal TXN_AMT;
-	protected BigDecimal INTEREST_AMT;
-	protected BigDecimal GST_AMT;
-	protected int LAST_TXN_DT;
-	protected String TXN_DESC;
+	protected int txn_seq;
+	protected int account_id_cr;
+	protected int account_type_cr;
+	protected int account_id_dr;
+	protected int account_type_dr;
+	protected LocalDate gen_dt;
+	protected BigDecimal txn_amt;
+	protected BigDecimal interest_amt;
+	protected BigDecimal gst_amt;
+	protected int last_txn_dt;
+	protected LocalDate last_update = LocalDate.now();
+	protected String txn_desc;
+	protected String currency;
+
 }
