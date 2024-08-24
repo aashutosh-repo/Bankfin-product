@@ -2,13 +2,8 @@ package com.fin.bancs.controller;
 
 import java.math.BigDecimal;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
-import com.fin.bancs.common.AccountsConstants;
-import com.fin.bancs.error.CustomError;
-import com.fin.bancs.error.CustomException;
-import org.apache.hc.core5.http.HttpStatus;
+import com.fin.bancs.error.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.fin.bancs.error.ErrorCode;
 import com.fin.bancs.services.Currency_service;
-import com.google.gson.JsonElement;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -40,7 +34,7 @@ public class Instruments {
 		BigDecimal finalAmt= new BigDecimal(0.0);
 		finalAmt= currency.currencyConverter(inputCurrency, targetCurrency, amount);
 		if(finalAmt ==null) {
-			throw new CustomError(ErrorCode.CURRNCY_CANNOT_CONVERTED);
+			throw new ErrorHandler(ErrorCode.CURRNCY_CANNOT_CONVERTED);
 		}else {
 			return String.valueOf(finalAmt);
 		}

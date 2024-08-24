@@ -28,10 +28,10 @@ public abstract class AuditInfo {
     private Instant createdDate;
 
     @LastModifiedBy
-    @Column(insertable = false, updatable = false)
+    @Column(insertable = false, updatable =true)
     private String lastModifiedBy;
 
     @LastModifiedDate
-    @Column(insertable = false, updatable = false)
+    @Column(insertable = false, updatable = true)
     private Instant lastModifiedDate;
    }

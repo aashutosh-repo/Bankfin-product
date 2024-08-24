@@ -3,6 +3,8 @@ package com.fin.bancs.transactions;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.fin.bancs.audit.AuditInfo;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,12 +17,13 @@ import lombok.ToString;
 
 @Entity
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor @ToString
-public class Core_Transaction {
+public class Core_Transaction extends AuditInfo{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected int cen_txn_id;
 	protected int txn_type; //cash or transfer
+	protected String txnRefId;
 	protected int credit_debit_flag;
 	protected int txn_seq;
 	protected int account_id_cr;

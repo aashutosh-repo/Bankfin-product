@@ -1,25 +1,34 @@
 package com.fin.bancs.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fin.bancs.account.AccountPk;
+import com.fin.bancs.dto.ResponseDto;
 import com.fin.bancs.dto.TransactionDTO;
-import com.fin.bancs.repository.Core_Transaction_Layer_Repository;
+import com.fin.bancs.error.ErrorHandler;
 import com.fin.bancs.services.Core_Transaction_services;
+import com.fin.bancs.transactions.CashTransactionInput;
 import com.fin.bancs.transactions.Core_Transaction;
+
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @Tag(name= "Omega Bank transaction Controller",
 description= "This collection contains CRUD operation for transactions")
 @RestController
 @RequestMapping("/transaction")
 public class TransactionController {
-    @Autowired
-    private Core_Transaction_Layer_Repository repo;
     @Autowired
     private  Core_Transaction_services txnServices;
 
@@ -29,15 +38,16 @@ public class TransactionController {
     @ApiResponse(
         responseCode= "201",
         description = "http status CREATED"
-
     )
-    @PostMapping("/cash")
-    public String createTxn(@RequestBody TransactionDTO centralTransaction){
-    	//capture the input for cash transaction(credit and debit type)
-    	Core_Transaction_services txn_service= new Core_Transaction_services();
-    	txnServices.cashTransaction(centralTransaction);
-    	//repo.save(centralTransaction);
-        return "SuccessFully Inserted";
+    @PostMapping("/cashTransaction")
+    public ResponseEntity<Object> createTxn(@RequestBody CashTransactionInput cashTxnDtls){
+    	String txnId = txnServices.cashTransaction(cashTxnDtls);
+    	AccountPk accId = new AccountPk();
+    	accId.setAccount_id(cashTxnDtls.getAccountId());
+    	accId.setAccount_type(cashTxnDtls.getAccountType());
+    	txnServices.getCashtxnDetails(accId, txnId);
+    	ResponseEntity<Object> respObj = ResponseDto.responseBuilder("Transaction SuccessFull", HttpStatus.OK, txnServices.getCashtxnDetails(accId, txnId));
+        return respObj;
     }
 
     @Operation(summary= "This end point is to create transfer type transaction",
@@ -53,11 +63,11 @@ public class TransactionController {
     )
     //Transaction  with TXN-ID 
     @GetMapping("/getByTxnId")
-    public Optional<Core_Transaction> getTxn(@RequestParam Integer txnId){
-        //Central_Transaction central_transaction= repo.findById(Central_Transaction.class,txnId);
-        Optional<Core_Transaction> central_transaction= repo.findById(txnId);
-
-        return central_transaction;
+    public List<TransactionDTO> getTxn(@RequestParam String txnId){
+    	if(txnId.isBlank()) {
+    		throw new ErrorHandler("Txn Id should be String");
+    	}
+    	return txnServices.getTransactionDetails(txnId);
     }
 
 }
