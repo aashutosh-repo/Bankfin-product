@@ -53,7 +53,7 @@ public boolean isDelivered(String shipmentId) {
 	return false;
 }
 
-public boolean isPaymentCleared(String shipmentId) {
-    return tfservices.isPaymentCompleted(shipmentId);
+public boolean isPaymentCleared(String shipmentId, long locId) {
+    return tfservices.isPaymentCompleted(shipmentId,locId);
 }
 }	

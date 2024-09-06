@@ -6,13 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fin.bancs.common.Notifications;
-import com.fin.bancs.error.ErrorCode;
-import com.fin.bancs.error.ResourceNotFoundException;
 import com.fin.bancs.mapper.NotificationMapper;
 import com.fin.bancs.repository.NotificationRepository;
 import com.fin.bancs.utils.SequenceGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service

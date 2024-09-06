@@ -5,7 +5,10 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
+import com.fin.bancs.error.ErrorHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +50,8 @@ public class Core_Transaction_services  {
 
 
     public void CreateA2ATransaction(List<TransactionDTO> txnInputDTO) {
-		BigInteger txnid = seqGen.generateSequence("TxnSeq");
-		String txnRef = "2-" + txnid.toString();
+		BigInteger txnId = seqGen.generateSequence("TxnSeq");
+		String txnRef = "2-" + txnId.toString();
 		Core_Transaction core_transaction_cr= new Core_Transaction();
 		Core_Transaction core_transaction_dr= new Core_Transaction();
 		List<Core_Transaction> core_transaction = new ArrayList<>();
@@ -56,75 +59,75 @@ public class Core_Transaction_services  {
 
 		for(TransactionDTO txn : txnInputDTO) {
 			Core_Transaction coreTxn = TransactionMapper.mapTOCoreTxnLayer(txn,new Core_Transaction());
-			if(coreTxn.getCredit_debit_flag()==1) //Credit Account
+			if(coreTxn.getCredit_debit_flag() == 1) //Credit Account
 			{
-				core_transaction_cr= coreTxn;
+				core_transaction_cr = coreTxn;
 			}
-			if(coreTxn.getCredit_debit_flag()==2) //Debit Account
+			if(coreTxn.getCredit_debit_flag() == 2) //Debit Account
 			{
-				core_transaction_dr= coreTxn;
+				core_transaction_dr = coreTxn;
 			}
 		}
-		
 		  //Transfer-> Do transfer Operation
 			// total 4 transaction row will be written
 			//1. Debit from source account 2. credit to internal Credit Account
-			Core_Transaction coreTransactionLayer_int_dr = new Core_Transaction();
+			//3. Credit to source account 4. Debit from internal Debit Account
 			Core_Transaction coreTransactionLayer_int_cr = new Core_Transaction();
+			Core_Transaction coreTransactionLayer_int_dr = new Core_Transaction();
 			Core_Transaction coreTransaction_acc_cr = new Core_Transaction();
 			Core_Transaction coreTransaction_acc_dr = new Core_Transaction();
 			//case1 -- Debit from source account
 			AccountPk account_pk = new AccountPk();
-			AccountPk internal_acc_pk = new AccountPk();
-			Account account_dr = new Account();
-			Account account_cr = new Account();
+			Account account_dr;
+			Account account_cr =  new Account();
 			Account internal_acc_cr = new Account();
-			Account internal_acc_dr = new Account();
+			Account internal_acc_dr;
+			if(!Objects.equals(core_transaction_cr.getTxn_amt(), core_transaction_dr.getTxn_amt())){
+				throw  new ErrorHandler("Debit Amount and Credit Amount should be Same");
+			}
+			BigDecimal txnAmt = core_transaction_cr.getTxn_amt();
 			//Account balance Update Starts here
-		if(core_transaction_cr.getCredit_debit_flag()==1) 
-		{
+		if(core_transaction_cr.getCredit_debit_flag()==1) {
 			account_pk.setAccount_id(core_transaction_cr.getAccount_id_cr()); //CR type Inter
 			account_pk.setAccount_type(core_transaction_cr.getAccount_type_cr());
 			Optional<Account> account_opt_cr = accRepo.findById(account_pk);
-			account_pk.setAccount_id(123456);
+			account_pk.setAccount_id(123456); //Default internal debit account
 			account_pk.setAccount_type(2);
 			Optional<Account> int_acc_dr = accRepo.findById(account_pk);
-			if (account_opt_cr.isPresent() && int_acc_dr.isPresent() ) {
+			if (account_opt_cr.isPresent() && int_acc_dr.isPresent()) {
 				account_cr = account_opt_cr.get();
 				internal_acc_dr = int_acc_dr.get();
 				account_cr.setAvailable_balance(account_cr.getAvailable_balance().subtract(core_transaction_dr.getTxn_amt()));
 				UpdateAccBal.add(account_cr);
 				internal_acc_cr.setAvailable_balance(internal_acc_dr.getAvailable_balance().add(core_transaction_dr.getTxn_amt()));
 				UpdateAccBal.add(internal_acc_cr);
-			}else {
+			} else {
 				throw new ResourceNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND);
 			}
 			//Account1 balance Update Ends here
-			
 			coreTransaction_acc_cr.setTxn_desc(core_transaction_cr.getTxn_desc() + " Account Transfer : Credit");
 			coreTransaction_acc_cr.setAccount_id_cr(account_cr.getAccountId().getAccount_id());
 			coreTransaction_acc_cr.setAccount_type_cr(account_cr.getAccountId().getAccount_type());
 			coreTransaction_acc_cr.setCredit_debit_flag(1);
-			coreTransaction_acc_cr.setTxn_amt(core_transaction_cr.getTxn_amt());
+			coreTransaction_acc_cr.setTxn_amt(txnAmt);
 			coreTransaction_acc_cr.setGen_dt(LocalDate.now());
-			coreTransaction_acc_cr.setCurrency("INR");
+			coreTransaction_acc_cr.setCurrency(core_transaction_cr.getCurrency());
 			coreTransaction_acc_cr.setTxn_seq(1);
 			coreTransaction_acc_cr.setTxnRefId(txnRef);
-			
-				//case2 -- Debit From internal Account
-				coreTransactionLayer_int_cr.setTxn_amt(core_transaction_dr.getTxn_amt());
-				coreTransactionLayer_int_cr.setGen_dt(LocalDate.now());
-				coreTransactionLayer_int_cr.setTxn_desc(core_transaction_dr.getTxn_desc() + " A2A internal : Debit");
-				coreTransactionLayer_int_cr.setCredit_debit_flag(2);
-				coreTransactionLayer_int_cr.setTxn_seq(2);
-				coreTransactionLayer_int_cr.setCurrency("INR");
-				
+
+			//case2 -- Debit From internal Account
+			coreTransactionLayer_int_dr.setTxn_amt(txnAmt);
+			coreTransactionLayer_int_dr.setGen_dt(LocalDate.now());
+			coreTransactionLayer_int_dr.setTxn_desc(core_transaction_dr.getTxn_desc() + " A2A internal : Debit");
+			coreTransactionLayer_int_dr.setCredit_debit_flag(2);
+			coreTransactionLayer_int_dr.setTxn_seq(2);
+			coreTransactionLayer_int_dr.setCurrency(core_transaction_cr.getCurrency());
+
 			core_transaction.add(coreTransaction_acc_cr);
-			core_transaction.add(coreTransactionLayer_int_cr);
+			core_transaction.add(coreTransactionLayer_int_dr);
 		}
 		
-		
-		if(core_transaction_dr.getCredit_debit_flag()==1) {
+		if(core_transaction_dr.getCredit_debit_flag() == 2) {
 			account_pk.setAccount_id(core_transaction_dr.getAccount_id_cr()); 
 			account_pk.setAccount_type(core_transaction_dr.getAccount_type_cr());
 			Optional<Account> account_opt_dr = accRepo.findById(account_pk);
@@ -134,34 +137,34 @@ public class Core_Transaction_services  {
 			if (account_opt_dr.isPresent() && int_acc_cr.isPresent() ) {
 				account_dr = account_opt_dr.get();
 				internal_acc_cr = int_acc_cr.get();
-				account_dr.setAvailable_balance(account_dr.getAvailable_balance().subtract(core_transaction_dr.getTxn_amt()));
-				UpdateAccBal.add(account_cr);
-				internal_acc_cr.setAvailable_balance(internal_acc_cr.getAvailable_balance().add(core_transaction_dr.getTxn_amt()));
+				account_dr.setAvailable_balance(account_dr.getAvailable_balance().subtract(txnAmt));
+				UpdateAccBal.add(account_dr);
+				internal_acc_cr.setAvailable_balance(internal_acc_cr.getAvailable_balance().add(txnAmt));
 				UpdateAccBal.add(internal_acc_cr);
 			}else {
 				throw new ResourceNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND);
 			}
 			//Account2 balance Update Ends here
-			
-			coreTransaction_acc_cr.setTxn_desc(core_transaction_cr.getTxn_desc() + " Account Transfer : Debit");
-			coreTransaction_acc_cr.setAccount_id_cr(account_dr.getAccountId().getAccount_id());
-			coreTransaction_acc_cr.setAccount_type_cr(account_dr.getAccountId().getAccount_type());
-			coreTransaction_acc_cr.setCredit_debit_flag(2);
-			coreTransaction_acc_cr.setTxn_amt(core_transaction_cr.getTxn_amt());
-			coreTransaction_acc_cr.setGen_dt(LocalDate.now());
-			coreTransaction_acc_cr.setCurrency("INR");
-			coreTransaction_acc_cr.setTxn_seq(3);
-			coreTransaction_acc_cr.setTxnRefId(txnRef);
+
+			coreTransaction_acc_dr.setTxn_desc(core_transaction_cr.getTxn_desc() + " Account Transfer : Debit");
+			coreTransaction_acc_dr.setAccount_id_cr(account_dr.getAccountId().getAccount_id());
+			coreTransaction_acc_dr.setAccount_type_cr(account_dr.getAccountId().getAccount_type());
+			coreTransaction_acc_dr.setCredit_debit_flag(2);
+			coreTransaction_acc_dr.setTxn_amt(txnAmt);
+			coreTransaction_acc_dr.setGen_dt(LocalDate.now());
+			coreTransaction_acc_dr.setCurrency("INR");
+			coreTransaction_acc_dr.setTxn_seq(3);
+			coreTransaction_acc_dr.setTxnRefId(txnRef);
 			
 				//case2 -- Credit To internal Account
-				coreTransactionLayer_int_cr.setTxn_amt(core_transaction_dr.getTxn_amt());
+				coreTransactionLayer_int_cr.setTxn_amt(txnAmt);
 				coreTransactionLayer_int_cr.setGen_dt(LocalDate.now());
 				coreTransactionLayer_int_cr.setTxn_desc(core_transaction_dr.getTxn_desc() + " A2A internal : Credit");
 				coreTransactionLayer_int_cr.setCredit_debit_flag(1);
-				coreTransactionLayer_int_cr.setTxn_seq(3);
+				coreTransactionLayer_int_cr.setTxn_seq(4);
 				coreTransactionLayer_int_cr.setCurrency("INR");
 				
-			core_transaction.add(coreTransaction_acc_cr);
+			core_transaction.add(coreTransaction_acc_dr);
 			core_transaction.add(coreTransactionLayer_int_cr);
 		}
 		
