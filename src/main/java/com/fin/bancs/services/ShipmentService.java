@@ -45,12 +45,7 @@ public class ShipmentService {
 
 public boolean isDelivered(String shipmentId) {
 	Optional<Shipment> shipment= shipmentRepository.findByShipmentId(shipmentId);
-	if(shipment.isEmpty()) {
-		return false;
-	}else if(shipment.get().getShipmentStatus().toUpperCase() == "DELIVERED"){
-	 	return true;
-	}
-	return false;
+    return shipment.filter(value -> value.getShipmentStatus().equalsIgnoreCase("DELIVERED")).isPresent();
 }
 
 public boolean isPaymentCleared(String shipmentId, long locId) {

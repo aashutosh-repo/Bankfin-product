@@ -79,7 +79,7 @@ public class Core_Transaction_services  {
 			//case1 -- Debit from source account
 			AccountPk account_pk = new AccountPk();
 			Account account_dr;
-			Account account_cr =  new Account();
+			Account account_cr;
 			Account internal_acc_cr = new Account();
 			Account internal_acc_dr;
 			if(!Objects.equals(core_transaction_cr.getTxn_amt(), core_transaction_dr.getTxn_amt())){
@@ -181,9 +181,9 @@ public class Core_Transaction_services  {
 			//1. Debit from source account and credit to internal Credit Account
 			//Find out Credit side account details and debit side account details.
 			//one row can handle this txn
-			Account acc = new Account();
-			Optional<Account> acc_internal= Optional.of(new  Account());
-			Optional<Account> acc_cash= Optional.of(new  Account());
+			Account acc;
+			Optional<Account> acc_internal;
+			Optional<Account> acc_cash;
 			AccountPk accPk= new AccountPk();
 			AccountPk accID= new AccountPk();
 			BigDecimal total_amt_internal;
@@ -308,10 +308,9 @@ public class Core_Transaction_services  {
 		List<Core_Transaction> coreTxn = coreRepo.findByTxnRefId(TxnId);
 		for(Core_Transaction txn : coreTxn) {
 			if(txn.getAccount_type_dr() == 2 || txn.getAccount_type_cr() == 2) {
-				Core_Transaction cashTxn = txn;
-				response.setTxnAmt(cashTxn.getTxn_amt());
-				response.setTxnDesc(cashTxn.getTxn_desc());
-				response.setTxnDate(cashTxn.getGen_dt());
+                response.setTxnAmt(txn.getTxn_amt());
+				response.setTxnDesc(txn.getTxn_desc());
+				response.setTxnDate(txn.getGen_dt());
 			}
 		}
 		return response;
