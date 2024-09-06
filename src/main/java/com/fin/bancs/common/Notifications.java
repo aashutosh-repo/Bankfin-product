@@ -1,13 +1,16 @@
 package com.fin.bancs.common;
 
-import java.io.Serializable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.*;
 
-import lombok.Data;
-
-@Data
-public class Notifications  implements Serializable{
-	private String notificationId;
+@Entity
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+public class Notifications{
+    @Id
+	private String ntfctnId;
     private String title;
     private String message;
-    private boolean isActive;
+    private int isActive;
+
 }

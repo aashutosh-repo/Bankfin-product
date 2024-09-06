@@ -2,15 +2,15 @@ package com.fin.bancs.controller;
 
 import java.util.List;
 
+import com.fin.bancs.common.AccountsConstants;
 import com.fin.bancs.common.Notifications;
+import com.fin.bancs.dto.ResponseDto;
+import com.fin.bancs.error.ErrorCode;
+import com.fin.bancs.error.ResourceNotFoundException;
 import com.fin.bancs.services.NotificationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/notifications")
@@ -31,5 +31,13 @@ public class NotificationController {
     public ResponseEntity<List<Notifications>> getActiveNotifications() {
         List<Notifications> activeNotifications = notificationService.getActiveNotifications();
         return new ResponseEntity<>(activeNotifications, HttpStatus.OK);
+    }
+    @PutMapping("/delete")
+    public ResponseEntity<ResponseDto> deleteNotification(@RequestParam String notificationId){
+        boolean flag = notificationService.deleteNotification(notificationId);
+        if(!flag){
+            throw new ResourceNotFoundException(ErrorCode.NOTIFICATION_NOT_FOUND);
+        }
+        return new ResponseEntity<>(new ResponseDto("Deleted SuccessFully",AccountsConstants.MESSAGE_200),HttpStatus.OK);
     }
 }
