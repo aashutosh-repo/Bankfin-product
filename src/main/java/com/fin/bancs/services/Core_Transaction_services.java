@@ -302,7 +302,7 @@ public class Core_Transaction_services  {
 		CashTransactionResponse response = new CashTransactionResponse();
 		Optional<Account> cashAcc = accRepo.findById(accId);
 		if(cashAcc.isPresent()) {
-			response.setAccNumber(cashAcc.get().getAccount_number());
+			response.setAccNumber(cashAcc.get().getAccountNumber());
 			response.setAvailableAmt(cashAcc.get().getAvailable_balance());
 		}
 		List<Core_Transaction> coreTxn = coreRepo.findByTxnRefId(TxnId);

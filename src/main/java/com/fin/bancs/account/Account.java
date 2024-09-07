@@ -8,8 +8,6 @@ import com.fin.bancs.audit.AuditInfo;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.TableGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +22,7 @@ public class Account extends AuditInfo{
 	protected AccountPk accountId; //pk
 	private String internalAcntNumber;
 	protected int account_status;
-	protected String account_number;
+	protected String accountNumber;
 	protected LocalDate account_open_dt;
 	protected String currency;
 	protected int custId;

@@ -8,7 +8,7 @@ public class AccountMapper {
 	
 	public static AccountDto mapToAccountDto(Account account, AccountDto accountDto) {
 		accountDto.setAccount_status(account.getAccount_status());
-        accountDto.setAccount_number(account.getAccount_number());
+        accountDto.setAccount_number(account.getAccountNumber());
         accountDto.setAccount_open_dt(account.getAccount_open_dt());
         accountDto.setCurrency(account.getCurrency());
         accountDto.setCust_id(account.getCustId());
@@ -28,7 +28,7 @@ public class AccountMapper {
 	
 	public static Account mapToAccount(AccountDto accountDto, Account account ) {
 		account.setAccount_status(accountDto.getAccount_status());
-        account.setAccount_number(accountDto.getAccount_number());
+        account.setAccountNumber(accountDto.getAccount_number());
         account.setAccount_open_dt(accountDto.getAccount_open_dt());
         account.setCurrency(accountDto.getCurrency());
         account.setCustId(accountDto.getCust_id());
