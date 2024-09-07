@@ -7,13 +7,13 @@ This project contains various high level banking services
 update** - openApi Swagger added to make life easy</p>
 <p>Functions - </p>
 
-    - Customer onboarding with nominee and address details(completed)
+    - Customer onboarding with Nominee, Docs and Address details(completed)
     - Account Creation (completed)
     - Cash transactions/ A2A transaction (Enhancement) 
     - SIP calculation (planned)
-    - Cross Currency calculation (Enhancement)
+    - Currency Exchange (Enhancement)
     - User access control (Completed)
-    -Trade Finance (in progress)
+    - Trade Finance (in progress)
     - Audit(completed)
   
 - 🔭 Currently working on project [Banking product](https://github.com/aashutosh-repo/Bankfin-product.git)
