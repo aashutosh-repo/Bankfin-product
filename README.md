@@ -15,6 +15,10 @@ update** - openApi Swagger added to make life easy</p>
     - User access control (Completed)
     - Trade Finance (in progress)
     - Audit(completed)
+## ER Diagrams
+Here are the ER diagrams for the project:
+
+![ER Diagram](src/main/resources/ProjectStrucure)
   
 - 🔭 Currently working on project [Banking product](https://github.com/aashutosh-repo/Bankfin-product.git)
 
