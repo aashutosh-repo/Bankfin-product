@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.fin.bancs.constants.AccountsConstants;
 import com.fin.bancs.error.ErrorHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -92,7 +93,7 @@ public class Core_Transaction_services  {
 			account_pk.setAccount_type(core_transaction_cr.getAccount_type_cr());
 			Optional<Account> account_opt_cr = accRepo.findById(account_pk);
 			account_pk.setAccount_id(123456); //Default internal debit account
-			account_pk.setAccount_type(2);
+			account_pk.setAccount_type(AccountsConstants.INTERNAL_ACCOUNT);
 			Optional<Account> int_acc_dr = accRepo.findById(account_pk);
 			if (account_opt_cr.isPresent() && int_acc_dr.isPresent()) {
 				account_cr = account_opt_cr.get();
@@ -132,7 +133,7 @@ public class Core_Transaction_services  {
 			account_pk.setAccount_type(core_transaction_dr.getAccount_type_cr());
 			Optional<Account> account_opt_dr = accRepo.findById(account_pk);
 			account_pk.setAccount_id(123455);
-			account_pk.setAccount_type(2);
+			account_pk.setAccount_type(AccountsConstants.INTERNAL_ACCOUNT);
 			Optional<Account> int_acc_cr = accRepo.findById(account_pk);
 			if (account_opt_dr.isPresent() && int_acc_cr.isPresent() ) {
 				account_dr = account_opt_dr.get();
@@ -192,10 +193,10 @@ public class Core_Transaction_services  {
 			if(txnInput.getCreditDebitFlag() == 2) {
 				//accPk.setAccount_id(core_transaction_cash.getAccount_id_cr()); //internal Account need to maintain internally
 				accID.setAccount_id(111111122); //Default credit Account
-				accID.setAccount_type(1); //For inernal account
+				accID.setAccount_type(AccountsConstants.INTERNAL_ACCOUNT); //For inernal account
 			}else {
 				accID.setAccount_id(111111123); //Default debit Account
-				accID.setAccount_type(1); //For inernal account
+				accID.setAccount_type(AccountsConstants.INTERNAL_ACCOUNT); //For inernal account
 			}
 			acc_internal= accRepo.findById(accID);
 			accPk.setAccount_id(txnInput.getAccountId());
@@ -307,10 +308,11 @@ public class Core_Transaction_services  {
 		}
 		List<Core_Transaction> coreTxn = coreRepo.findByTxnRefId(TxnId);
 		for(Core_Transaction txn : coreTxn) {
-			if(txn.getAccount_type_dr() == 2 || txn.getAccount_type_cr() == 2) {
-                response.setTxnAmt(txn.getTxn_amt());
-				response.setTxnDesc(txn.getTxn_desc());
-				response.setTxnDate(txn.getGen_dt());
+			if(txn.getAccount_type_dr().equals(AccountsConstants.SAVINGS) || txn.getAccount_type_cr().equals(AccountsConstants.SAVINGS)) {
+				Core_Transaction cashTxn = txn;
+				response.setTxnAmt(cashTxn.getTxn_amt());
+				response.setTxnDesc(cashTxn.getTxn_desc());
+				response.setTxnDate(cashTxn.getGen_dt());
 			}
 		}
 		return response;

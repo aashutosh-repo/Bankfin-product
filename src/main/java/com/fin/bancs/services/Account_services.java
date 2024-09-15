@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.fin.bancs.constants.AccountsConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,7 @@ public class Account_services implements Account_Service_Interface{
 			String customerAccountNum = "SB"+ custAccNumber.toString();
 			AccountPk accId = new AccountPk();
 			accId.setAccount_id(entityId.intValue());
-			accId.setAccount_type(1);
+			accId.setAccount_type(AccountsConstants.SAVINGS_ACCOUNT);
 			accCreate= AccountMapper.mapToAccount(account, new Account());
 			accCreate.setClsr_dt(null);
 			accCreate.setClsr_reason(null);

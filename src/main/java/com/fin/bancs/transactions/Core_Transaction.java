@@ -27,9 +27,9 @@ public class Core_Transaction extends AuditInfo{
 	protected int credit_debit_flag;
 	protected int txn_seq;
 	protected int account_id_cr;
-	protected int account_type_cr;
+	protected String account_type_cr;
 	protected int account_id_dr;
-	protected int account_type_dr;
+	protected String account_type_dr;
 	protected LocalDate gen_dt;
 	protected BigDecimal txn_amt;
 	protected BigDecimal interest_amt;

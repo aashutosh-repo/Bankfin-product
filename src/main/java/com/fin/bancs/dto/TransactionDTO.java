@@ -15,9 +15,9 @@ public class TransactionDTO {
     private int creditDebitFlag;
     private int txnSeq;
     private int accountIdCr;
-    private int accountTypeCr;
+    private String accountTypeCr;
     private int accountIdDr;
-    private int accountTypeDr;
+    private String accountTypeDr;
     private LocalDate genDt;
     private BigDecimal txnAmt;
     private BigDecimal interestAmt;

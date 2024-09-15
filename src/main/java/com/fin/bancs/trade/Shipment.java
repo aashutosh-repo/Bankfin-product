@@ -18,12 +18,15 @@ import lombok.Setter;
 public class Shipment {
 	@EmbeddedId
 	private ShipmentID shipmentId;
-	  private String trackingNumber;
-	  private String shipperName;
-	  private String shipperAddress;
-	  private String consigneeName;
-	  private String consigneeAddress;
-	  private String shipmentStatus;
-	  private LocalDate shipmentDate;
-	  private LocalDate deliveryDate;
+	private String contractId;
+	private String trackingNumber;
+	private String shipperName;
+	private String shipperID;
+	private String shipperAddress;
+	private String consigneeName;
+	private String consigneeID;
+	private String consigneeAddress;
+	private String shipmentStatus;
+	private LocalDate shipmentDate;
+	private LocalDate deliveryDate;
 }

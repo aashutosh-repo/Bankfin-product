@@ -11,13 +11,17 @@ import lombok.Data;
 @Entity	
 @Data
 public class LineOfCredit {
-	
-	 @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Long locId;
-	 private int locType;
-	    private Long contractId;
-	    private String bankName;
-	    private String locStatus;
-	    private BigDecimal creditAmout;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long locId;
+	private String importerId;
+	private String exporterId;
+	private String shipmentId;
+	private String bankName;
+	private String advisingBankId;
+	private String advisingBankType;
+	private String locStatus;
+	private String pymntStatus;
+	private BigDecimal creditAmout;
+	private String currency;
 }

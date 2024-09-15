@@ -3,6 +3,8 @@ package com.fin.bancs.trade;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,8 +15,7 @@ import lombok.Setter;
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class TradeFinance {
 	@Id
-	private String tradeId; // Unique identifier for the trade
-	private String shipmentId; //FK of Shipment
+    private String contractId; // Unique identifier for the trade
     private String buyerName; // Name of the buyer
     private String sellerName; // Name of the seller
     private String commodity; // Type of commodity being traded (e.g. oil, wheat, etc.)

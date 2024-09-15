@@ -111,7 +111,7 @@ public class CustomerDetailsServices implements Customer_Service_Interface{
 		cusPkey.setCustomerType(CustomerType);
 		Optional<CustomerDetails> customerDetails = detailsRepository.findById(cusPkey);
 		if(customerDetails.isPresent()) {
-			customer= customerDetails.get();
+			//customer= customerDetails.get();
 			customer = CustomerDetailsMapper.mapToCustomerDetails(cuatomerInp, customer);
 			customer = detailsRepository.save(customer);
 			cDto = CustomerDetailsMapper.mapToCustomerDetailsDto(customer, new CustomerDto());

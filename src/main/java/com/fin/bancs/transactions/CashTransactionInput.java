@@ -14,7 +14,7 @@ public class CashTransactionInput {
 	private int txnType;
     private int creditDebitFlag;
     private int accountId;
-    private int accountType;
+    private String accountType;
     private BigDecimal txnAmt;
     private BigDecimal interestAmt;
     private BigDecimal gstAmt;
