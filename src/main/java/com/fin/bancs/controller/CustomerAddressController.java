@@ -2,10 +2,7 @@ package com.fin.bancs.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fin.bancs.customer.AddressID;
 import com.fin.bancs.customer.CustomerAddressDetails;
@@ -21,12 +18,12 @@ public class CustomerAddressController {
 	@Autowired
 	private CustomerAddressServices cusServices;
 	
-	@GetMapping("/create")
+	@PostMapping("/create")
 	public void createAddressDetails(@RequestBody CustomerAddressDto custAddress ) {
 		cusServices.createModifyCustAddressDetails(custAddress);
 	}
 	
-	@GetMapping("/modify")
+	@PutMapping("/modify")
 	public void modifyAddressDetails(@RequestBody CustomerAddressDto cust_address ) {
 		cusServices.createModifyCustAddressDetails(cust_address);
 	}

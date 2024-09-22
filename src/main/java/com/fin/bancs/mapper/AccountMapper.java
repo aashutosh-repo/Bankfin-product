@@ -4,8 +4,6 @@ import com.fin.bancs.account.Account;
 import com.fin.bancs.dto.AccountDto;
 
 public class AccountMapper {
-	
-	
 	public static AccountDto mapToAccountDto(Account account, AccountDto accountDto) {
 		accountDto.setAccount_status(account.getAccount_status());
         accountDto.setAccount_number(account.getAccountNumber());

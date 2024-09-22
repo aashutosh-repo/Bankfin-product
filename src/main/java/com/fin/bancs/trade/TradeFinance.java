@@ -13,7 +13,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
-public class TradeFinance {
+    public class TradeFinance {
 	@Id
     private String contractId; // Unique identifier for the trade
     private String buyerName; // Name of the buyer
@@ -26,8 +26,9 @@ public class TradeFinance {
     private String shipmentTerms; // Shipment terms (e.g. FOB, CIF, etc.)
     private LocalDate shipmentDate; // Date of shipment
     private LocalDate paymentDueDate; // Date payment is due
+    private String originCountry;
+    private String destinationCountry;
     private String currency; // Currency of the trade
-    private String incoterms; // Incoterms (e.g. EXW, FCA, etc.)
     private String tradeStatus;
 
 }

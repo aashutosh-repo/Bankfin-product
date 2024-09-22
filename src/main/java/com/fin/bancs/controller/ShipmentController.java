@@ -43,9 +43,10 @@ public class ShipmentController {
           description = "Http Request processed successfully"
   )
   @PostMapping("/createTrade")
-  public ResponseEntity<ResponseDto> createTrade(@RequestBody RequestWrapperShipment tradeDetails
-		  ){
-	  tfserv.createTrade(tradeDetails.getTradeFinance(),tradeDetails.getReciverDetails(),tradeDetails.getSenderDetails());
+  public ResponseEntity<ResponseDto> createTrade(@RequestBody RequestWrapperShipment tradeDetails){
+	  tfserv.createTrade(tradeDetails.getTradeFinance(),
+              tradeDetails.getSenderDetails(),
+              tradeDetails.getReceiverDetails());
 	  
 	  return ResponseEntity
               .status(HttpStatus.CREATED)
