@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipment Form</title>
+    <link rel="stylesheet" href="css/shipment.css">
+</head>
+<body>
+<div class="container">
+    <h1>Shipment Form</h1>
+    <form id="shipmentForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="contractId">Contract ID:</label>
+                <input type="text" id="contractId" name="contractId" required>
+            </div>
+            <div class="form-group">
+                <label for="trackingNumber">Tracking Number:</label>
+                <input type="text" id="trackingNumber" name="trackingNumber" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="shipperName">Shipper Name:</label>
+                <input type="text" id="shipperName" name="shipperName" required>
+            </div>
+            <div class="form-group">
+                <label for="shipperID">Shipper ID:</label>
+                <input type="text" id="shipperID" name="shipperID" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="shipperAddress">Shipper Address:</label>
+                <input type="text" id="shipperAddress" name="shipperAddress" required>
+            </div>
+            <div class="form-group">
+                <label for="consigneeName">Consignee Name:</label>
+                <input type="text" id="consigneeName" name="consigneeName" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="consigneeID">Consignee ID:</label>
+                <input type="text" id="consigneeID" name="consigneeID" required>
+            </div>
+            <div class="form-group">
+                <label for="consigneeAddress">Consignee Address:</label>
+                <input type="text" id="consigneeAddress" name="consigneeAddress" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="originPort">Origin Port:</label>
+                <input type="text" id="originPort" name="originPort" required>
+            </div>
+            <div class="form-group">
+                <label for="destinationPort">Destination Port:</label>
+                <input type="text" id="destinationPort" name="destinationPort" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="estimatedArrivalDate">Estimated Arrival Date:</label>
+                <input type="date" id="estimatedArrivalDate" name="estimatedArrivalDate" required>
+            </div>
+            <div class="form-group">
+                <label for="shipmentStatus">Shipment Status:</label>
+                <input type="text" id="shipmentStatus" name="shipmentStatus" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="shipmentDate">Shipment Date:</label>
+                <input type="date" id="shipmentDate" name="shipmentDate" required>
+            </div>
+            <div class="form-group">
+                <label for="deliveryDate">Delivery Date:</label>
+                <input type="date" id="deliveryDate" name="deliveryDate" required>
+            </div>
+        </div>
+        <button type="submit">Create Shipment</button>
+    </form>
+    <div id="responseMessage"></div>
+</div>
+    <script src="js/shipment.js"></script> <!-- Place the script here -->
+
+</body>
+</html>

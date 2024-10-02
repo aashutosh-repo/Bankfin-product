@@ -27,8 +27,11 @@ public class Shipment extends AuditInfo {
 	private String shipperID;
 	private String shipperAddress;
 	private String consigneeName;
-	private String consigneeID;
+	private String consigneeID;  //receiver
 	private String consigneeAddress;
+	private String originPort;
+	private String destinationPort;
+	private LocalDate estimatedArrivalDate;
 	private String shipmentStatus;
 	private LocalDate shipmentDate;
 	private LocalDate deliveryDate;

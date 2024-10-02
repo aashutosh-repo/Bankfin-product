@@ -25,9 +25,10 @@ public class ShipmentService {
 	  BigInteger shipmentId = sequenceGenerator.generateSequence("Shipment_seq");
 	  BigInteger trackingId = sequenceGenerator.generateSequence("Tracking_seq");
 	  ShipmentID shipId = new ShipmentID();
-	  shipId.setShipmentId("sh"+shipmentId);
+	  shipId.setShipmentId("SH"+shipmentId);
 	  shipId.setShipmentType("NA");
 	  shipment.setTrackingNumber("IND"+trackingId);
+      shipment.setShipmentId(shipId);
     return shipmentRepository.save(shipment);
   }
   

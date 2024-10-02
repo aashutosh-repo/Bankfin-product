@@ -53,10 +53,11 @@ public class ShipmentController {
               .body(new ResponseDto(AccountsConstants.STATUS_200,AccountsConstants.MESSAGE_200));
 
   }
-//  @PostMapping("/createShipment")
-//  public Shipment createShipment(@RequestBody Shipment shipment) {
-//    return shipmentService.createShipment(shipment);
-//  }
+  @PostMapping("/createShipment")
+  public ResponseEntity<Shipment> createShipment(@RequestBody Shipment shipment) {
+    Shipment shipmentOut = shipmentService.createShipment(shipment);
+    return ResponseEntity.status(HttpStatus.CREATED).body(shipmentOut);
+  }
   
   @GetMapping("/trackingNumber")
   public Optional<Shipment> getShipmentByTrackingNumber(@RequestParam String trackingNumber) {
