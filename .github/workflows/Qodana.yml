@@ -9,26 +9,16 @@ on:
       - main
 
 jobs:
-  build:
+  quality-check:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up JDK
-        uses: actions/setup-java@v2
+      - name: Set up Qodana
+        uses: jetbrains/qodana-action@v2024.1
         with:
-          java-version: '17'  # Use your project's Java version
-
-      - name: Build with Maven
-        run: mvn clean install
-
-      - name: Run Tests
-        run: mvn test
-
-      - name: Run Code Quality Analysis with Qodana
-        uses: jetbrains/qodana-action@v1
-        with:
-          qodana-version: '2023.1'  # Specify your Qodana version
-          project-dir: .  # The directory to analyze
+          project-dir: .
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
