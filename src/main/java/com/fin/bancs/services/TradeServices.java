@@ -90,11 +90,15 @@ public class TradeServices {
 		TradeFinance tradeFinance = getTradeFinance(contractId);
 		if (tradeFinance != null) {
 			Optional<Shipment> shipment  = shipmentRepo.findByContractId(contractId);
+			if(shipment.isPresent()){
 			if (shipment.get().getShipmentStatus().equals(TradeFinanceConstants.WORKFLOW_COMPLETED)) {
 				Optional<LineOfCredit> lineOfCredit = locRepository.findByShipmentId(shipment.get().getShipmentId().getShipmentId());
-				initiatePayment(lineOfCredit.get());
+				//initiatePayment(lineOfCredit.get());
+				lineOfCredit.ifPresent(this::initiatePayment);
+
 			} else {
 				System.out.println("Shipment status is not completed");
+			}
 			}
 		} else {
 			System.out.println("Contract not found");

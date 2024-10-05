@@ -52,7 +52,7 @@ public class NomineeControllerMvc {
     public String showNomineeDetails(Model theModel,@RequestParam("nominee_id") int nominee_id){
     	//Optional<Nominee_Details>  nominee = Optional.ofNullable(new Nominee_Details());
     	Optional<NomineeDetails>  nominee= nomRepo.findById(nominee_id);
-    	if(!nominee.isEmpty() == true){
+    	if(nominee.isPresent()){
     	theModel.addAttribute("nominee",nominee);
     	}
     	

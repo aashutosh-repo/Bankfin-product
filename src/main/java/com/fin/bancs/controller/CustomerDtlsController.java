@@ -13,14 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.fin.bancs.common.AccountsConstants;
-import com.fin.bancs.customer.CustomerID;
 import com.fin.bancs.dto.CustomerDto;
 import com.fin.bancs.dto.ResponseDto;
 import com.fin.bancs.mapper.RequestWrapper;
-import com.fin.bancs.repository.Nominee_Repository;
 import com.fin.bancs.services.CustomerAddressServices;
 import com.fin.bancs.services.CustomerDetailsServices;
-import com.fin.bancs.services.NomineeDetailsServices;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,23 +32,20 @@ public class CustomerDtlsController {
     CustomerDetailsServices customerDetailsServices;
     @Autowired
     CustomerAddressServices custAddServices;
-    @Autowired
-    NomineeDetailsServices nomineeService;
+
 
 
     @Operation(summary = "Find All Customer API",
     description = "REST API to All Customer in Omega Bank")
-    @GetMapping("/getallcust")
+    @GetMapping("/getaAllCustomerDetails")
     public List<CustomerDto> getAllCustomer(){
-    	List<CustomerDto> allCust =customerDetailsServices.getAllCust();
-        return allCust;
+        return customerDetailsServices.getAllCust();
     }
     @Operation(summary = "Find Customer By Mobile Number API",
     description = "REST API to Find Customer By Mobile Number in Omega Bank")
     @GetMapping("/getCustByMobileNumber")
     public CustomerDto geCustomerByCustomerId(@RequestParam String mobileNumber){
-    	CustomerDto allCust =customerDetailsServices.findCustomerByMobileNumber(mobileNumber);
-        return allCust;
+        return customerDetailsServices.findCustomerByMobileNumber(mobileNumber);
     }
     
     @Operation(summary = "Create Customer API",
@@ -64,9 +58,8 @@ public class CustomerDtlsController {
     public ResponseEntity<ResponseDto> creteCust(@RequestBody RequestWrapper requestWrapper) 
 	{
     	customerDetailsServices.CreateCustDetails(requestWrapper.getCustomerDto(), 
-    			requestWrapper.getDocDto());
+    			requestWrapper.getDocDto(),requestWrapper.getNomineeDetails());
     	custAddServices.createModifyCustAddressDetails(requestWrapper.getCustomerAddress());
-    	nomineeService.createNomineesDetails(requestWrapper.getNomineeDetails(), 1);
         return  ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ResponseDto(AccountsConstants.STATUS_202,AccountsConstants.MESSAGE_202));

@@ -30,7 +30,7 @@ public class NotificationService {
     }
 
     public List<Notifications> getActiveNotifications() {
-        List<Notifications> activeNotifications = new ArrayList<>();
+        List<Notifications> activeNotifications;
         activeNotifications = notificationRepository.findByIsActive(1);
         return activeNotifications;
     }

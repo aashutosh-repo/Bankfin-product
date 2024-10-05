@@ -10,6 +10,9 @@ import com.fin.bancs.constants.AccountsConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import com.fin.bancs.account.Account;
 import com.fin.bancs.account.AccountPk;
@@ -38,8 +41,9 @@ public class Account_services implements Account_Service_Interface{
 	private SequenceGenerator sequenceGenerator;
 
 	@Override
+	@CachePut(value = "accounts", key = "#account.account_number")
 	public Account ceateModifyAccountDetails(AccountDto account,int modifyFlag){
-		logger.debug("Entered int Creation Task of class : "+ this.getClass().getSimpleName()+ "On : "+ LocalDate.now());
+        logger.info("Entered int Creation Task of class : {}On : {}", this.getClass().getSimpleName(), LocalDate.now());
 		//If Modify flag is 1 then primary key should pass as a User-input
 		Account acc;
 		Account accCreate;
@@ -60,16 +64,16 @@ public class Account_services implements Account_Service_Interface{
 			cId.setCustomerID(account.getCust_id());
 			cId.setCustomerType(account.getCus_type());
 
-			Optional<CustomerDetails> cust = custRepository.findById(cId);
-			if(cust.isEmpty()) {
+			Optional<CustomerDetails> customer = custRepository.findById(cId);
+			if(customer.isEmpty()) {
 				throw new ResourceNotFoundException(ErrorCode.CUSTOMER_NOT_FOUND);
 			}
 
 			BigInteger entityId = sequenceGenerator.generateSequence("AccountId_seq");
 			BigInteger intAccNumber = sequenceGenerator.generateSequence("InternalAccNO_seq");
-			BigInteger custAccNumber = sequenceGenerator.generateSequence("CustomerAccNO_seq");
+			BigInteger customerAccNumber = sequenceGenerator.generateSequence("CustomerAccNO_seq");
 			String intAccNumStr = "OMEGA"+intAccNumber.toString();
-			String customerAccountNum = "SB"+ custAccNumber.toString();
+			String customerAccountNum = "SB"+ customerAccNumber.toString();
 			AccountPk accId = new AccountPk();
 			accId.setAccount_id(entityId.intValue());
 			accId.setAccount_type(AccountsConstants.SAVINGS_ACCOUNT);
@@ -87,9 +91,11 @@ public class Account_services implements Account_Service_Interface{
 		return acc;
 	}
 
-
+	@Override
+	@CacheEvict(value = "accounts", key = "#account.accountId")
 	public void deleteAccount(Account account) {
-		Account account_del =new Account();
+        new Account();
+        Account account_del;
 		if(account_repository.findById(account.getAccountId()).isPresent()) {
 			account_del = (account_repository.findById(account.getAccountId())).get();
 			account_del.setAccount_status(2);
@@ -99,10 +105,12 @@ public class Account_services implements Account_Service_Interface{
 
 	}
 
+	@Override
+	@Cacheable(value = "accounts")
 	public List<AccountDto> findAllAccounts() {
-		logger.debug("Account Finding in :  "+ this.getClass().getSimpleName()+ "On : "+ LocalDate.now());
+        logger.debug("Account Finding in :  {}On : {}", this.getClass().getSimpleName(), LocalDate.now());
 
-		List<Account> account = new ArrayList<>();
+		List<Account> account;
 		List<AccountDto> accDto = new ArrayList<AccountDto>();
 		AccountDto accountDto = new AccountDto();
 		account = account_repository.findAll();
@@ -113,8 +121,11 @@ public class Account_services implements Account_Service_Interface{
 
 		return accDto;
 	}
+
+	@Override
+	@Cacheable(value = "accounts", key = "#customerId")
 	public List<Account> getAccountByCustomerId(int customerId){
-		List<Account> accounts = new ArrayList<>();
+		List<Account> accounts;
 		accounts= account_repository.findByCustId(customerId);
 		return accounts;
 	}

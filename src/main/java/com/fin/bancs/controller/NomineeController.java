@@ -46,7 +46,7 @@ public class NomineeController {
     @PostMapping("/insert")
     public List<NomineeDetails> insertInto(@RequestBody List<NomineeDto> nominee){
     	//nomRepo.save(nominee);
-    	List<NomineeDetails> nominee_Details = new ArrayList<NomineeDetails>();
+    	List<NomineeDetails> nominee_Details;
     	
     	nominee_Details=nomineeService.createNomineesDetails(nominee,1);
     	return nominee_Details;

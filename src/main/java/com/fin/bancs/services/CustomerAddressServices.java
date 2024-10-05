@@ -23,7 +23,8 @@ public class CustomerAddressServices implements Address_Service_Interface{
 	private SequenceGenerator sequenceGenerator;
     
     	public void createModifyCustAddressDetails(CustomerAddressDto customerAddressDto){
-            CustomerAddressDetails customer_address_details= new CustomerAddressDetails();
+            new CustomerAddressDetails();
+            CustomerAddressDetails customer_address_details;
             AddressID addressKey = new AddressID();
             customer_address_details = AddressMapper.mapToCustomerAddress(customerAddressDto, new CustomerAddressDetails());
             BigInteger addressId = sequenceGenerator.generateSequence("AddressId_seq");
