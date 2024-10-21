@@ -34,9 +34,15 @@ public class AccountController {
     @Operation(summary = "View All Accounts API",
     description = "REST API to View All account in MyBank")
     @GetMapping("/viewAccounts")
-    public List<AccountDto> viewAccountDetails(){    
-    	List<AccountDto> allAccount =acc_services.findAllAccounts();
-    	return allAccount;
+    public List<AccountDto> viewAccountDetails(){
+        return acc_services.findAllAccounts();
+    }
+
+    @Operation(summary = "View All Accounts API",
+            description = "REST API to View account By CustomerId in MyBank")
+    @GetMapping("/viewAccountByCustomerId")
+    public List<AccountDto> viewAccountByCustomerId(int customerId){
+        return acc_services.getAccountByCustomerId(customerId);
     }
     @Operation(summary = "Create Account API",
     description = "REST API to create account in Omega Bank")
@@ -47,7 +53,7 @@ public class AccountController {
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createAccount(@RequestBody AccountDto account,@RequestParam String MobileNum) {
     	System.out.println(account.toString());
-    	acc_services.ceateModifyAccountDetails(account, 0);
+    	acc_services.createModifyAccountDetails(account, 0);
     	return  ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ResponseDto(AccountsConstants.STATUS_201,AccountsConstants.MESSAGE_201));
@@ -61,7 +67,7 @@ public class AccountController {
     )
     @PutMapping("/modify")
     public ResponseEntity<ResponseDto> modifyAccount(@RequestBody AccountDto account) {
-    	Account accountOut = acc_services.ceateModifyAccountDetails(account, 1);
+    	Account accountOut = acc_services.createModifyAccountDetails(account, 1);
     	return  ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ResponseDto(AccountsConstants.STATUS_200,AccountsConstants.MESSAGE_200));

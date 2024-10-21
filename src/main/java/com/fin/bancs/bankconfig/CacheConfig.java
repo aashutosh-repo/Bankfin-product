@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,18 +14,13 @@ import org.springframework.context.annotation.Configuration;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
 @Configuration
+@EnableCaching
 public class CacheConfig {
-
-    private final CacheProperties cacheProperties;
-
-    public CacheConfig(CacheProperties cacheProperties) {
-        this.cacheProperties = cacheProperties;
-    }
 
     @Bean
     public CacheManager cacheManager() {
         //Update this list for new cache
-    	List<String> allRecords= Arrays.asList("customer","events","shipments", "trackingEvents");
+    	List<String> allRecords= Arrays.asList("customer","accounts","accountByCustomerId","shipments", "trackingEvents");
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setCacheNames(allRecords);
         cacheManager.setCaffeine(Caffeine.newBuilder()

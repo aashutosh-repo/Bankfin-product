@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface Account_Service_Interface {
 	
-	Account ceateModifyAccountDetails(AccountDto account, int modifyFlag);
+	Account createModifyAccountDetails(AccountDto account, int modifyFlag);
 	void deleteAccount(Account account);
 	List<AccountDto> findAllAccounts();
-	List<Account> getAccountByCustomerId(int customerId);
+	List<AccountDto> getAccountByCustomerId(int customerId);
 
 }

@@ -42,7 +42,7 @@ public class Account_services implements Account_Service_Interface{
 
 	@Override
 	@CachePut(value = "accounts", key = "#account.account_number")
-	public Account ceateModifyAccountDetails(AccountDto account,int modifyFlag){
+	public Account createModifyAccountDetails(AccountDto account, int modifyFlag){
         logger.info("Entered int Creation Task of class : {}On : {}", this.getClass().getSimpleName(), LocalDate.now());
 		//If Modify flag is 1 then primary key should pass as a User-input
 		Account acc;
@@ -123,10 +123,14 @@ public class Account_services implements Account_Service_Interface{
 	}
 
 	@Override
-	@Cacheable(value = "accounts", key = "#customerId")
-	public List<Account> getAccountByCustomerId(int customerId){
+	@Cacheable(value = "accountByCustomerId", key = "#customerId")
+	public List<AccountDto> getAccountByCustomerId(int customerId){
 		List<Account> accounts;
 		accounts= account_repository.findByCustId(customerId);
-		return accounts;
+		List<AccountDto> accountDtos = new ArrayList<>(List.of());
+		for(Account ac : accounts){
+			accountDtos.add(AccountMapper.mapToAccountDto(ac,new AccountDto()));
+		}
+		return accountDtos;
 	}
 }
