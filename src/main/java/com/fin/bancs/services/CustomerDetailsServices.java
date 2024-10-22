@@ -95,7 +95,7 @@ public class CustomerDetailsServices implements Customer_Service_Interface{
 //		cust_dtls.setSTATUS(0000); //put Account Closing Status
 	}
 
-	@Cacheable(value = "customers", key = "'all'")
+	@Cacheable(value = "customers", key = "all")
 	@Override
 	public List<CustomerDto> getAllCust(){
 		List<CustomerDetails> allcust = detailsRepository.findAll();

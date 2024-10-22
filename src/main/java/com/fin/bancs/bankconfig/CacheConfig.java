@@ -20,7 +20,7 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
         //Update this list for new cache
-    	List<String> allRecords= Arrays.asList("customer","accounts","accountByCustomerId","shipments", "trackingEvents");
+    	List<String> allRecords= Arrays.asList("customer","notifications","accounts","accountByCustomerId","shipments", "trackingEvents");
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setCacheNames(allRecords);
         cacheManager.setCaffeine(Caffeine.newBuilder()
