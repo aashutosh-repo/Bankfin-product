@@ -1,8 +1,13 @@
 package com.fin.bancs.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
+import com.fin.bancs.dto.EMIDetailDTO;
+import com.fin.bancs.dto.LoanSummaryDTO;
+import com.fin.bancs.instrument.EMIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +38,10 @@ public class Instruments {
 	@Autowired
 	Currency_service currency;
 
+	@Autowired
+	private EMIService emiService;
+
+
 	@GetMapping("currency/Get")
 	public Map<String, String> getCurrency() {
 	return null;
@@ -50,12 +59,6 @@ public class Instruments {
 			return String.valueOf(finalAmt);
 		}
 	}
-	@GetMapping
-	public String emiCalculator(@RequestParam String loanAmt,@RequestParam String interestRate,
-								@RequestParam int tenure){
-
-		return "String";
-	}
 	
 	@GetMapping("/sipCalculator")
 	public ResponseEntity<ResponseDto> sipCalculator(@Parameter(description = "Sip Amount", name = "SipAmount")
@@ -72,6 +75,24 @@ public class Instruments {
 		SipCalculatorDto out= sip.calculateSIPFutureValue(SipAmount, expectedReturnRate, tenure);
 		return ResponseEntity.status(HttpStatus.FOUND).body(
 				new ResponseDto(AccountsConstants.STATUS_200,AccountsConstants.MESSAGE_200,out));
+	}
+
+	@GetMapping("/EMI/repaymentEvents")
+	public List<EMIDetailDTO> getEMIRepaymentEvents(
+			@RequestParam double loanAmount,
+			@RequestParam double annualInterestRate,
+			@RequestParam int tenureInMonths,
+			@RequestParam LocalDate repaymentStartDate) {
+		return emiService.calculateEMIPlans(loanAmount, annualInterestRate, tenureInMonths,repaymentStartDate);
+	}
+	@GetMapping("/EMI/estimation")
+	public ResponseEntity<LoanSummaryDTO> getEMIPlans(
+			@RequestParam BigDecimal loanAmount,
+			@RequestParam BigDecimal annualInterestRate,
+			@RequestParam int tenureInMonths) {
+
+		LoanSummaryDTO emiSummery= emiService.calculateLoanSummary(loanAmount, annualInterestRate, tenureInMonths);
+		return ResponseEntity.ok(emiSummery);
 	}
 }
 
