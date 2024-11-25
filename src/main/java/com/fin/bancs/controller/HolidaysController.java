@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fin.bancs.services.HolidayServices;
+import com.fin.bancs.utils.Holidays;
 import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class HolidaysController {
 
     @GetMapping("getHolidays")
     public ResponseEntity<List<LocalDate>> getHolidaysDates(){
-
+        Holidays holidays = new Holidays();
         List<LocalDate> allHolidays =  holidayservices.getHolidayList();
         return ResponseEntity.ok(allHolidays);
     }

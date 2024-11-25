@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fin.bancs.constants.AppConstants;
 import com.fin.bancs.repository.HolidayRepository;
 import com.fin.bancs.utils.Holidays;
 import com.opencsv.CSVReader;
@@ -38,24 +39,23 @@ public class HolidayServices {
         return dates;
     }
 
-    public LocalDate getValidWorkingDay(LocalDate inpDate,  int addType, int qtyToAdd) {
+    public LocalDate getValidWorkingDay(LocalDate inpDate,  int addType, int prd_to_add) {
         LocalDate dateOut = inpDate;
 
-        if(addType ==1 ) { //for days
-            dateOut = inpDate.plusDays(qtyToAdd);
+        if(addType == AppConstants.FREQUENCY.DAY) { //for days
+            dateOut = inpDate.plusDays(prd_to_add);
             dateOut = findAvailableDate(dateOut);
             dateOut = adjustWeekendsDates(dateOut);
 
         }
-        if(addType == 2 ) { //For Month
-            inpDate = inpDate.plusMonths(qtyToAdd);
-            dateOut = inpDate;
+        if(addType == AppConstants.FREQUENCY.MONTH) { //For Month
+            dateOut = inpDate.plusMonths(prd_to_add);
+            dateOut = findAvailableDate(dateOut);
             dateOut = adjustWeekendsDates(dateOut);
         }
-        if(addType == 3 ) { //For Years
-            inpDate = inpDate.plusYears(qtyToAdd);
-            dateOut = inpDate;
-            dateOut = adjustWeekendsDates(dateOut);
+        if(addType == AppConstants.FREQUENCY.YEAR ) { //For Years
+            dateOut = inpDate.plusYears(prd_to_add);
+            dateOut = adjustWeekendsDates(findAvailableDate(dateOut));
         }
 
         return dateOut;

@@ -21,6 +21,12 @@ public class AppConstants {
     public static final int MAX_RETRY_COUNT = 3;
     public static final long TIMEOUT_IN_MS = 5000L;
 
+    public static class  FREQUENCY {
+        public static final int DAY = 1;
+        public static final int MONTH = 1;
+        public static final int YEAR = 1;
+    }
+
     private AppConstants() {
         // private constructor to prevent instantiation
     }
