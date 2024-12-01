@@ -58,6 +58,7 @@ public class Core_Transaction_services  {
 		Core_Transaction core_transaction_cr= new Core_Transaction();
 		Core_Transaction core_transaction_dr= new Core_Transaction();
 		List<Core_Transaction> core_transaction = new ArrayList<>();
+		AccountBalanceUpdate update = new AccountBalanceUpdate();
 		List<Account> UpdateAccBal= new ArrayList<>();
 
 		for(TransactionDTO txn : txnInputDTO) {
@@ -83,27 +84,25 @@ public class Core_Transaction_services  {
 			AccountPk account_pk = new AccountPk();
 			Account account_dr;
 			Account account_cr;
-			Account internal_acc_cr = new Account();
+			Account internal_acc_cr;
 			Account internal_acc_dr;
 			if(!Objects.equals(core_transaction_cr.getTxn_amt(), core_transaction_dr.getTxn_amt())){
 				throw  new ErrorHandler("Debit Amount and Credit Amount should be Same");
 			}
 			BigDecimal txnAmt = core_transaction_cr.getTxn_amt();
-			//Account balance Update Starts here
-		if(core_transaction_cr.getCredit_debit_flag()==1) {
-			account_pk.setAccount_id(core_transaction_cr.getAccount_id_cr()); //CR type Inter
+			// balance Update for credit to Customer Account Starts here
+		if(core_transaction_cr.getCredit_debit_flag() == 1 ) {
+			account_pk.setAccount_id(core_transaction_cr.getAccount_id_cr()); //CR type Internal account
 			account_pk.setAccount_type(core_transaction_cr.getAccount_type_cr());
 			Optional<Account> account_opt_cr = accRepo.findById(account_pk);
 			account_pk.setAccount_id(123456); //Default internal debit account
 			account_pk.setAccount_type(AccountsConstants.INTERNAL_ACCOUNT);
 			Optional<Account> int_acc_dr = accRepo.findById(account_pk);
 			if (account_opt_cr.isPresent() && int_acc_dr.isPresent()) {
-				account_cr = account_opt_cr.get();
-				internal_acc_dr = int_acc_dr.get();
-				account_cr.setAvailable_balance(account_cr.getAvailable_balance().subtract(core_transaction_dr.getTxn_amt()));
-				UpdateAccBal.add(account_cr);
-				internal_acc_cr.setAvailable_balance(internal_acc_dr.getAvailable_balance().add(core_transaction_dr.getTxn_amt()));
-				UpdateAccBal.add(internal_acc_cr);
+				account_cr = account_opt_cr.get(); // This is Credit Customer Account
+				internal_acc_dr = int_acc_dr.get(); // This is Debit Internal Account
+				update.creditToAccount(account_cr,txnAmt);
+				update.debitFromAccount(internal_acc_dr,txnAmt);
 			} else {
 				throw new ResourceNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND);
 			}
@@ -138,12 +137,14 @@ public class Core_Transaction_services  {
 			account_pk.setAccount_type(AccountsConstants.INTERNAL_ACCOUNT);
 			Optional<Account> int_acc_cr = accRepo.findById(account_pk);
 			if (account_opt_dr.isPresent() && int_acc_cr.isPresent() ) {
-				account_dr = account_opt_dr.get();
-				internal_acc_cr = int_acc_cr.get();
-				account_dr.setAvailable_balance(account_dr.getAvailable_balance().subtract(txnAmt));
-				UpdateAccBal.add(account_dr);
-				internal_acc_cr.setAvailable_balance(internal_acc_cr.getAvailable_balance().add(txnAmt));
-				UpdateAccBal.add(internal_acc_cr);
+				account_dr = account_opt_dr.get(); // Debit type Customer Account
+				internal_acc_cr = int_acc_cr.get(); // Credit type Internal Account
+				update.creditToAccount(internal_acc_cr,txnAmt);
+				update.debitFromAccount(account_dr,txnAmt);
+//				account_dr.setAvailable_balance(account_dr.getAvailable_balance().subtract(txnAmt));
+//				UpdateAccBal.add(account_dr);
+//				internal_acc_cr.setAvailable_balance(internal_acc_cr.getAvailable_balance().add(txnAmt));
+//				UpdateAccBal.add(internal_acc_cr);
 			}else {
 				throw new ResourceNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND);
 			}
@@ -170,13 +171,12 @@ public class Core_Transaction_services  {
 			core_transaction.add(coreTransaction_acc_dr);
 			core_transaction.add(coreTransactionLayer_int_cr);
 		}
-		
-		accRepo.saveAll(UpdateAccBal);
 		coreRepo.saveAll(core_transaction);
 	}
 
 	public String cashTransaction(CashTransactionInput txnInput){
 		String txnRef="";
+		AccountBalanceUpdate update = new AccountBalanceUpdate();
 		if(txnInput.getTxnType() == 1 ) //Cash-> do cash Operation
 		{
 			Core_Transaction coreTxn_cash_cash= new Core_Transaction();
@@ -195,10 +195,10 @@ public class Core_Transaction_services  {
 			if(txnInput.getCreditDebitFlag() == 2) {
 				//accPk.setAccount_id(core_transaction_cash.getAccount_id_cr()); //internal Account need to maintain internally
 				accID.setAccount_id(111111122); //Default credit Account
-				accID.setAccount_type(AccountsConstants.INTERNAL_ACCOUNT); //For inernal account
+				accID.setAccount_type(AccountsConstants.INTERNAL_ACCOUNT); //For internal account
 			}else {
 				accID.setAccount_id(111111123); //Default debit Account
-				accID.setAccount_type(AccountsConstants.INTERNAL_ACCOUNT); //For inernal account
+				accID.setAccount_type(AccountsConstants.INTERNAL_ACCOUNT); //For internal account
 			}
 			acc_internal= accRepo.findById(accID);
 			accPk.setAccount_id(txnInput.getAccountId());
@@ -207,16 +207,14 @@ public class Core_Transaction_services  {
 			if(acc_internal.isEmpty() || acc_cash.isEmpty()) {
 				throw new ResourceNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND);
 			}else {
-				acc= acc_internal.get();
-				BigDecimal Available_AMT= acc.getAvailable_balance();
+				acc = acc_internal.get();
 				BigDecimal transaction_amt= txnInput.getTxnAmt();
 				int cred_deb_flag= txnInput.getCreditDebitFlag();
 				if(cred_deb_flag == 1) {
-					total_amt_internal= Available_AMT.add(transaction_amt.multiply(new BigDecimal(-1)));
+					update.debitFromAccount(acc,transaction_amt);
 				}else {
-					total_amt_internal= Available_AMT.add(transaction_amt.multiply(new BigDecimal(1)));
+					update.creditToAccount(acc,transaction_amt);
 				}
-				acc.setAvailable_balance(total_amt_internal);
 				//Core Txn for internal Account Started here
 				//coreTxn_cash_cr = TransactionMapper.mapTOCoreTxnLayer(txnInput, new Core_Transaction() );
 				if(coreTxn_cash_internal.getCredit_debit_flag() == 1) {
@@ -239,7 +237,6 @@ public class Core_Transaction_services  {
 				coreTxn_cash_internal.setTxnRefId(txnRef);
 				coreRepo.save(coreTxn_cash_internal);
 				//Core Txn Ends here
-				accRepo.save(acc);
 				//DEBIT/credit to internal account ends
 
 			//}
@@ -251,11 +248,12 @@ public class Core_Transaction_services  {
 				BigDecimal Available_AMT_cash= acc.getAvailable_balance();
 				BigDecimal transaction_amt_cash= txnInput.getTxnAmt();
 				if(txnInput.getCreditDebitFlag()==1) {
-					total_amt_cash= Available_AMT_cash.add(transaction_amt.multiply(new BigDecimal(1)));
+					//total_amt_cash= Available_AMT_cash.add(transaction_amt.multiply(new BigDecimal(1)));
+					update.creditToAccount(acc,transaction_amt);
 				}else {
-					total_amt_cash= Available_AMT_cash.add(transaction_amt_cash.multiply(new BigDecimal(-1)));
+					//total_amt_cash= Available_AMT_cash.add(transaction_amt_cash.multiply(new BigDecimal(-1)));
+					update.debitFromAccount(acc,transaction_amt);
 				}
-				acc.setAvailable_balance(total_amt_cash);
 
 				//Core Txn for cash Account Started here
 				//coreTxn_cash_dr= TransactionMapper.mapTOCoreTxnLayer(txnInput, new Core_Transaction());
@@ -279,7 +277,6 @@ public class Core_Transaction_services  {
 
 				coreRepo.save(coreTxn_cash_cash);
 				//Core Txn Ends here
-				accRepo.save(acc);
 				//Debit/credit to Customer account ends
 				
 			}
