@@ -3,10 +3,12 @@ package com.fin.bancs.services;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.fin.bancs.constants.AccountsConstants;
 import com.fin.bancs.error.ErrorHandler;
@@ -317,6 +319,20 @@ public class Core_Transaction_services  {
 		}
 		return response;
 		
+	}
+	public  List<TransactionDTO> getTransactionDetails(int periodInMonth){
+		LocalDateTime startDate = LocalDateTime.now().minusMonths(periodInMonth);
+		List<Core_Transaction> coreTransaction=  coreRepo.findByTransactionDateAfter(startDate);
+        return coreTransaction.stream()
+				.map(x -> TransactionMapper.mapToTransactionDTO(x, new TransactionDTO()))
+				.toList();
+	}
+
+	public List<TransactionDTO> getTransactionsForCustomDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+		List<Core_Transaction> coreTransaction = coreRepo.findByTransactionDateBetween(startDate, endDate);
+		return coreTransaction.stream()
+				.map(x -> TransactionMapper.mapToTransactionDTO(x, new TransactionDTO()))
+				.toList();
 	}
 
 }

@@ -2,6 +2,7 @@ package com.fin.bancs.transactions;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fin.bancs.audit.AuditInfo;
 
@@ -21,22 +22,23 @@ public class Core_Transaction extends AuditInfo{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int cen_txn_id;
-	protected int txn_type; //cash or transfer
-	protected String txnRefId;
-	protected int credit_debit_flag;
-	protected int txn_seq;
-	protected int account_id_cr;
-	protected String account_type_cr;
-	protected int account_id_dr;
-	protected String account_type_dr;
-	protected LocalDate gen_dt;
-	protected BigDecimal txn_amt;
-	protected BigDecimal interest_amt;
-	protected BigDecimal gst_amt;
-	protected int last_txn_dt;
-	protected LocalDate last_update = LocalDate.now();
-	protected String txn_desc;
-	protected String currency;
+	private int cen_txn_id;
+	private int txn_type; //cash or transfer
+	private String txnRefId;
+	private int credit_debit_flag;
+	private int txn_seq;
+	private int account_id_cr;
+	private String account_type_cr;
+	private int account_id_dr;
+	private String account_type_dr;
+	private LocalDateTime transactionDate;
+	private LocalDate gen_dt;
+	private BigDecimal txn_amt;
+	private BigDecimal interest_amt;
+	private BigDecimal gst_amt;
+	private int last_txn_dt;
+	private LocalDate last_update = LocalDate.now();
+	private String txn_desc;
+	private String currency;
 
 }

@@ -23,8 +23,8 @@ public class AppConstants {
 
     public static class  FREQUENCY {
         public static final int DAY = 1;
-        public static final int MONTH = 1;
-        public static final int YEAR = 1;
+        public static final int MONTH = 2;
+        public static final int YEAR = 3;
     }
 
     private AppConstants() {

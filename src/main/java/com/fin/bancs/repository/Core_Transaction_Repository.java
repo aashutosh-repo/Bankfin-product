@@ -1,5 +1,6 @@
 package com.fin.bancs.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,5 +17,8 @@ public interface Core_Transaction_Repository extends
 						JpaRepository<Core_Transaction, Integer>{
 	
 	List<Core_Transaction>  findByTxnRefId(String txnId);
+
+	List<Core_Transaction> findByTransactionDateAfter(LocalDateTime date);
+	List<Core_Transaction> findByTransactionDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 
 }

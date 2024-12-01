@@ -1,5 +1,7 @@
 package com.fin.bancs.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +48,7 @@ public class TransactionController {
     	accId.setAccount_id(cashTxnDtls.getAccountId());
     	accId.setAccount_type(cashTxnDtls.getAccountType());
     	txnServices.getCashtxnDetails(accId, txnId);
-    	ResponseEntity<Object> respObj = ResponseDto.responseBuilder("Transaction SuccessFull", HttpStatus.OK, txnServices.getCashtxnDetails(accId, txnId));
-        return respObj;
+        return ResponseDto.responseBuilder("Transaction SuccessFull", HttpStatus.OK, txnServices.getCashtxnDetails(accId, txnId));
     }
 
     @Operation(summary= "This end point is to create transfer type transaction",
@@ -68,6 +69,27 @@ public class TransactionController {
     		throw new ErrorHandler("Txn Id should be String");
     	}
     	return txnServices.getTransactionDetails(txnId);
+    }
+    @GetMapping("/getTransactionByPeriod")
+    public List<TransactionDTO> getTransactions(
+            @RequestParam(required = false) String timeframe,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate) {
+        if (timeframe != null) {
+            return switch (timeframe) {
+                case "1" -> txnServices.getTransactionDetails(1);
+                case "3" -> txnServices.getTransactionDetails(3);
+                case "6" -> txnServices.getTransactionDetails(6);
+                default -> throw new IllegalArgumentException("Invalid timeframe");
+            };
+        } else if (startDate != null && endDate != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime start = LocalDateTime.parse(startDate, formatter);
+            LocalDateTime end = LocalDateTime.parse(endDate, formatter);
+            return txnServices.getTransactionsForCustomDateRange(start, end);
+        } else {
+            throw new IllegalArgumentException("Timeframe or custom date range required");
+        }
     }
 
 }
