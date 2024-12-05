@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.fin.bancs.dto.NomineeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.WebDataBinder;
@@ -53,6 +54,7 @@ public class CustomerDetailsServices implements Customer_Service_Interface{
 	private SequenceGenerator sequenceGenerator;
 
 	@Override
+	@CacheEvict(value = "customers", key = "'allCustomers'", allEntries = false)
 	public void CreateCustDetails( CustomerDto inp_cust_details,
 								   DocumentsDtlsDto documentsDtlsDto,List<NomineeDto> nomineeDtoList){
 
@@ -95,7 +97,7 @@ public class CustomerDetailsServices implements Customer_Service_Interface{
 //		cust_dtls.setSTATUS(0000); //put Account Closing Status
 	}
 
-	@Cacheable(value = "customers", key = "all")
+	@Cacheable(value = "customers", key = "'allCustomers'")
 	@Override
 	public List<CustomerDto> getAllCust(){
 		List<CustomerDetails> allcust = detailsRepository.findAll();
@@ -107,7 +109,7 @@ public class CustomerDetailsServices implements Customer_Service_Interface{
 
 		return allCustDtoOut;
 	}
-	@Cacheable(value = "customers", key = "#mobNumber")
+	@Cacheable(value = "customers", key = "#mobileNumber")
 	@Override
 	public CustomerDto findCustomerByMobileNumber(String mobileNumber) {
 		Optional<CustomerDetails> customerDetails = detailsRepository.findByMobileNumber(mobileNumber);

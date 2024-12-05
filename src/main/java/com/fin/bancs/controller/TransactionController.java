@@ -47,7 +47,7 @@ public class TransactionController {
     	AccountPk accId = new AccountPk();
     	accId.setAccount_id(cashTxnDtls.getAccountId());
     	accId.setAccount_type(cashTxnDtls.getAccountType());
-    	txnServices.getCashtxnDetails(accId, txnId);
+    	//txnServices.getCashtxnDetails(accId, txnId);
         return ResponseDto.responseBuilder("Transaction SuccessFull", HttpStatus.OK, txnServices.getCashtxnDetails(accId, txnId));
     }
 

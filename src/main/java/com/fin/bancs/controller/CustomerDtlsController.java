@@ -37,7 +37,7 @@ public class CustomerDtlsController {
 
     @Operation(summary = "Find All Customer API",
     description = "REST API to All Customer in Omega Bank")
-    @GetMapping("/getaAllCustomerDetails")
+    @GetMapping("/getAllCustomerDetails")
     public List<CustomerDto> getAllCustomer(){
         return customerDetailsServices.getAllCust();
     }
@@ -72,7 +72,7 @@ public class CustomerDtlsController {
             responseCode = "201",
             description = "Http Status Succesfully Precessed"
     )
-    @PutMapping("/modify-cust") 
+    @PutMapping("/modify-Customer")
     public ResponseEntity<ResponseDto> modifyDetails(@RequestBody CustomerDto customerDetails, 
     		@RequestParam int cust_id, @RequestParam int CustomerType){
     	customerDetailsServices.modifyCustomer(customerDetails, cust_id, CustomerType);

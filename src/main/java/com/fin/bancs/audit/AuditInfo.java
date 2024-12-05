@@ -36,8 +36,8 @@ public abstract class AuditInfo {
     @Column(insertable = false)
     private Instant lastModifiedDate;
 
-    @Version
-    @Column(name = "version")
-    private Long version;
+//    @Version
+//    @Column(name = "version")
+//    private Long version=0L;
 
    }

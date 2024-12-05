@@ -115,7 +115,9 @@ public class Account_services implements Account_Service_Interface{
 		AccountDto accountDto = new AccountDto();
 		account = account_repository.findAll();
 		for(Account acc: account) {
-			accountDto.setAccount_number(acc.getAccountNumber());
+			//accountDto.setAccount_number(acc.getAccountNumber());
+			accountDto = AccountMapper.mapToAccountDto(acc, new AccountDto());
+			accDto.add(accountDto);
 		}
         logger.debug("Account Finding completed in :  {}On : {}", this.getClass().getSimpleName(), LocalDate.now());
 
