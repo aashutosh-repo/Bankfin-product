@@ -1,0 +1,89 @@
+User Story for Backend Developer: End-to-End NEFT Transaction System
+Title: Develop Backend Code for End-to-End NEFT Transaction in Banking System
+Created By : Aashutosh Kumar
+As a backend developer,
+I want to create an end-to-end NEFT transaction system in Java using Spring Boot,
+So that users can initiate NEFT transactions securely and reliably through an API.
+
+Background
+The NEFT (National Electronic Funds Transfer) system is a crucial part of the banking ecosystem that facilitates the transfer of funds between accounts at different banks. The backend system should ensure secure, reliable, and efficient processing of NEFT transactions, including validation, authorization, processing, and notifications.
+
+Acceptance Criteria
+API Endpoint Creation:
+
+Implement a REST API endpoint to initiate NEFT transactions.
+
+Endpoint: POST /neft/transaction/initiate
+
+Request payload should include:
+
+Transaction related Details-- 
+senderAccountNumber (String)
+recipientAccountNumber (String)
+recipientBankIFSC (String)
+amount (double)
+transactionReference (String)
+transactionDate (String, ISO format)
+
+Beneficiary's Details --
+Beneficiary's Name
+Beneficiary's Branch Name
+Beneficiary's Bank Name
+Beneficiary's Account Type
+Beneficiary's Account No.
+Beneficiary's Branch IFSC
+Sender and Beneficiary Legal Entity Identifier (for eligible transactions)
+
+
+Response should return: --Done
+transactionReference (String)
+status (String: "Success" or "Failed")
+message (String)
+
+Transaction Validation:  --WIP
+
+1. Ensure the sender has sufficient balance for the transaction. --done
+2. Validate the recipient’s account details and bank IFSC code. --done
+3. Implement business rules to validate transaction limits (e.g., max allowed transaction amount). --Done
+4. Ensure proper authentication for transaction initiation (use JWT, OAuth2, or basic authentication). --Hold
+5. No charges to savings bank account customers for online NEFT transactions.  --done
+
+
+Database Interaction:
+
+	Design an entity class (NeftTransaction) representing the transaction in the database.
+	Create a repository interface (NeftTransactionRepository) to interact with the database.
+	Save transaction details with an initial status of "Initiated".
+
+Transaction Processing:
+	Implement logic to lock the sender’s account during the transaction processing phase.
+	Deduct the transaction amount from the sender’s account.
+	Credit the recipient’s account with the transaction amount.
+	Update the transaction status to "Processing" during fund transfer.
+
+Transaction Completion:
+	After successful processing, update the transaction status to "Completed".
+	Record the transaction timestamp and relevant audit data.
+
+Batch Processing Setup:
+	Implement a method in the NEFTService class, processNEFTBatch(List<Transaction> transactions), to process a list of transactions in batches.
+	The method should process transactions sequentially and ensure that each transaction's status is updated after completion.
+	Transactions should be logged with their timestamp for audit purposes.
+
+Notifications:
+	Send notifications (e.g., email or SMS) to the sender and recipient with the transaction status.
+	Include details like transaction reference, amount, and timestamp.
+
+Error Handling and Logging:
+	Handle errors such as insufficient funds, invalid account details, or failed transaction processing.
+	Ensure all errors are logged for auditing purposes.
+	Provide appropriate HTTP response codes and error messages for different failure scenarios.
+
+Security and Compliance:
+	Implement encryption for sensitive data.
+	Ensure data compliance with banking regulations.
+	Use secure authentication and authorization practices.
+Testing:
+	Create unit tests for the NeftTransactionService methods to ensure they function as expected.
+	Implement integration tests to verify the interaction between the controller, service, and repository.
+	Ensure all endpoints return the correct responses and handle edge cases correctly.

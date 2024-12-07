@@ -11,6 +11,8 @@ public class TransactionConstants {
 
     public static final int CREDIT = 1;
     public static final int DEBIT = 2;
+    
+    public static final String TRANSACTION_LIMIT_CROSS = "Transaction Amount is Above provided LIMIT";
 
 
 

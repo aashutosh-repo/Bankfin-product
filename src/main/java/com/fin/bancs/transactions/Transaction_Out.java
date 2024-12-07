@@ -2,10 +2,13 @@ package com.fin.bancs.transactions;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Data
 @Getter @Setter @NoArgsConstructor
 public class Transaction_Out {
 	

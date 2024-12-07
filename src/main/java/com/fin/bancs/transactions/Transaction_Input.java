@@ -11,7 +11,8 @@ import lombok.Setter;
 public class Transaction_Input {
 	
 	protected int CEN_TXN_ID;
-	protected int TXN_TYPE; //DEBIT or CREDIT
+	protected int TXN_TYPE;  //NEFT/CASH/IMPS
+	protected int credit_debit_flag;
 	protected int TXN_SEQ;
 	protected int ACCOUNT_ID_CR;
 	protected int ACCOUNT_TYPE_CR;

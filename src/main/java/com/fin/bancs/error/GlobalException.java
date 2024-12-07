@@ -90,5 +90,17 @@ public class GlobalException extends ResponseEntityExceptionHandler {
             );
             return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        
+        @ExceptionHandler(CustomErrorMessage.class)
+        public ResponseEntity<ErrorResponseDto> customErrorHandler(CustomErrorMessage ex, WebRequest request){
+        	ErrorResponseDto response= new ErrorResponseDto(
+                    request.getDescription(false),
+                    HttpStatus.BAD_REQUEST,
+                    ex.getMessage(),
+                    LocalDateTime.now()
+            );
+            return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+        }
+        
 
 }

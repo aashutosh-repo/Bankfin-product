@@ -10,18 +10,19 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.fin.bancs.bankconfig.InternalAccountConfiguration;
-import com.fin.bancs.constants.AccountsConstants;
-import com.fin.bancs.constants.TransactionConstants;
-import com.fin.bancs.error.ErrorHandler;
-import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.fin.bancs.account.Account;
 import com.fin.bancs.account.AccountPk;
+import com.fin.bancs.constants.AccountsConstants;
+import com.fin.bancs.constants.TransactionConstants;
 import com.fin.bancs.dto.TransactionDTO;
+import com.fin.bancs.error.CustomErrorMessage;
 import com.fin.bancs.error.ErrorCode;
+import com.fin.bancs.error.ErrorHandler;
 import com.fin.bancs.error.ResourceNotFoundException;
 import com.fin.bancs.mapper.TransactionMapper;
 import com.fin.bancs.repository.Account_repository;
@@ -30,6 +31,8 @@ import com.fin.bancs.transactions.CashTransactionInput;
 import com.fin.bancs.transactions.CashTransactionResponse;
 import com.fin.bancs.transactions.Core_Transaction;
 import com.fin.bancs.utils.SequenceGenerator;
+
+import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
@@ -67,6 +70,8 @@ public class Core_Transaction_services  {
 		List<Core_Transaction> core_transaction = new ArrayList<>();
 		List<Account> UpdateAccBal= new ArrayList<>();
 
+		accountBalanceUpdate.checkTransactionLimit(txnInputDTO.get(0));
+		
 		for(TransactionDTO txn : txnInputDTO) {
 			Core_Transaction coreTxn = TransactionMapper.mapTOCoreTxnLayer(txn,new Core_Transaction());
 			if(coreTxn.getCredit_debit_flag() == 1) //Credit Account
@@ -107,10 +112,13 @@ public class Core_Transaction_services  {
 			if (account_opt_cr.isPresent() && int_acc_dr.isPresent()) {
 				account_cr = account_opt_cr.get();
 				internal_acc_dr = int_acc_dr.get();
+				if(internal_acc_dr.getAvailable_balance().compareTo(txnAmt) <= 0) {
+					throw new CustomErrorMessage(AccountsConstants.INSUFFICIENT_BALANCE);
+				}
 				account_cr.setAvailable_balance(account_cr.getAvailable_balance().subtract(core_transaction_dr.getTxn_amt()));
 				UpdateAccBal.add(account_cr);
-				internal_acc_cr.setAvailable_balance(internal_acc_dr.getAvailable_balance().add(core_transaction_dr.getTxn_amt()));
-				UpdateAccBal.add(internal_acc_cr);
+				internal_acc_dr.setAvailable_balance(internal_acc_dr.getAvailable_balance().add(core_transaction_dr.getTxn_amt()));
+				UpdateAccBal.add(internal_acc_dr);
 			} else {
 				throw new ResourceNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND);
 			}
@@ -146,6 +154,10 @@ public class Core_Transaction_services  {
 			Optional<Account> int_acc_cr = accRepo.findById(account_pk);
 			if (account_opt_dr.isPresent() && int_acc_cr.isPresent() ) {
 				account_dr = account_opt_dr.get();
+				if(account_dr.getAvailable_balance().compareTo(txnAmt) <= 0) {
+					throw new CustomErrorMessage(AccountsConstants.INSUFFICIENT_BALANCE);
+				}
+				
 				internal_acc_cr = int_acc_cr.get();
 				account_dr.setAvailable_balance(account_dr.getAvailable_balance().subtract(txnAmt));
 				UpdateAccBal.add(account_dr);
@@ -196,8 +208,9 @@ public class Core_Transaction_services  {
 			Optional<Account> acc_cash;
 			AccountPk accPk= new AccountPk();
 			AccountPk accID= new AccountPk();
+			BigDecimal total_amt_internal;
+			BigDecimal total_amt_cash;
 			//debit/credit to internal account srarts
-			// internal Account need to maintain internally in Configuration Fil
 			if(txnInput.getCreditDebitFlag() == 2) {
 				//Default Internal credit Account
 				accID.setAccount_id(InternalAccountConfiguration.getDefaultCreditAccountId());
@@ -254,6 +267,8 @@ public class Core_Transaction_services  {
 				//For customer account
 				//Debit/credit to Customer account ends
 				acc= acc_cash.get();
+				BigDecimal Available_AMT_cash= acc.getAvailable_balance();
+				BigDecimal transaction_amt_cash= txnInput.getTxnAmt();
 				if(txnInput.getCreditDebitFlag()==1) {
 					accountBalanceUpdate.creditToAccount(acc,total_Amt);
 				}else {
@@ -263,6 +278,7 @@ public class Core_Transaction_services  {
 				//Core Txn for cash Account Started here
 				//coreTxn_cash_dr= TransactionMapper.mapTOCoreTxnLayer(txnInput, new Core_Transaction());
 				//coreTxn_cash_cr.setTXN_SEQ(2); //use auto sequence generator in case need to write txn with different cases
+				coreTxn_cash_cash.setGen_dt(LocalDate.now());
 				if(txnInput.getCreditDebitFlag() == 1) {
 					coreTxn_cash_cash.setTxn_desc(txnInput.getTxnDesc() + " cash : Credit");
 					coreTxn_cash_cash.setAccount_id_cr(acc.getAccountId().getAccount_id());
@@ -275,7 +291,6 @@ public class Core_Transaction_services  {
 					coreTxn_cash_cash.setCredit_debit_flag(TransactionConstants.DEBIT);
 				}
 				coreTxn_cash_cash.setTxn_amt(total_Amt);
-				coreTxn_cash_cash.setGen_dt(LocalDate.now());
 				coreTxn_cash_cash.setCurrency(txnInput.getCurrency());
 				coreTxn_cash_cash.setGen_dt(LocalDate.now());
 				coreTxn_cash_cash.setTxn_seq(2);
@@ -313,12 +328,12 @@ public class Core_Transaction_services  {
 		}
 		List<Core_Transaction> coreTxn = core_transactions.findByTxnRefId(TxnId);
 		for(Core_Transaction txn : coreTxn) {
-			if(txn.getAccount_type_dr().equals(AccountsConstants.SAVINGS) || txn.getAccount_type_cr().equals(AccountsConstants.SAVINGS)) {
+			//if(txn.getAccount_type_dr() == (AccountsConstants.SAVINGS) || txn.getAccount_type_cr() == (AccountsConstants.SAVINGS)) {
 				Core_Transaction cashTxn = txn;
 				response.setTxnAmt(cashTxn.getTxn_amt());
 				response.setTxnDesc(cashTxn.getTxn_desc());
 				response.setTxnDate(cashTxn.getGen_dt());
-			}
+			//}
 		}
 		return response;
 

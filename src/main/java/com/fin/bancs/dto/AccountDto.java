@@ -18,9 +18,10 @@ public class AccountDto {
     @NotEmpty(message = "Account number cannot be null or empty")
     @Schema(description = "Unique identifier for the account", example = "123456789")
     protected String account_number;
-
-    @NotNull(message = "Account open date cannot be null")
-    @Schema(description = "Date when the account was opened", example = "2024-01-01")
+    
+    @Schema(description = "Account Type used for the account", example = "saving")
+    protected String accType;;
+    @Schema(description = "Date when the account was opened")
     protected LocalDate account_open_dt;
 
     @NotEmpty(message = "Currency cannot be null or empty")

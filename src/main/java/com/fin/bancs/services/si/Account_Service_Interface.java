@@ -11,5 +11,6 @@ public interface Account_Service_Interface {
 	void deleteAccount(Account account);
 	List<AccountDto> findAllAccounts();
 	List<AccountDto> getAccountByCustomerId(int customerId);
+	Account createAccountPendingAuth(AccountDto accountdDto);
 
 }

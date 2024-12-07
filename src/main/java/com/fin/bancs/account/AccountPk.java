@@ -12,6 +12,6 @@ import lombok.Setter;
 @Getter @Setter @EqualsAndHashCode
 public class AccountPk implements Serializable{
 	private int account_id;
-	private String account_type;
+	private int account_type;
 	
 }

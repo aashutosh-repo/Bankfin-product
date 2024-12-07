@@ -19,6 +19,7 @@ import com.fin.bancs.account.AccountPk;
 import com.fin.bancs.customer.CustomerID;
 import com.fin.bancs.customer.CustomerDetails;
 import com.fin.bancs.dto.AccountDto;
+import com.fin.bancs.error.CustomErrorMessage;
 import com.fin.bancs.error.ErrorCode;
 import com.fin.bancs.error.ResourceNotFoundException;
 import com.fin.bancs.mapper.AccountMapper;
@@ -26,6 +27,7 @@ import com.fin.bancs.repository.Account_repository;
 import com.fin.bancs.repository.Customer_Details_Repository;
 import com.fin.bancs.services.si.Account_Service_Interface;
 import com.fin.bancs.utils.SequenceGenerator;
+import com.fin.bancs.utils.TempModifiedEntity;
 
 @Service
 public class Account_services implements Account_Service_Interface{
@@ -39,6 +41,58 @@ public class Account_services implements Account_Service_Interface{
 	private Customer_Details_Repository custRepository;
 	@Autowired
 	private SequenceGenerator sequenceGenerator;
+    @Autowired
+    private TempModifiedEntityServices tempModifiedEntityService;
+	
+	
+
+	@Override
+	public Account createAccountPendingAuth(AccountDto accountdDto) {
+		Account account = AccountMapper.mapToAccount(accountdDto, new Account());
+		CustomerDetails customer = new CustomerDetails();
+		customer.setCustomerId(new CustomerID(accountdDto.getCust_id(),accountdDto.getCus_type()));
+		customer = custRepository.findById(new CustomerID(accountdDto.getCust_id(),accountdDto.getCus_type()))
+				.orElseThrow(() -> new CustomErrorMessage("Customer not found with ID: " + accountdDto.getCust_id()));
+		BigInteger entityId = sequenceGenerator.generateSequence("AccountId_seq");
+		BigInteger intAccNumber = sequenceGenerator.generateSequence("InternalAccNO_seq");
+		BigInteger customerAccNumber = sequenceGenerator.generateSequence("CustomerAccNO_seq");
+		String intAccNumStr = "OMEGA"+intAccNumber.toString();
+		String customerAccountNum = "SB"+ customerAccNumber.toString();
+		AccountPk accId = new AccountPk();
+		accId.setAccount_id(entityId.intValue());
+		account.setOwner_name(customer.getFirstName() +" " +customer.getLastName());
+		account.setAccount_status(AccountsConstants.PENDING_AUTH);
+		account.setClsr_dt(null);
+		account.setClsr_reason(null);
+		account.setAccountId(accId);
+		account.setInternalAcntNumber(intAccNumStr);
+		account.setAccountNumber(customerAccountNum);
+		
+		
+		boolean isStored =
+				tempModifiedEntityService.storeTransactionInTemp(
+						account.getAccountNumber(),
+				Account.class.getName(),
+				account
+	        );
+		if(isStored == true) {
+			logger.info("Data Stored Successfully into TempModifiedEntityServices");
+		}
+		
+		return account;
+		
+	}
+	
+	
+	public void authAccountPendingTransaction(Account account) {
+		Account  account_create = tempModifiedEntityService.retrieveTransactionFromTemp
+				(account.getAccountNumber(), Account.class.getName(), Account.class);
+		if(account_create.getAccountId() == null) {
+			throw new CustomErrorMessage("No data Found in tempModifiedEntity");
+		}
+		account_repository.save(account_create);
+		
+	}
 
 	@Override
 	@CachePut(value = "accounts", key = "#account.account_number")
@@ -135,4 +189,5 @@ public class Account_services implements Account_Service_Interface{
 		}
 		return accountDtos;
 	}
+
 }

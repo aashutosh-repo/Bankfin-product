@@ -28,9 +28,9 @@ public class Core_Transaction extends AuditInfo{
 	private int credit_debit_flag;
 	private int txn_seq;
 	private int account_id_cr;
-	private String account_type_cr;
+	private int account_type_cr;
 	private int account_id_dr;
-	private String account_type_dr;
+	private int account_type_dr;
 	private LocalDateTime transactionDate;
 	private LocalDate gen_dt;
 	private BigDecimal txn_amt;
