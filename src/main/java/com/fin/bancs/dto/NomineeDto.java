@@ -3,8 +3,7 @@ package com.fin.bancs.dto;
 import java.time.LocalDate;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
-import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

@@ -36,26 +36,22 @@ import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-public class Core_Transaction_services  {
+public class CoreTransactionServices {
 
-	private static final Logger log = LogManager.getLogger(Core_Transaction_services.class);
-	@Autowired
+	private static final Logger log = LogManager.getLogger(CoreTransactionServices.class);
 	private Core_Transaction_Repository core_transactions;
-	@Autowired
 	private Account_repository accRepo;
-
-	@Autowired
 	private AccountBalanceUpdate accountBalanceUpdate;
-
+	private SequenceGenerator seqGen;
 	@Autowired
-	SequenceGenerator seqGen;
-
-	public Core_Transaction_services(Core_Transaction_Repository coreRepo, Account_repository accRepo) {
-		this.core_transactions = coreRepo;
+	public CoreTransactionServices(Core_Transaction_Repository core_transactions, Account_repository accRepo, AccountBalanceUpdate accountBalanceUpdate, SequenceGenerator seqGen) {
+		this.core_transactions = core_transactions;
 		this.accRepo = accRepo;
+		this.accountBalanceUpdate = accountBalanceUpdate;
+		this.seqGen = seqGen;
 	}
 
-	public Core_Transaction_services() {
+	public CoreTransactionServices() {
 		super();
 	}
 
@@ -95,7 +91,7 @@ public class Core_Transaction_services  {
 		AccountPk account_pk = new AccountPk();
 		Account account_dr;
 		Account account_cr;
-		Account internal_acc_cr = new Account();
+		Account internal_acc_cr;
 		Account internal_acc_dr;
 		if(!Objects.equals(core_transaction_cr.getTxn_amt(), core_transaction_dr.getTxn_amt())){
 			throw  new ErrorHandler("Debit Amount and Credit Amount should be Same");
@@ -105,13 +101,13 @@ public class Core_Transaction_services  {
 		if(core_transaction_cr.getCredit_debit_flag()==1) {
 			account_pk.setAccount_id(core_transaction_cr.getAccount_id_cr()); //CR type Inter
 			account_pk.setAccount_type(core_transaction_cr.getAccount_type_cr());
-			Optional<Account> account_opt_cr = accRepo.findById(account_pk);
+			Optional<Account> optionalAccountCredit = accRepo.findById(account_pk);
 			account_pk.setAccount_id(123456); //Default internal debit account
 			account_pk.setAccount_type(AccountsConstants.INTERNAL_ACCOUNT);
-			Optional<Account> int_acc_dr = accRepo.findById(account_pk);
-			if (account_opt_cr.isPresent() && int_acc_dr.isPresent()) {
-				account_cr = account_opt_cr.get();
-				internal_acc_dr = int_acc_dr.get();
+			Optional<Account> InternalAccountDebit = accRepo.findById(account_pk);
+			if (optionalAccountCredit.isPresent() && InternalAccountDebit.isPresent()) {
+				account_cr = optionalAccountCredit.get();
+				internal_acc_dr = InternalAccountDebit.get();
 				if(internal_acc_dr.getAvailable_balance().compareTo(txnAmt) <= 0) {
 					throw new CustomErrorMessage(AccountsConstants.INSUFFICIENT_BALANCE);
 				}
@@ -148,17 +144,17 @@ public class Core_Transaction_services  {
 		if(core_transaction_dr.getCredit_debit_flag() == 2) {
 			account_pk.setAccount_id(core_transaction_dr.getAccount_id_cr());
 			account_pk.setAccount_type(core_transaction_dr.getAccount_type_cr());
-			Optional<Account> account_opt_dr = accRepo.findById(account_pk);
+			Optional<Account> optionalAccountDebit = accRepo.findById(account_pk);
 			account_pk.setAccount_id(123455);
 			account_pk.setAccount_type(AccountsConstants.INTERNAL_ACCOUNT);
-			Optional<Account> int_acc_cr = accRepo.findById(account_pk);
-			if (account_opt_dr.isPresent() && int_acc_cr.isPresent() ) {
-				account_dr = account_opt_dr.get();
+			Optional<Account> internalAccountCredit = accRepo.findById(account_pk);
+			if (optionalAccountDebit.isPresent() && internalAccountCredit.isPresent() ) {
+				account_dr = optionalAccountDebit.get();
 				if(account_dr.getAvailable_balance().compareTo(txnAmt) <= 0) {
 					throw new CustomErrorMessage(AccountsConstants.INSUFFICIENT_BALANCE);
 				}
 				
-				internal_acc_cr = int_acc_cr.get();
+				internal_acc_cr = internalAccountCredit.get();
 				account_dr.setAvailable_balance(account_dr.getAvailable_balance().subtract(txnAmt));
 				UpdateAccBal.add(account_dr);
 				internal_acc_cr.setAvailable_balance(internal_acc_cr.getAvailable_balance().add(txnAmt));
@@ -208,8 +204,6 @@ public class Core_Transaction_services  {
 			Optional<Account> acc_cash;
 			AccountPk accPk= new AccountPk();
 			AccountPk accID= new AccountPk();
-			BigDecimal total_amt_internal;
-			BigDecimal total_amt_cash;
 			//debit/credit to internal account srarts
 			if(txnInput.getCreditDebitFlag() == 2) {
 				//Default Internal credit Account
@@ -267,9 +261,7 @@ public class Core_Transaction_services  {
 				//For customer account
 				//Debit/credit to Customer account ends
 				acc= acc_cash.get();
-				BigDecimal Available_AMT_cash= acc.getAvailable_balance();
-				BigDecimal transaction_amt_cash= txnInput.getTxnAmt();
-				if(txnInput.getCreditDebitFlag()==1) {
+                if(txnInput.getCreditDebitFlag()==1) {
 					accountBalanceUpdate.creditToAccount(acc,total_Amt);
 				}else {
 					accountBalanceUpdate.debitFromAccount(acc,total_Amt);
@@ -328,12 +320,9 @@ public class Core_Transaction_services  {
 		}
 		List<Core_Transaction> coreTxn = core_transactions.findByTxnRefId(TxnId);
 		for(Core_Transaction txn : coreTxn) {
-			//if(txn.getAccount_type_dr() == (AccountsConstants.SAVINGS) || txn.getAccount_type_cr() == (AccountsConstants.SAVINGS)) {
-				Core_Transaction cashTxn = txn;
-				response.setTxnAmt(cashTxn.getTxn_amt());
-				response.setTxnDesc(cashTxn.getTxn_desc());
-				response.setTxnDate(cashTxn.getGen_dt());
-			//}
+            response.setTxnAmt(txn.getTxn_amt());
+				response.setTxnDesc(txn.getTxn_desc());
+				response.setTxnDate(txn.getGen_dt());
 		}
 		return response;
 
@@ -352,5 +341,4 @@ public class Core_Transaction_services  {
 				.map(x -> TransactionMapper.mapToTransactionDTO(x, new TransactionDTO()))
 				.toList();
 	}
-
 }

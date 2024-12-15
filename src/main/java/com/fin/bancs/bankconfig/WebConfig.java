@@ -9,14 +9,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fin.bancs.aop.RestControllerInterceptor;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
     //Interceptors manage HTTP-level concerns, like logging requests and responses.
+    private final RestControllerInterceptor restControllerInterceptor;
+
     @Autowired
-    private RestControllerInterceptor restControllerInterceptor;
+    public WebConfig(RestControllerInterceptor restControllerInterceptor) {
+        this.restControllerInterceptor = restControllerInterceptor;
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

@@ -25,8 +25,3 @@ public class Sequence {
   @Column(name = "seq_id")
   private int seqId;
 }
-
-//CREATE TABLE sequences (
-//		  sequence_name VARCHAR(50) PRIMARY KEY,
-//		  next_value BIGINT NOT NULL
-//		);

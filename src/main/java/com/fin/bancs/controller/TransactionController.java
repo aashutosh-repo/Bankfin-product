@@ -18,9 +18,8 @@ import com.fin.bancs.account.AccountPk;
 import com.fin.bancs.dto.ResponseDto;
 import com.fin.bancs.dto.TransactionDTO;
 import com.fin.bancs.error.ErrorHandler;
-import com.fin.bancs.services.Core_Transaction_services;
+import com.fin.bancs.services.CoreTransactionServices;
 import com.fin.bancs.transactions.CashTransactionInput;
-import com.fin.bancs.transactions.Core_Transaction;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,7 +31,7 @@ description= "This collection contains CRUD operation for transactions")
 @RequestMapping("/transaction")
 public class TransactionController {
     @Autowired
-    private  Core_Transaction_services txnServices;
+    private CoreTransactionServices txnServices;
 
     //Test application
     @Operation(summary ="This Endpoint handle creation of transaction ",

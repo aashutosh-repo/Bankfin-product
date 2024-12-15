@@ -43,7 +43,7 @@ public class TradeServices {
 	@Autowired
 	private Account_repository accRepository;
 	@Autowired
-	private Core_Transaction_services coreTransaction;
+	private CoreTransactionServices coreTransaction;
 	@Autowired
 	private SequenceGenerator sequenceGenerator;
 

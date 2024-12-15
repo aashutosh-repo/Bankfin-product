@@ -26,8 +26,9 @@ public class TempModifiedEntityServices {
     public <T> boolean storeTransactionInTemp(String modifiedKey, String entityName, T modifiedData) {
         try {
             // Serialize the modified data into a BLOB
-        	String jsondata = JSONMapper.convertToJSON(modifiedData);
-            byte[] jsonBytes = jsondata.getBytes(StandardCharsets.UTF_8);
+        	String jSONdata = JSONMapper.convertToJSON(modifiedData);
+            assert jSONdata != null;
+            byte[] jsonBytes = jSONdata.getBytes(StandardCharsets.UTF_8);
         	Blob blob = new SerialBlob(jsonBytes);
         	// Create a new TempModified entry
             TempModifiedEntity tempTransaction = new TempModifiedEntity();

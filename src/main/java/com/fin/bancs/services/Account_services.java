@@ -75,7 +75,7 @@ public class Account_services implements Account_Service_Interface{
 				Account.class.getName(),
 				account
 	        );
-		if(isStored == true) {
+		if(isStored) {
 			logger.info("Data Stored Successfully into TempModifiedEntityServices");
 		}
 		
@@ -166,10 +166,9 @@ public class Account_services implements Account_Service_Interface{
 
 		List<Account> account;
 		List<AccountDto> accDto = new ArrayList<AccountDto>();
-		AccountDto accountDto = new AccountDto();
+		AccountDto accountDto;
 		account = account_repository.findAll();
 		for(Account acc: account) {
-			//accountDto.setAccount_number(acc.getAccountNumber());
 			accountDto = AccountMapper.mapToAccountDto(acc, new AccountDto());
 			accDto.add(accountDto);
 		}

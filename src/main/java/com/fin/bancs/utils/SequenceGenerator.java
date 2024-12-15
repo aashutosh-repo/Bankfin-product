@@ -11,16 +11,20 @@ import com.fin.bancs.repository.SequenceRepository;
 @Service
 public class SequenceGenerator {
   
-  @Autowired
-  private SequenceRepository sequenceRepository;
-  
-  public BigInteger generateSequence(String sequenceName) {
+  private final SequenceRepository sequenceRepository;
+
+    @Autowired
+    public SequenceGenerator(SequenceRepository sequenceRepository) {
+        this.sequenceRepository = sequenceRepository;
+    }
+
+    public BigInteger generateSequence(String sequenceName) {
     Sequence sequence = sequenceRepository.findBySequenceName(sequenceName);
     if (sequence == null) {
-      sequence = new Sequence(sequenceName, new BigInteger("1"),getNextSeqId());
+      sequence = new Sequence(sequenceName, BigInteger.valueOf(1L),getNextSeqId());
       sequenceRepository.save(sequence);
     } else {
-      sequence.setNextValue(sequence.getNextValue().add(new BigInteger("1")));
+      sequence.setNextValue(sequence.getNextValue().add(BigInteger.valueOf(1L)));
       sequenceRepository.save(sequence);
     }
     return sequence.getNextValue();

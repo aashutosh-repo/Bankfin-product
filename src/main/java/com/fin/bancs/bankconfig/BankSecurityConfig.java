@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -35,9 +37,8 @@ public class BankSecurityConfig {
         http.authorizeHttpRequests(configurer ->
                         configurer
                                 .requestMatchers("/").hasRole("EMPLOYEE")
-                                .requestMatchers(HttpMethod.POST,"/customer-service").hasRole("MANAGER")
+                                .requestMatchers("/customer-service","/instrument").hasRole("MANAGER")
                                 .requestMatchers(HttpMethod.GET,"/nominee").hasRole("EMPLOYEE")
-                                .requestMatchers("/instrument").hasRole("MANAGER")
                                 .requestMatchers("/leaders/**").hasRole("MANAGER")
                                 .requestMatchers("/systems/**").hasRole("ADMIN")
                                 .requestMatchers("/v2/api-docs",    // Swagger API documentation
@@ -52,13 +53,13 @@ public class BankSecurityConfig {
                                 .loginProcessingUrl("/authenticateTheUser")
                                 .permitAll()
                 )
-                .logout(logout -> logout.permitAll()
+                .logout(LogoutConfigurer::permitAll
                 )
                 .exceptionHandling(configurer ->
                         configurer.accessDeniedPage("/access-denied")
                 );
         http
-        .csrf((csrf) -> csrf.disable());
+        .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
