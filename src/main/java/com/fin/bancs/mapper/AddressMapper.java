@@ -4,8 +4,10 @@ import com.fin.bancs.customer.CustomerAddressDetails;
 import com.fin.bancs.dto.CustomerAddressDto;
 
 public class AddressMapper {
-	
-	public static CustomerAddressDto mapToCustomerAddressDto(CustomerAddressDetails addressDetails,CustomerAddressDto addressDtlsDto) {
+    private AddressMapper() {
+    }
+
+    public static CustomerAddressDto mapToCustomerAddressDto(CustomerAddressDetails addressDetails, CustomerAddressDto addressDtlsDto) {
 		addressDtlsDto.setAddressType(addressDetails.getAddressType());
         addressDtlsDto.setAddressLn1(addressDetails.getAddressLn1());
         addressDtlsDto.setAddressLn2(addressDetails.getAddressLn2());

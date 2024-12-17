@@ -4,6 +4,7 @@ import com.fin.bancs.dto.TransactionDTO;
 import com.fin.bancs.transactions.Core_Transaction;
 
 public class TransactionMapper {
+        private TransactionMapper(){}
 	
 	public static TransactionDTO  mapToTransactionDTO(Core_Transaction entity,TransactionDTO dto) {
 	    dto.setTxnType(entity.getTxn_type());

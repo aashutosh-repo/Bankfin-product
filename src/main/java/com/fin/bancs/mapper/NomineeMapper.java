@@ -4,8 +4,11 @@ import com.fin.bancs.customer.NomineeDetails;
 import com.fin.bancs.dto.NomineeDto;
 
 public class NomineeMapper {
-	
-	public static NomineeDto mpToNomineeDto (NomineeDetails nominee, NomineeDto nomineeDto) {
+
+        private NomineeMapper() {
+        }
+
+        public static NomineeDto mpToNomineeDto (NomineeDetails nominee, NomineeDto nomineeDto) {
 		nomineeDto.setOwnerId(nominee.getOwnerId());
         nomineeDto.setOwnerType(nominee.getOwnerType());
         nomineeDto.setSeqNum(nominee.getSeqNum());

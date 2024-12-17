@@ -4,6 +4,7 @@ import com.fin.bancs.dto.ShipmentDTO;
 import com.fin.bancs.trade.Shipment;
 
 public class ShipmentMapper {
+    private ShipmentMapper(){}
 
     public static ShipmentDTO shipmentToShipmentDTO(Shipment shipment) {
         ShipmentDTO shipmentDTO = new ShipmentDTO();

@@ -4,8 +4,10 @@ import com.fin.bancs.customer.DocumentsDetails;
 import com.fin.bancs.dto.DocumentsDtlsDto;
 
 public class DocumentDetailsMapper {
-	
-	    public static DocumentsDtlsDto mapToDocumentDetailsDto(DocumentsDetails documentDetails,DocumentsDtlsDto documentDetailsDto) {
+	private DocumentDetailsMapper() {
+	}
+
+	public static DocumentsDtlsDto mapToDocumentDetailsDto(DocumentsDetails documentDetails, DocumentsDtlsDto documentDetailsDto) {
 	        documentDetailsDto.setCustId(documentDetails.getCustId());
 	        documentDetailsDto.setDocDescription(documentDetails.getDocDescription());
 	        documentDetailsDto.setDocIdentificationNumber(documentDetails.getDocIdentificationNumber());

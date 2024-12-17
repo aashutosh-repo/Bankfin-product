@@ -4,6 +4,7 @@ import com.fin.bancs.dto.TradeFinanceDTO;
 import com.fin.bancs.trade.TradeFinance;
 
 public class TradeFinanceMapper {
+    private TradeFinanceMapper(){}
     public static TradeFinanceDTO tradeFinanceToTradeFinanceDTO(TradeFinance tradeFinance, TradeFinanceDTO tradeFinanceDTO ) {
         tradeFinanceDTO.setBuyerName(tradeFinance.getBuyerName());
         tradeFinanceDTO.setSellerName(tradeFinance.getSellerName());

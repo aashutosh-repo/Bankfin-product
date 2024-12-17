@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JSONMapper {
+    private JSONMapper(){}
 	
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
