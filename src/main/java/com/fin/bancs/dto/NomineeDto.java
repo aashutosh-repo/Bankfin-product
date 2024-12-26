@@ -27,7 +27,7 @@ public class NomineeDto {
 
     @NotNull(message = "Sequence number cannot be null")
     @Schema(description = "Sequence number of the nominee", example = "1")
-    protected int SeqNum;
+    protected int seqNum;
 
     @NotNull(message = "Nominee share percentage cannot be null")
     @Schema(description = "Percentage share allocated to the nominee", example = "50")

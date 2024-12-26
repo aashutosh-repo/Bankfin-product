@@ -40,7 +40,7 @@ public class ResponseDto {
 	}
 	//This method use to get response with object containing important info for User
     public static ResponseEntity<Object> responseBuilder(String message, HttpStatus respStatus, Object responseObj){
-    	Map<String, Object> response = new HashMap<String, Object>();
+    	Map<String, Object> response = new HashMap<>();
     	response.put("Message", message);
     	response.put("HttpStatus", respStatus);
     	response.put("Data", responseObj);

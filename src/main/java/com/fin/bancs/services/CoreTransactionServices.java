@@ -41,10 +41,10 @@ public class CoreTransactionServices {
 	private static final Logger log = LogManager.getLogger(CoreTransactionServices.class);
 	private Core_Transaction_Repository core_transactions;
 	private Account_repository accRepo;
-	private AccountBalanceUpdate accountBalanceUpdate;
+	private Account_Balance_Details_Service accountBalanceUpdate;
 	private SequenceGenerator seqGen;
 	@Autowired
-	public CoreTransactionServices(Core_Transaction_Repository core_transactions, Account_repository accRepo, AccountBalanceUpdate accountBalanceUpdate, SequenceGenerator seqGen) {
+	public CoreTransactionServices(Core_Transaction_Repository core_transactions, Account_repository accRepo, Account_Balance_Details_Service accountBalanceUpdate, SequenceGenerator seqGen) {
 		this.core_transactions = core_transactions;
 		this.accRepo = accRepo;
 		this.accountBalanceUpdate = accountBalanceUpdate;
@@ -64,7 +64,7 @@ public class CoreTransactionServices {
 		Core_Transaction core_transaction_cr= new Core_Transaction();
 		Core_Transaction core_transaction_dr= new Core_Transaction();
 		List<Core_Transaction> core_transaction = new ArrayList<>();
-		List<Account> UpdateAccBal= new ArrayList<>();
+		List<Account> updateAccBal= new ArrayList<>();
 
 		accountBalanceUpdate.checkTransactionLimit(txnInputDTO.get(0));
 		
@@ -104,17 +104,17 @@ public class CoreTransactionServices {
 			Optional<Account> optionalAccountCredit = accRepo.findById(account_pk);
 			account_pk.setAccount_id(123456); //Default internal debit account
 			account_pk.setAccount_type(AccountsConstants.INTERNAL_ACCOUNT);
-			Optional<Account> InternalAccountDebit = accRepo.findById(account_pk);
-			if (optionalAccountCredit.isPresent() && InternalAccountDebit.isPresent()) {
+			Optional<Account> internalAccountDebit = accRepo.findById(account_pk);
+			if (optionalAccountCredit.isPresent() && internalAccountDebit.isPresent()) {
 				account_cr = optionalAccountCredit.get();
-				internal_acc_dr = InternalAccountDebit.get();
+				internal_acc_dr = internalAccountDebit.get();
 				if(internal_acc_dr.getAvailable_balance().compareTo(txnAmt) <= 0) {
 					throw new CustomErrorMessage(AccountsConstants.INSUFFICIENT_BALANCE);
 				}
 				account_cr.setAvailable_balance(account_cr.getAvailable_balance().subtract(core_transaction_dr.getTxn_amt()));
-				UpdateAccBal.add(account_cr);
+				updateAccBal.add(account_cr);
 				internal_acc_dr.setAvailable_balance(internal_acc_dr.getAvailable_balance().add(core_transaction_dr.getTxn_amt()));
-				UpdateAccBal.add(internal_acc_dr);
+				updateAccBal.add(internal_acc_dr);
 			} else {
 				throw new ResourceNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND);
 			}
@@ -156,9 +156,9 @@ public class CoreTransactionServices {
 				
 				internal_acc_cr = internalAccountCredit.get();
 				account_dr.setAvailable_balance(account_dr.getAvailable_balance().subtract(txnAmt));
-				UpdateAccBal.add(account_dr);
+				updateAccBal.add(account_dr);
 				internal_acc_cr.setAvailable_balance(internal_acc_cr.getAvailable_balance().add(txnAmt));
-				UpdateAccBal.add(internal_acc_cr);
+				updateAccBal.add(internal_acc_cr);
 			}else {
 				throw new ResourceNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND);
 			}
@@ -186,7 +186,7 @@ public class CoreTransactionServices {
 			core_transaction.add(coreTransactionLayer_int_cr);
 		}
 
-		accRepo.saveAll(UpdateAccBal);
+		accRepo.saveAll(updateAccBal);
 		core_transactions.saveAll(core_transaction);
 	}
 
@@ -223,7 +223,6 @@ public class CoreTransactionServices {
 				log.info("Both Account found Proceeding ....");
 				acc= acc_internal.get();
 				BigDecimal transaction_amt= txnInput.getTxnAmt();
-				BigDecimal gst_amt =  txnInput.getGstAmt();
 				BigDecimal interest_amt = txnInput.getInterestAmt();
 				BigDecimal total_Amt = transaction_amt.add(interest_amt);
 				int cred_deb_flag= txnInput.getCreditDebitFlag();
@@ -235,7 +234,6 @@ public class CoreTransactionServices {
 					accountBalanceUpdate.creditToAccount(acc,total_Amt);
 				}
 				//Core Txn for internal Account Started here
-				//coreTxn_cash_cr = TransactionMapper.mapTOCoreTxnLayer(txnInput, new Core_Transaction() );
 				if(txnInput.getCreditDebitFlag() == 1) {
 					coreTxn_cash_internal.setTxn_desc(txnInput.getTxnDesc() + " Internal : Debit");
 					coreTxn_cash_internal.setAccount_id_dr(acc.getAccountId().getAccount_id());
@@ -268,8 +266,6 @@ public class CoreTransactionServices {
 				}
 
 				//Core Txn for cash Account Started here
-				//coreTxn_cash_dr= TransactionMapper.mapTOCoreTxnLayer(txnInput, new Core_Transaction());
-				//coreTxn_cash_cr.setTXN_SEQ(2); //use auto sequence generator in case need to write txn with different cases
 				coreTxn_cash_cash.setGen_dt(LocalDate.now());
 				if(txnInput.getCreditDebitFlag() == 1) {
 					coreTxn_cash_cash.setTxn_desc(txnInput.getTxnDesc() + " cash : Credit");
@@ -299,7 +295,7 @@ public class CoreTransactionServices {
 
 	public List<TransactionDTO> getTransactionDetails(String txnId){
 		List<Core_Transaction> coreTxn = core_transactions.findByTxnRefId(txnId);
-		List<TransactionDTO> txnOut = new ArrayList<TransactionDTO>();
+		List<TransactionDTO> txnOut = new ArrayList<>();
 		if(coreTxn.isEmpty()){
 			throw new ResourceNotFoundException(ErrorCode.TXN_DETAILS_NOT_FOUND);
 		}
@@ -311,14 +307,14 @@ public class CoreTransactionServices {
 
 		return txnOut;
 	}
-	public CashTransactionResponse getCashtxnDetails(AccountPk accId, String TxnId) {
+	public CashTransactionResponse getCashtxnDetails(AccountPk accId, String txnId) {
 		CashTransactionResponse response = new CashTransactionResponse();
 		Optional<Account> cashAcc = accRepo.findById(accId);
 		if(cashAcc.isPresent()) {
 			response.setAccNumber(cashAcc.get().getAccountNumber());
 			response.setAvailableAmt(cashAcc.get().getAvailable_balance());
 		}
-		List<Core_Transaction> coreTxn = core_transactions.findByTxnRefId(TxnId);
+		List<Core_Transaction> coreTxn = core_transactions.findByTxnRefId(txnId);
 		for(Core_Transaction txn : coreTxn) {
             response.setTxnAmt(txn.getTxn_amt());
 				response.setTxnDesc(txn.getTxn_desc());

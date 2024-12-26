@@ -1,7 +1,5 @@
 package com.fin.bancs.services;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -13,29 +11,22 @@ import com.fin.bancs.repository.HolidayRepository;
 import com.fin.bancs.utils.Holidays;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
+import lombok.AllArgsConstructor;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class HolidayServices {
 
-    @Autowired
-    private HolidayRepository holidayRepository;
-
-
-    @Autowired
-    private ResourceLoader resourceLoader;
+    private final HolidayRepository holidayRepository;
+    private final ResourceLoader resourceLoader;
 
     public List<LocalDate> getHolidayList() {
         List<Holidays> allHolidays = holidayRepository.findAll();
-        List<LocalDate> dates = new ArrayList<LocalDate>();
+        List<LocalDate> dates = new ArrayList<>();
         allHolidays.forEach(date ->
-        {
-            dates.add(date.getDate());
-
-        });
+            dates.add(date.getDate()));
         return dates;
     }
 
@@ -85,14 +76,10 @@ public class HolidayServices {
         return dateOut;
     }
 
-    public void loadHolidaysFromCSV() throws IOException, FileNotFoundException, java.io.IOException, CsvValidationException {
-        ClassPathResource resource = new ClassPathResource("InputFiles/IndiaHolidays.csv");
-
+    public void loadHolidaysFromCSV() throws java.io.IOException, CsvValidationException {
         String csvFilePath = "classpath:InputFiles/IndiaHolidys.csv"; // Use classpath
 
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(resourceLoader.getResource(csvFilePath).getInputStream()))) {
-            String[] header = csvReader.readNext(); // Read header
-            //try (CSVReader csvReader = new CSVReader(new InputStreamReader(resource.getInputStream()))) {
             String[] nextLine;
             while ((nextLine = csvReader.readNext()) != null) {
                 // Skip header row

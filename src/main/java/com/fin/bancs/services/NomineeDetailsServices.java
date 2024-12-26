@@ -4,9 +4,9 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import com.fin.bancs.customer.NomineeDetails;
 import com.fin.bancs.dto.NomineeDto;
@@ -17,18 +17,18 @@ import com.fin.bancs.services.si.Nominee_Service_Interface;
 import com.fin.bancs.utils.SequenceGenerator;
 
 @Service
+@AllArgsConstructor
 public class NomineeDetailsServices implements Nominee_Service_Interface{
+	private static final Logger log = LogManager.getLogger(NomineeDetailsServices.class);
 
-    @Autowired
-    private Nominee_Repository nomineeRepository;
-	@Autowired
-	private SequenceGenerator sequenceGenerator;
+    private final Nominee_Repository nomineeRepository;
+	private final SequenceGenerator sequenceGenerator;
 
     @Override
 	public List<NomineeDetails> createNomineesDetails(List<NomineeDto> nomineeDetails,int flag)
 	{
 		NomineeDetails nominee_details;
-		List<NomineeDetails> nominee_detail_out = new ArrayList<NomineeDetails>();
+		List<NomineeDetails> nominee_detail_out = new ArrayList<>();
 		for(NomineeDto nominee : nomineeDetails) {
 			NomineeDetails nominee_details_temp;
 		nominee_details = NomineeMapper.mapToNominee(nominee, new NomineeDetails());
@@ -57,7 +57,7 @@ public class NomineeDetailsServices implements Nominee_Service_Interface{
 					nominee_detail_arr.add(nominee_details_temp);
 
 				}else {
-					System.out.println("There is No Details Present");
+					log.info("There is No Details Present");
 				}
 			}
 		}
@@ -66,11 +66,11 @@ public class NomineeDetailsServices implements Nominee_Service_Interface{
 	
     @Override
 	public void deleteNominee(NomineeDto nominee_Details) {
-		int NomineeId= nominee_Details.getNomAddId();
-		if(nomineeRepository.findById(NomineeId).isPresent()) {
-			nomineeRepository.deleteById(NomineeId);
+		int nomineeId= nominee_Details.getNomAddId();
+		if(nomineeRepository.findById(nomineeId).isPresent()) {
+			nomineeRepository.deleteById(nomineeId);
 		}else {
-			throw new ResourceNotFoundException("Nominee Not Existing with given Id"+ NomineeId);
+			throw new ResourceNotFoundException("Nominee Not Existing with given Id"+ nomineeId);
 		}
 		
 	}

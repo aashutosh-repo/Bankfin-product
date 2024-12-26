@@ -3,12 +3,11 @@ package com.fin.bancs.account;
 import java.io.Serializable;
 
 import jakarta.persistence.Embeddable;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Embeddable
-@Getter @Setter @EqualsAndHashCode
+@Getter @Setter
+@AllArgsConstructor @NoArgsConstructor
 public class AccountPk implements Serializable{
 	private int account_id;
 	private int account_type;

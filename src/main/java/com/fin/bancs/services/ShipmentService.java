@@ -3,7 +3,7 @@ package com.fin.bancs.services;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.fin.bancs.repository.ShipmentRepository;
@@ -12,14 +12,12 @@ import com.fin.bancs.trade.ShipmentID;
 import com.fin.bancs.utils.SequenceGenerator;
 
 @Service
+@AllArgsConstructor
 public class ShipmentService {
   
-  @Autowired
-  private ShipmentRepository shipmentRepository;
-  @Autowired
-  private TradeServices tfservices;
-  @Autowired
-  private SequenceGenerator sequenceGenerator;
+  private final ShipmentRepository shipmentRepository;
+  private final TradeServices tfservices;
+  private final SequenceGenerator sequenceGenerator;
   
   public Shipment createShipment(Shipment shipment) {
 	  BigInteger shipmentId = sequenceGenerator.generateSequence("Shipment_seq");
@@ -49,7 +47,7 @@ public boolean isDelivered(String shipmentId) {
     return shipment.filter(value -> value.getShipmentStatus().equalsIgnoreCase("DELIVERED")).isPresent();
 }
 
-public boolean isPaymentCleared(String shipmentId, long locId) {
+public boolean isPaymentCleared(String shipmentId) {
     return tfservices.isPaymentCompleted(shipmentId);
 }
 }	

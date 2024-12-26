@@ -2,10 +2,6 @@ package com.fin.bancs.dto;
 
 import java.time.LocalDate;
 import java.util.Date;
-
-import com.fin.bancs.customer.AddressID;
-
-import jakarta.persistence.EmbeddedId;
 import lombok.Data;
 
 @Data

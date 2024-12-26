@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fin.bancs.dto.NomineeDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
 import com.fin.bancs.customer.CustomerID;
-import com.fin.bancs.customer.CustomerAddressDetails;
 import com.fin.bancs.customer.CustomerDetails;
 import com.fin.bancs.customer.DocumentsDetails;
 import com.fin.bancs.customer.NomineeDetails;
@@ -35,6 +34,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class CustomerDetailsServices implements Customer_Service_Interface{
 
 	@InitBinder
@@ -44,14 +44,10 @@ public class CustomerDetailsServices implements Customer_Service_Interface{
 		webdataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
 	}
 
-	@Autowired
-	private Customer_Details_Repository detailsRepository;
-	@Autowired
-	private DocumentsRepository docRepository;
-	@Autowired
-	NomineeDetailsServices nomineeService;
-	@Autowired
-	private SequenceGenerator sequenceGenerator;
+	private final Customer_Details_Repository detailsRepository;
+	private final DocumentsRepository docRepository;
+	private final NomineeDetailsServices nomineeService;
+	private final SequenceGenerator sequenceGenerator;
 
 	@Override
 	@CacheEvict(value = "customers", key = "'allCustomers'", allEntries = false)
@@ -63,7 +59,6 @@ public class CustomerDetailsServices implements Customer_Service_Interface{
         new NomineeDetails();
         new DocumentsDetails();
         DocumentsDetails doc;
-		CustomerAddressDetails customer_Address_Details = new CustomerAddressDetails();
 		//Create customer Details
 		customer_Details = CustomerDetailsMapper.mapToCustomerDetails(inp_cust_details, new CustomerDetails());
 		customer_Details.setCustClsngDt(null);
@@ -82,26 +77,14 @@ public class CustomerDetailsServices implements Customer_Service_Interface{
 		doc.setCustId(customer_Details.getCustomerId().getCustomerID());
 		docRepository.save(doc);
 		//create Nominee details
-		List<NomineeDetails> nominee_detail=
-				nomineeService.createNomineesDetails(nomineeDtoList,1);
-
-		//Create Address details
-//		Customer_Address_Details cust_add_dtls =
-//				customer_Address_Details.Cr(inp_Customer_Address_Details);
-
-	}
-	public void DeleteCustomer(CustomerDetails customerDetails){
-//        CustomerID customerID= new CustomerID(customerDetails.getCUS_ID(),customerDetails.CUS_TYP);
-//		Customer_Details cust_dtls = entityManager.find(Customer_Details.class,customerID);
-//		cust_dtls.setCUST_CLSNG_DT(customerDetails.getCUST_CLSNG_DT());
-//		cust_dtls.setSTATUS(0000); //put Account Closing Status
+		nomineeService.createNomineesDetails(nomineeDtoList,1);
 	}
 
 	@Cacheable(value = "customers", key = "'allCustomers'")
 	@Override
 	public List<CustomerDto> getAllCust(){
 		List<CustomerDetails> allcust = detailsRepository.findAll();
-		List<CustomerDto> allCustDtoOut = new ArrayList<CustomerDto>();
+		List<CustomerDto> allCustDtoOut = new ArrayList<>();
 		for(CustomerDetails cust : allcust) {
 			CustomerDto customerDetailsSingle = CustomerDetailsMapper.mapToCustomerDetailsDto(cust, new CustomerDto());
 			allCustDtoOut.add(customerDetailsSingle);
@@ -121,16 +104,15 @@ public class CustomerDetailsServices implements Customer_Service_Interface{
 
 	@CachePut(value = "customers", key = "#customerInp.mobileNumber")
 	@Override
-	public CustomerDto modifyCustomer(CustomerDto cuatomerInp, int CustomerId,int CustomerType) {
+	public CustomerDto modifyCustomer(CustomerDto customerInp, int customerId,int customerType) {
 		CustomerID cusPkey = new CustomerID();
 		CustomerDto cDto = new CustomerDto();
 		CustomerDetails customer = new CustomerDetails();
-		cusPkey.setCustomerID(CustomerId);
-		cusPkey.setCustomerType(CustomerType);
+		cusPkey.setCustomerID(customerId);
+		cusPkey.setCustomerType(customerType);
 		Optional<CustomerDetails> customerDetails = detailsRepository.findById(cusPkey);
 		if(customerDetails.isPresent()) {
-			//customer= customerDetails.get();
-            CustomerDetailsMapper.mapToCustomerDetails(cuatomerInp, customer);
+            CustomerDetailsMapper.mapToCustomerDetails(customerInp, customer);
             customer = detailsRepository.save(customer);
 			cDto = CustomerDetailsMapper.mapToCustomerDetailsDto(customer, new CustomerDto());
 		}

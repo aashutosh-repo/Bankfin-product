@@ -33,7 +33,7 @@ public class GlobalException extends ResponseEntityExceptionHandler {
             return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
         }
         @ExceptionHandler(AlreadyExistException.class)
-        public ResponseEntity<ErrorResponseDto> globalException(AlreadyExistException ex, WebRequest request){
+        public ResponseEntity<ErrorResponseDto> alreadyExistException(AlreadyExistException ex, WebRequest request){
             ErrorResponseDto response= new ErrorResponseDto(
             request.getDescription(false),
             HttpStatus.BAD_REQUEST,
@@ -57,7 +57,7 @@ public class GlobalException extends ResponseEntityExceptionHandler {
             Map<String, String> validationError = new HashMap<>();
             List<ObjectError> validationErrList = ex.getBindingResult().getAllErrors();
 
-            validationErrList.forEach((error) ->{
+            validationErrList.forEach(error ->{
                 String fieldName= ((FieldError)error).getField();
                 String validationMsg= error.getDefaultMessage();
                 validationError.put(fieldName,validationMsg);

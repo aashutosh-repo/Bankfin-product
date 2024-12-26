@@ -19,8 +19,7 @@ public class Currency_service implements Currency_Service_Interface{
         if (currencyOptional.isPresent()) {
             Currency currency = currencyOptional.get();
             BigDecimal exchangeRate = currency.getExch_value();
-            BigDecimal convertedAmount = amount.multiply(exchangeRate);
-            return convertedAmount;
+            return amount.multiply(exchangeRate);
         } else {
             return null;
         }

@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fin.bancs.constants.AccountsConstants;
+import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,22 +27,17 @@ import com.fin.bancs.repository.Account_repository;
 import com.fin.bancs.repository.Customer_Details_Repository;
 import com.fin.bancs.services.si.Account_Service_Interface;
 import com.fin.bancs.utils.SequenceGenerator;
-import com.fin.bancs.utils.TempModifiedEntity;
 
 @Service
+@AllArgsConstructor
 public class Account_services implements Account_Service_Interface{
 
 	private static final Logger logger = LogManager.getLogger(Account_services.class);
 
-
-	@Autowired
-	public Account_repository account_repository;
-	@Autowired
-	private Customer_Details_Repository custRepository;
-	@Autowired
-	private SequenceGenerator sequenceGenerator;
-    @Autowired
-    private TempModifiedEntityServices tempModifiedEntityService;
+	public final Account_repository account_repository;
+	private final Customer_Details_Repository custRepository;
+	private final SequenceGenerator sequenceGenerator;
+    private final TempModifiedEntityServices tempModifiedEntityService;
 	
 	
 
@@ -151,7 +146,7 @@ public class Account_services implements Account_Service_Interface{
         new Account();
         Account account_del;
 		if(account_repository.findById(account.getAccountId()).isPresent()) {
-			account_del = (account_repository.findById(account.getAccountId())).get();
+			account_del = (account_repository.findById(account.getAccountId()).orElseThrow(()-> new CustomErrorMessage(ErrorCode.ACCOUNT_NOT_FOUND)));
 			account_del.setAccount_status(2);
 			account_del.setClsr_dt (account.getClsr_dt());
 			account_repository.save(account_del);
@@ -165,7 +160,7 @@ public class Account_services implements Account_Service_Interface{
         logger.debug("Account Finding in :  {}On : {}", this.getClass().getSimpleName(), LocalDate.now());
 
 		List<Account> account;
-		List<AccountDto> accDto = new ArrayList<AccountDto>();
+		List<AccountDto> accDto = new ArrayList<>();
 		AccountDto accountDto;
 		account = account_repository.findAll();
 		for(Account acc: account) {

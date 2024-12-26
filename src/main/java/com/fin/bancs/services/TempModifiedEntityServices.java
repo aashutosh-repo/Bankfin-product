@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 import javax.sql.rowset.serial.SerialBlob;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,10 @@ import com.fin.bancs.utils.TempModifiedEntity;
 import jakarta.transaction.Transactional;
 
 @Service
+@AllArgsConstructor
 public class TempModifiedEntityServices {
-	
-	@Autowired
-    private TempModifiedEntityRepository tempModifiedRepository;
+
+    private final TempModifiedEntityRepository tempModifiedRepository;
 
     @Transactional
     public <T> boolean storeTransactionInTemp(String modifiedKey, String entityName, T modifiedData) {

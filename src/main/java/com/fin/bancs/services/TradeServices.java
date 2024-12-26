@@ -13,13 +13,16 @@ import com.fin.bancs.constants.TradeFinanceConstants;
 import com.fin.bancs.dto.ShipmentDTO;
 import com.fin.bancs.dto.TradeFinanceDTO;
 import com.fin.bancs.dto.TransactionDTO;
+import com.fin.bancs.error.CustomErrorMessage;
 import com.fin.bancs.error.ErrorCode;
 import com.fin.bancs.error.ResourceNotFoundException;
 import com.fin.bancs.mapper.ShipmentMapper;
 import com.fin.bancs.mapper.TradeFinanceMapper;
 import com.fin.bancs.repository.Account_repository;
 import com.fin.bancs.repository.LIneOfCreditRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.fin.bancs.repository.ShipmentRepository;
@@ -31,34 +34,29 @@ import com.fin.bancs.utils.SequenceGenerator;
 
 
 @Service
+@AllArgsConstructor
 public class TradeServices {
+	private static final Logger log = LogManager.getLogger(TradeServices.class);
 
+	private final TFRepository tradeFinRepo;
+	private final ShipmentRepository shipmentRepo;
+	private final LIneOfCreditRepository locRepository;
+	private final Account_repository accRepository;
+	private final CoreTransactionServices coreTransaction;
+	private final SequenceGenerator sequenceGenerator;
 
-	@Autowired
-	TFRepository tradeFinRepo;
-	@Autowired
-	ShipmentRepository shipmentRepo;
-	@Autowired
-	private LIneOfCreditRepository locRepository;
-	@Autowired
-	private Account_repository accRepository;
-	@Autowired
-	private CoreTransactionServices coreTransaction;
-	@Autowired
-	private SequenceGenerator sequenceGenerator;
-
-	public boolean isPaymentCompleted(String ShipmentId) {
-		Optional<TradeFinance> tf  = tradeFinRepo.findById(ShipmentId); //WRONG
+	public boolean isPaymentCompleted(String shipmentId) {
+		Optional<TradeFinance> tf  = tradeFinRepo.findById(shipmentId); //WRONG
         return tf.map(tradeFinance -> tradeFinance.getTradeStatus().equalsIgnoreCase("COMPLETED")).orElse(false);
     }
 	public void createTrade(TradeFinanceDTO tradeInp, ShipmentDTO senderShipmentDtlsInp, ShipmentDTO receiverShipmentDtlsInp) {
 		BigInteger tradeId = sequenceGenerator.generateSequence("TradeId_seq");
 		BigInteger shipmentId1 = sequenceGenerator.generateSequence("shipmentId_seq");
 		BigInteger shipmentId2 = sequenceGenerator.generateSequence("shipmentId_seq");
-		BigInteger TrackId = sequenceGenerator.generateSequence("TrackingId_seq");
+		BigInteger trackId = sequenceGenerator.generateSequence("TrackingId_seq");
 		//Tracking Id format "OriginCountry+ sequence + Destination country"
 		TradeFinance tradeFinance = TradeFinanceMapper.tradeFinanceDTOToTradeFinance(tradeInp,new TradeFinance());
-		String trackingId = tradeFinance.getOriginCountry().substring(0,2).toUpperCase() + TrackId.toString() +
+		String trackingId = tradeFinance.getOriginCountry().substring(0,2).toUpperCase() + trackId.toString() +
 				tradeFinance.getDestinationCountry().substring(0,2).toUpperCase();
 		tradeFinance.setContractId(String.valueOf(tradeId));
 		tradeFinRepo.save(tradeFinance);
@@ -93,15 +91,14 @@ public class TradeServices {
 			if(shipment.isPresent()){
 			if (shipment.get().getShipmentStatus().equals(TradeFinanceConstants.WORKFLOW_COMPLETED)) {
 				Optional<LineOfCredit> lineOfCredit = locRepository.findByShipmentId(shipment.get().getShipmentId().getShipmentId());
-				//initiatePayment(lineOfCredit.get());
 				lineOfCredit.ifPresent(this::initiatePayment);
 
 			} else {
-				System.out.println("Shipment status is not completed");
+				throw new CustomErrorMessage("Shipment status is not completed");
 			}
 			}
 		} else {
-			System.out.println("Contract not found");
+			throw new CustomErrorMessage(ErrorCode.TRADE_DETAILS_NOT_FOUND);
 		}
 	}
 
@@ -111,7 +108,7 @@ public class TradeServices {
 
 			//Write Transaction
 			TransactionDTO txndto = new TransactionDTO();
-			List<TransactionDTO> ListTxnDto = new ArrayList<>();
+			List<TransactionDTO> listTxnDto = new ArrayList<>();
             new Account();
             Account expAccount;
 			Account importerAccount;
@@ -126,17 +123,14 @@ public class TradeServices {
 			txndto.setAccountTypeCr(AccountsConstants.TRADE_ACCOUNT);
 			txndto.setTxnDesc("TF : Credit Transfer ");
 			txndto.setCurrency(loc.getCurrency());
-			ListTxnDto.add(txndto);
-			coreTransaction.CreateA2ATransaction(ListTxnDto);
+			listTxnDto.add(txndto);
+			coreTransaction.CreateA2ATransaction(listTxnDto);
 
 			loc.setPymntStatus(TradeFinanceConstants.PYMNT_FULLPAID);
 			loc.setCreditAmout(new BigDecimal(0));
 			locRepository.save(loc);
-
-
-
 		}else {
-			System.out.println("Not Active");
+			throw  new CustomErrorMessage(ErrorCode.ACCOUNT_NOT_FOUND);
 		}
 
 

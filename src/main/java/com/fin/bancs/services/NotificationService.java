@@ -1,7 +1,6 @@
 package com.fin.bancs.services;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,22 +8,19 @@ import com.fin.bancs.common.Notifications;
 import com.fin.bancs.mapper.NotificationMapper;
 import com.fin.bancs.repository.NotificationRepository;
 import com.fin.bancs.utils.SequenceGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class NotificationService {
 
-    @Autowired
-    private NotificationMapper notificationMapper;
-    @Autowired
-    private SequenceGenerator sequenceGenerator;
-
-    @Autowired
-    private NotificationRepository notificationRepository;
+    private final NotificationMapper notificationMapper;
+    private final SequenceGenerator sequenceGenerator;
+    private final NotificationRepository notificationRepository;
 
     //@CacheEvict(value = "notifications", allEntries = true)
     @CachePut(value = "notifications", key = "#notification.ntfctnId")

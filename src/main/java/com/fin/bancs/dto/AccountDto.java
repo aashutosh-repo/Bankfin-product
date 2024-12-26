@@ -20,7 +20,7 @@ public class AccountDto {
     protected String account_number;
     
     @Schema(description = "Account Type used for the account", example = "saving")
-    protected String accType;;
+    protected String accType;
     @Schema(description = "Date when the account was opened")
     protected LocalDate account_open_dt;
 

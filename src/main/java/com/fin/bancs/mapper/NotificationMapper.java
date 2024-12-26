@@ -7,8 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class NotificationMapper {
-    private NotificationMapper(){}
+//    private NotificationMapper(){}
     private final ObjectMapper objectMapper = new ObjectMapper();
+
 
     public String toJson(Notifications notification) throws JsonProcessingException {
         return objectMapper.writeValueAsString(notification);
