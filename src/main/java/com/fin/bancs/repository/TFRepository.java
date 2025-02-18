@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TFRepository extends JpaRepository<TradeFinance, String> {
-	  Optional<TradeFinance> findByShipmentId(String shipmentId);
+//	  Optional<TradeFinance> findByShipmentId(String shipmentId);
 }

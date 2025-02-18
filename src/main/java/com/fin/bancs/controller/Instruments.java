@@ -54,7 +54,7 @@ public class Instruments {
 		BigDecimal finalAmt;
 		finalAmt= currency.currencyConverter(inputCurrency, targetCurrency, amount);
 		if(finalAmt ==null) {
-			throw new ErrorHandler(ErrorCode.CURRNCY_CANNOT_CONVERTED);
+			throw new ErrorHandler(ErrorCode.CURRENCY_CANNOT_CONVERTED);
 		}else {
 			return String.valueOf(finalAmt);
 		}

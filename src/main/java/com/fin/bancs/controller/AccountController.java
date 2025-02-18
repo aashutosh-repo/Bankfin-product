@@ -34,8 +34,8 @@ public class AccountController {
     @Operation(summary = "View All Accounts API",
     description = "REST API to View All account in MyBank")
     @GetMapping("/viewAccounts")
-    public List<AccountDto> viewAccountDetails(){
-        return acc_services.findAllAccounts();
+    public ResponseEntity<List<AccountDto>> viewAccountDetails(){
+        return new ResponseEntity<>(acc_services.findAllAccounts(),HttpStatus.OK);
     }
 
     @Operation(summary = "View All Accounts API",

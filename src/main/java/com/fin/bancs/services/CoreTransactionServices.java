@@ -13,6 +13,7 @@ import com.fin.bancs.bankconfig.InternalAccountConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.fin.bancs.account.Account;
@@ -44,7 +45,7 @@ public class CoreTransactionServices {
 	private Account_Balance_Details_Service accountBalanceUpdate;
 	private SequenceGenerator seqGen;
 	@Autowired
-	public CoreTransactionServices(Core_Transaction_Repository core_transactions, Account_repository accRepo, Account_Balance_Details_Service accountBalanceUpdate, SequenceGenerator seqGen) {
+	public CoreTransactionServices(Core_Transaction_Repository core_transactions, Account_repository accRepo, @Lazy Account_Balance_Details_Service accountBalanceUpdate, SequenceGenerator seqGen) {
 		this.core_transactions = core_transactions;
 		this.accRepo = accRepo;
 		this.accountBalanceUpdate = accountBalanceUpdate;

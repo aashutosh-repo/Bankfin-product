@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 
 @Configuration
 public class BankSecurityConfig {
-	
+
     @Bean
     public UserDetailsManager userDetailsManager(DataSource dataSource) {
 
@@ -44,7 +44,8 @@ public class BankSecurityConfig {
                                 .requestMatchers("/v2/api-docs",    // Swagger API documentation
                                         "/swagger-resources/**",    // Swagger resource endpoints
                                         "/swagger-ui.html",         // Swagger UI
-                                        "/webjars/**"   ).permitAll()
+                                        "/webjars/**","/user/**","/customer/**",
+                                "/account/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form ->

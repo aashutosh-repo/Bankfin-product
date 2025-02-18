@@ -15,7 +15,7 @@ import lombok.ToString;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
 public class Currency {
 	@Id
-	private String currency_code;
+	private String currencyCode;
 	private String country;
 	private String country_code;
 	private String exch_currency;
