@@ -10,7 +10,7 @@ update** - openApi Swagger added to make life easy</p>
     - Customer onboarding with Nominee, Docs and Address details(completed)
     - Account Creation (completed)
     - Cash transactions/ A2A transaction (Enhancement) 
-    - SIP calculation (planned)
+    - SIP/EMI calculation (Completed)
     - Currency Exchange (Enhancement)
     - User access control (Completed)
     - Trade Finance (in progress)
