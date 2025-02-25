@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class CustomerDetails {
 	@EmbeddedId
-	CustomerID customerId; //PK
+	private CustomerID customerId; //PK
 	private String firstName;
 	private String lastName;
 	private String fatherName;
